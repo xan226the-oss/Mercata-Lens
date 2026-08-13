@@ -11,7 +11,7 @@ import {
   type ReactNode,
 } from "react";
 import type { ParseIssue, ResearchDataset } from "../domain/types";
-import { loadDemoDataset } from "../data/demoLoader";
+import { tryLoadDemoDataset } from "../data/demoLoader";
 
 export type ResearchStatus = "idle" | "loading" | "ready" | "error";
 
@@ -38,14 +38,19 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
       setDataset(null);
       setIssues([]);
       setError(null);
-      loadDemoDataset()
+      tryLoadDemoDataset()
         .then((result) => {
           if (result.ok) {
             setDataset(result.dataset);
             setStatus("ready");
           } else {
-            setIssues(result.issues);
-            setError(`Demo data failed validation (${result.issues.length} issue(s)).`);
+            const issues = result.issues;
+            setIssues(issues);
+            setError(
+              issues.length > 0
+                ? `Demo data failed validation (${issues.length} issue(s)).`
+                : `Failed to load demo data${result.error ? `: ${result.error}` : "."}`,
+            );
             setStatus("error");
           }
         })

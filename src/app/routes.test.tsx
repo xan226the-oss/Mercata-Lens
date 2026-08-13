@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import "@testing-library/jest-dom/vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import type { ReactNode } from "react";
 import { RESEARCH_STEPS, STEP_ROUTES } from "./routes";
@@ -16,6 +16,16 @@ function RenderWithProviders({ children }: { children: ReactNode }) {
       </MemoryRouter>
     </ResearchProvider>
   );
+}
+
+/** Let the ResearchProvider's async demo load settle to avoid act() warnings. */
+async function settleProvider() {
+  await waitFor(() => {
+    // Once the async load settles, the "loading" placeholder disappears.
+    expect(
+      document.body.textContent?.includes("Loading demo research data"),
+    ).toBe(false);
+  });
 }
 
 describe("research step route contract", () => {
@@ -43,12 +53,14 @@ describe("research step route contract", () => {
     );
   });
 
-  it("renders persistent header, scope boundary, warning and demo badge", () => {
+  it("renders persistent header, scope boundary, warning and demo badge", async () => {
     render(
       <RenderWithProviders>
         <HomePage />
       </RenderWithProviders>,
     );
+
+    await settleProvider();
 
     expect(screen.getByText("Mercata Lens")).toBeInTheDocument();
     expect(screen.getByText("商机镜")).toBeInTheDocument();
@@ -66,13 +78,14 @@ describe("research step route contract", () => {
     }
   });
 
-  it("does not claim any analysis is complete on placeholder pages", () => {
+  it("does not claim any analysis is complete on placeholder pages", async () => {
     for (const { Component } of STEP_ROUTES) {
       const { container } = render(
         <RenderWithProviders>
           <Component />
         </RenderWithProviders>,
       );
+      await settleProvider();
       const text = container.textContent ?? "";
       expect(text).not.toMatch(/analysis complete|already completed|score|sales prediction/i);
     }

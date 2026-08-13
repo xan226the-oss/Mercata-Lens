@@ -97,6 +97,59 @@ describe("parseProductRow", () => {
     }
   });
 
+  it("rejects a negative price_usd with out_of_range", () => {
+    const base = {
+      product_id: "p3b",
+      title: "Demo Fountain 3b",
+      brand: null,
+      price_usd: "29.99",
+      rating: "4.0",
+      review_count: null,
+      category: "Cat Water Fountain",
+      material: null,
+      capacity: null,
+      filter_cost: null,
+      source_url: "https://example.com/demo/p3b",
+      observed_at: "2026-07-01",
+    };
+    for (const bad of ["-1", "-29.99"]) {
+      const result = parseProductRow({ ...base, price_usd: bad }, 8);
+      expect(result.ok).toBe(false);
+      if (result.ok) continue;
+      expect(result.issues[0]).toMatchObject({
+        field: "price_usd",
+        code: "out_of_range",
+        value: bad,
+      });
+    }
+  });
+
+  it("treats whitespace-only review_count and filter_cost as null", () => {
+    const base = {
+      product_id: "p3c",
+      title: "Demo Fountain 3c",
+      brand: null,
+      price_usd: "29.99",
+      rating: "4.0",
+      review_count: null,
+      category: "Cat Water Fountain",
+      material: null,
+      capacity: null,
+      filter_cost: null,
+      source_url: "https://example.com/demo/p3c",
+      observed_at: "2026-07-01",
+    };
+    const rc = parseProductRow({ ...base, review_count: "   " }, 9);
+    expect(rc.ok).toBe(true);
+    if (!rc.ok) return;
+    expect(rc.value.reviewCount).toBeNull();
+
+    const fc = parseProductRow({ ...base, filter_cost: "   " }, 10);
+    expect(fc.ok).toBe(true);
+    if (!fc.ok) return;
+    expect(fc.value.filterCost).toBeNull();
+  });
+
   it("treats required fields with only whitespace as missing", () => {
     const row = {
       product_id: "   ",
@@ -259,6 +312,22 @@ describe("parseReviewRow", () => {
       source_url: "https://example.com/demo/reviews/r3",
     };
     const result = parseReviewRow(row, 4);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.value.verifiedPurchase).toBeNull();
+  });
+
+  it("treats whitespace-only verified_purchase as null (not false, not an error)", () => {
+    const row = {
+      review_id: "r3b",
+      product_id: "p1",
+      rating: "4",
+      review_text: "Works fine.",
+      review_date: null,
+      verified_purchase: "   ",
+      source_url: "https://example.com/demo/reviews/r3b",
+    };
+    const result = parseReviewRow(row, 5);
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     expect(result.value.verifiedPurchase).toBeNull();

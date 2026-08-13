@@ -24,9 +24,28 @@ export interface DemoLoadResult {
 export interface DemoLoadFailure {
   ok: false;
   issues: ParseIssue[];
+  /** Present when the failure is a fetch/parse-level error with no row issues. */
+  error?: string;
 }
 
 export type DemoLoadOutcome = DemoLoadResult | DemoLoadFailure;
+
+/** Structured error thrown by loadDemoDataset on failure. */
+export class DemoLoadError extends Error {
+  readonly issues: ParseIssue[];
+  readonly causeMessage?: string;
+
+  constructor(issues: ParseIssue[], causeMessage?: string) {
+    super(
+      issues.length > 0
+        ? `Demo data failed validation (${issues.length} issue(s)).`
+        : `Failed to load demo data${causeMessage ? `: ${causeMessage}` : "."}`,
+    );
+    this.name = "DemoLoadError";
+    this.issues = issues;
+    this.causeMessage = causeMessage;
+  }
+}
 
 export const DEMO_CATEGORY = "Cat Water Fountain";
 
@@ -61,33 +80,51 @@ function parseCsv<T>(
   return { rows, issues };
 }
 
-export async function loadDemoDataset(): Promise<DemoLoadOutcome> {
-  const [productsText, reviewsText] = await Promise.all([
-    fetch("/demo/products.csv").then((r) => {
-      if (!r.ok) throw new Error(`Failed to fetch /demo/products.csv: HTTP ${r.status}`);
-      return r.text();
-    }),
-    fetch("/demo/reviews.csv").then((r) => {
-      if (!r.ok) throw new Error(`Failed to fetch /demo/reviews.csv: HTTP ${r.status}`);
-      return r.text();
-    }),
-  ]);
+/**
+ * Loads the demo dataset and returns it directly.
+ * On any failure (fetch error, Papa parse error, or row validation issues)
+ * it throws a structured DemoLoadError carrying the diagnostics.
+ */
+export async function loadDemoDataset(): Promise<ResearchDataset> {
+  const productsText = await fetch("/demo/products.csv").then((r) => {
+    if (!r.ok) throw new DemoLoadError([], `HTTP ${r.status} fetching /demo/products.csv`);
+    return r.text();
+  });
+  const reviewsText = await fetch("/demo/reviews.csv").then((r) => {
+    if (!r.ok) throw new DemoLoadError([], `HTTP ${r.status} fetching /demo/reviews.csv`);
+    return r.text();
+  });
 
   const products = parseCsv<ProductRecord>(productsText, (row, n) => parseProductRow(row, n));
   const reviews = parseCsv<ReviewRecord>(reviewsText, (row, n) => parseReviewRow(row, n));
 
   const issues = [...products.issues, ...reviews.issues];
   if (issues.length > 0) {
-    return { ok: false, issues };
+    throw new DemoLoadError(issues);
   }
 
-  const dataset = createResearchDataset({
+  return createResearchDataset({
     category: DEMO_CATEGORY,
     sourceKind: "demo",
     importedAt: new Date().toISOString(),
     products: products.rows,
     reviews: reviews.rows,
   });
+}
 
-  return { ok: true, dataset, productIssues: [], reviewIssues: [] };
+/**
+ * Safe variant that never throws: resolves to a discriminant outcome
+ * so callers can surface row/field diagnostics without try/catch.
+ */
+export async function tryLoadDemoDataset(): Promise<DemoLoadOutcome> {
+  try {
+    const dataset = await loadDemoDataset();
+    return { ok: true, dataset, productIssues: [], reviewIssues: [] };
+  } catch (err: unknown) {
+    if (err instanceof DemoLoadError) {
+      return { ok: false, issues: err.issues };
+    }
+    const message = err instanceof Error ? err.message : String(err);
+    return { ok: false, issues: [], error: message };
+  }
 }

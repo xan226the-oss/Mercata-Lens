@@ -74,6 +74,7 @@ function parseOptionalBoolean(
   issues: ParseIssue[],
 ): boolean | null {
   if (value === null || value === undefined || value === "") return null;
+  if (typeof value === "string" && isBlank(value)) return null;
   if (typeof value === "boolean") return value;
   if (typeof value === "string") {
     const trimmed = value.trim().toLowerCase();
@@ -99,6 +100,7 @@ function parseOptionalCount(
   opts: { integerOnly: boolean },
 ): number | null {
   if (value === null || value === undefined || value === "") return null;
+  if (typeof value === "string" && isBlank(value)) return null;
   if (typeof value === "number" && !Number.isFinite(value)) {
     issues.push({ row, field, code: "invalid_type", value, message: `${field} must be a finite number.` });
     return null;
@@ -152,6 +154,10 @@ function parseRequiredNumber(
   }
   if (!Number.isFinite(num)) {
     issues.push({ row, field, code: "invalid_type", value, message: `${field} must be a finite number.` });
+    return null;
+  }
+  if (num < 0) {
+    issues.push({ row, field, code: "out_of_range", value, message: `${field} must not be negative.` });
     return null;
   }
   return num;

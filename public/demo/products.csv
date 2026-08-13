@@ -1,0 +1,13 @@
+product_id,title,brand,price_usd,rating,review_count,category,material,capacity,filter_cost,source_url,observed_at
+p01,ClearFlow Pet Fountain 2.5L,ClearFlow,29.99,4.2,156,Cat Water Fountain,Stainless Steel,2.5L,7.99,https://example.com/demo/product/p01,2026-07-01
+p02,ClearFlow Wide-Bowl Fountain 3L,ClearFlow,34.99,4.0,98,Cat Water Fountain,Stainless Steel,3L,8.49,https://example.com/demo/product/p02,2026-07-01
+p03,HushPaws Silent Fountain 2L,HushPaws,39.99,4.5,240,Cat Water Fountain,Ceramic,2L,9.99,https://example.com/demo/product/p03,2026-07-01
+p04,HushPaws Compact Quiet Fountain 1.5L,HushPaws,32.99,4.3,121,Cat Water Fountain,Ceramic,1.5L,9.49,https://example.com/demo/product/p04,2026-07-01
+p05,AquaPets BPA-Free Fountain 2.8L,AquaPets,27.99,3.8,310,Cat Water Fountain,Plastic,2.8L,6.99,https://example.com/demo/product/p05,2026-07-01
+p06,AquaPets Multi-Level Fountain 4L,AquaPets,44.99,4.1,87,Cat Water Fountain,Plastic,4L,7.49,https://example.com/demo/product/p06,2026-07-01
+p07,StillDrink Stainless Fountain 1.8L,StillDrink,36.99,4.6,175,Cat Water Fountain,Stainless Steel,1.8L,8.99,https://example.com/demo/product/p07,2026-07-01
+p08,StillDrink Whisper Fountain 2.2L,StillDrink,41.99,4.4,133,Cat Water Fountain,Ceramic,2.2L,9.49,https://example.com/demo/product/p08,2026-07-01
+p09,PureFount Simple Fountain 2L,PureFount,24.99,3.6,402,Cat Water Fountain,Plastic,2L,5.99,https://example.com/demo/product/p09,2026-07-01
+p10,PureFount Low-Filter Fountain 3.2L,PureFount,37.99,4.0,66,Cat Water Fountain,Stainless Steel,3.2L,5.49,https://example.com/demo/product/p10,2026-07-01
+p11,FreshStream Easy-Clean Fountain 2.4L,FreshStream,30.99,4.2,205,Cat Water Fountain,Stainless Steel,2.4L,8.99,https://example.com/demo/product/p11,2026-07-01
+p12,FreshStream Quiet Pump Fountain 2.6L,FreshStream,38.99,4.3,149,Cat Water Fountain,Ceramic,2.6L,9.99,https://example.com/demo/product/p12,2026-07-01

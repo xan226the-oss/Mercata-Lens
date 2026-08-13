@@ -57,17 +57,53 @@ pnpm build           # production build (tsc + vite build)
 ## Project structure
 
 ```text
+public/
+└── demo/
+    ├── products.csv          # curated synthetic demo products (12)
+    └── reviews.csv           # curated synthetic demo reviews (76)
 src/
 ├── main.tsx                 # entry: mounts App under BrowserRouter
 ├── app/
-│   ├── App.tsx              # route wiring shell
+│   ├── App.tsx              # route wiring shell + ResearchProvider
 │   ├── routes.tsx           # RESEARCH_STEPS + STEP_ROUTES shared metadata
 │   ├── routes.test.tsx      # route contract tests
 │   └── styles.css
+├── domain/
+│   ├── types.ts             # versioned domain contracts
+│   ├── schemas.ts           # strict single-row parsers
+│   └── dataset.ts           # ResearchDataset envelope builder
+├── data/
+│   └── demoLoader.ts        # Papa Parse demo loader
 ├── research/
+│   ├── ResearchContext.tsx  # demo load state (idle/loading/ready/error)
 │   └── ResearchLayout.tsx   # persistent header, warning, step navigation
+├── fixtures/
+│   └── testDataset.ts       # fixed in-memory test dataset
 └── pages/                   # one placeholder page per step
 ```
+
+## Demo dataset provenance
+
+The demo data under `public/demo/` is a **hand-curated synthetic fixture**
+created for demonstration only. It is **not** a current Amazon scrape and
+the review texts are **not** real consumer reviews.
+
+- All product and review URLs use `https://example.com/demo/...`.
+- No real brands, Amazon ASINs, sales, GMV, ROAS, or market-share figures.
+- The data can only validate the product's processing flow; it cannot prove
+  market demand, sales, or share.
+
+## Running the demo data
+
+The app loads the demo dataset automatically on the home page:
+
+```bash
+pnpm dev
+```
+
+Open the printed local URL. The home page shows product count, review count,
+source kind, imported timestamp, category, and the demo disclaimer. All six
+routes remain reachable.
 
 ## License and status
 

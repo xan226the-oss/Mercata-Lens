@@ -1,0 +1,77 @@
+review_id,product_id,rating,review_text,review_date,verified_purchase,source_url
+r001,p01,2,"Hard to clean. The inside has corners that trap slime no matter how many times I scrub.",2026-06-30,true,https://example.com/demo/review/r001
+r002,p01,3,"Cleaning takes forever. Every little nook collects grime and I need a brush for each part.",2026-06-28,true,https://example.com/demo/review/r002
+r003,p03,2,"Very hard to clean, the motor chamber is impossible to reach and gets dirty fast.",2026-06-26,false,https://example.com/demo/review/r003
+r004,p05,1,"Hard to clean is an understatement. I stopped using it because scrubbing took too long.",2026-06-24,true,https://example.com/demo/review/r004
+r005,p06,2,"The wide bowl sounds nice but it is a pain to clean every few days.",2026-06-22,false,https://example.com/demo/review/r005
+r006,p07,3,"Not the easiest to clean. The pump area has small gaps that hold residue.",2026-06-20,true,https://example.com/demo/review/r006
+r007,p09,2,"Hard to clean and it smells after a few days unless I take everything apart.",2026-06-18,true,https://example.com/demo/review/r007
+r008,p11,5,"Easy to clean, the parts come apart simply and I can rinse everything in minutes.",2026-06-16,true,https://example.com/demo/review/r008
+r009,p11,4,"Much easier to clean than my old fountain. Smooth surfaces with no hidden corners.",2026-06-14,false,https://example.com/demo/review/r009
+r010,p12,3,"Mostly fine but the filter housing is a bit awkward to clean each week.",2026-06-12,true,https://example.com/demo/review/r010
+r011,p02,2,"Too noisy at night, I can hear it humming from the next room.",2026-06-10,true,https://example.com/demo/review/r011
+r012,p03,5,"Silent fountain as promised. I cannot hear it running at all.",2026-06-08,true,https://example.com/demo/review/r012
+r013,p03,4,"Very quiet, only a faint trickle sound when full.",2026-06-06,false,https://example.com/demo/review/r013
+r014,p04,4,"Quiet enough that it does not bother me during sleep.",2026-06-04,true,https://example.com/demo/review/r014
+r015,p05,2,"Gets noisy when the water level drops, a loud splashing sound.",2026-06-02,true,https://example.com/demo/review/r015
+r016,p07,5,"Whisper quiet, my cat drinks without any motor noise.",2026-05-31,true,https://example.com/demo/review/r016
+r017,p08,4,"Pump is quiet but there is a soft gurgle, acceptable.",2026-05-29,false,https://example.com/demo/review/r017
+r018,p09,2,"Noisy pump that vibrates and rattles on the counter.",2026-05-27,true,https://example.com/demo/review/r018
+r019,p10,3,"Not as quiet as advertised, there is a constant hum.",2026-05-25,true,https://example.com/demo/review/r019
+r020,p12,4,"Quiet pump, barely audible. Good for the bedroom.",2026-05-23,false,https://example.com/demo/review/r020
+r021,p01,3,"Started leaking from the bottom seal after a few weeks.",2026-05-21,true,https://example.com/demo/review/r021
+r022,p02,2,"Leaks around the lid whenever it is full to the top.",2026-05-19,true,https://example.com/demo/review/r022
+r023,p04,3,"Small leak from the connector, I had to wrap it with tape.",2026-05-17,false,https://example.com/demo/review/r023
+r024,p05,2,"Leaked water onto my floor after two weeks of use.",2026-05-15,true,https://example.com/demo/review/r024
+r025,p08,3,"There is a slow leak from the pump cable opening.",2026-05-13,true,https://example.com/demo/review/r025
+r026,p09,1,"Leaked everywhere on day one, returned it.",2026-05-11,true,https://example.com/demo/review/r026
+r027,p10,4,"No leaks so far after a month, seals look solid.",2026-05-09,true,https://example.com/demo/review/r027
+r028,p11,4,"No leakage, the gasket fits well.",2026-05-07,false,https://example.com/demo/review/r028
+r029,p03,3,"Pump died after two months. Replacement part was expensive.",2026-05-05,true,https://example.com/demo/review/r029
+r030,p05,2,"The pump stopped working after six weeks.",2026-06-30,true,https://example.com/demo/review/r030
+r031,p06,3,"Pump became weak after a while and needed frequent priming.",2026-06-28,false,https://example.com/demo/review/r031
+r032,p07,4,"Pump still going strong after four months of daily use.",2026-06-26,true,https://example.com/demo/review/r032
+r033,p09,2,"Pump died after two months, very disappointing.",2026-06-24,true,https://example.com/demo/review/r033
+r034,p12,4,"Quiet pump has lasted three months with regular cleaning.",2026-06-22,true,https://example.com/demo/review/r034
+r035,p04,3,"Pump got clogged and stopped after a month, had to clean it out.",2026-06-20,false,https://example.com/demo/review/r035
+r036,p10,5,"Pump has been reliable for over six months.",2026-06-18,true,https://example.com/demo/review/r036
+r037,p01,3,"Filter replacements add up, about two filters a month.",2026-06-16,true,https://example.com/demo/review/r037
+r038,p03,2,"Replacement filters are pricey and hard to find locally.",2026-06-14,true,https://example.com/demo/review/r038
+r039,p05,3,"Filters are cheap enough but you need them often.",2026-06-12,false,https://example.com/demo/review/r039
+r040,p07,3,"Filter cost is okay, though it is a recurring expense.",2026-06-10,true,https://example.com/demo/review/r040
+r041,p09,4,"Low-cost filters, one of the reasons I bought this.",2026-06-08,true,https://example.com/demo/review/r041
+r042,p10,5,"The filter lasts long so the running cost stays low.",2026-06-06,true,https://example.com/demo/review/r042
+r043,p12,3,"Filters are average price and need changing monthly.",2026-06-04,true,https://example.com/demo/review/r043
+r044,p08,2,"Filter refills are on the expensive side compared to the fountain.",2026-06-02,false,https://example.com/demo/review/r044
+r045,p11,3,"Filter cost is fine but the pack is large to store.",2026-05-31,false,https://example.com/demo/review/r045
+r046,p02,4,"Good capacity for two cats, lasts a couple of days.",2026-05-29,true,https://example.com/demo/review/r046
+r047,p04,2,"Too small, needs refilling every day with one cat.",2026-05-27,false,https://example.com/demo/review/r047
+r048,p05,4,"Decent capacity, fine for a single cat.",2026-05-25,true,https://example.com/demo/review/r048
+r049,p06,5,"Big tank, I only refill every few days even with three cats.",2026-05-23,true,https://example.com/demo/review/r049
+r050,p07,3,"Smaller than expected, refills more often than I hoped.",2026-05-21,true,https://example.com/demo/review/r050
+r051,p08,3,"Capacity is okay but the water level drops fast in summer.",2026-05-19,true,https://example.com/demo/review/r051
+r052,p09,3,"Average size, fine for one cat.",2026-05-17,false,https://example.com/demo/review/r052
+r053,p10,5,"Large capacity is great for a busy household.",2026-05-15,true,https://example.com/demo/review/r053
+r054,p01,4,"My cat took to it right away, drinks more water now.",2026-05-13,true,https://example.com/demo/review/r054
+r055,p02,3,"One cat loves it, the other ignores it completely.",2026-05-11,false,https://example.com/demo/review/r055
+r056,p03,4,"Both cats drink from it, they seem to prefer running water.",2026-05-09,true,https://example.com/demo/review/r056
+r057,p04,3,"My cat was scared of the sound at first but got used to it.",2026-05-07,true,https://example.com/demo/review/r057
+r058,p06,4,"Cats love the moving water and use it constantly.",2026-05-05,true,https://example.com/demo/review/r058
+r059,p07,4,"My picky cat finally drinks more with this fountain.",2026-06-30,true,https://example.com/demo/review/r059
+r060,p08,3,"Only one of my three cats uses it regularly.",2026-06-28,false,https://example.com/demo/review/r060
+r061,p09,3,"Cat accepts it but drinks about the same amount.",2026-06-26,true,https://example.com/demo/review/r061
+r062,p11,4,"Both cats accepted it on day one, no hesitation.",2026-06-24,true,https://example.com/demo/review/r062
+r063,p12,5,"My cat is obsessed with it, drinks several times a day.",2026-06-22,true,https://example.com/demo/review/r063
+r064,p01,4,"Solid basic fountain, works well, cleaning is the only chore.",2026-06-20,true,https://example.com/demo/review/r064
+r065,p03,4,"Quiet and looks nice on the counter, worth the price.",2026-06-18,true,https://example.com/demo/review/r065
+r066,p05,3,"Average fountain for the price, nothing special.",2026-06-16,false,https://example.com/demo/review/r066
+r067,p07,5,"Best fountain I have tried, quiet and my cats love it.",2026-06-14,true,https://example.com/demo/review/r067
+r068,p11,4,"Simple and effective, easy to fill and maintain.",2026-06-12,true,https://example.com/demo/review/r068
+r069,p12,4,"Good quality build and a quiet pump.",2026-06-10,true,https://example.com/demo/review/r069
+r070,p02,3,"Fine fountain, no complaints really.",2026-06-08,true,https://example.com/demo/review/r070
+r071,p04,4,"Small but does the job, quiet motor.",2026-06-06,false,https://example.com/demo/review/r071
+r072,p06,3,"It is okay, a little awkward to take apart.",2026-06-04,true,https://example.com/demo/review/r072
+r073,p09,3,"Works but feels cheap, I worry about durability.",2026-06-02,true,https://example.com/demo/review/r073
+r074,p10,4,"Reliable so far, low running costs.",2026-05-31,false,https://example.com/demo/review/r074
+r075,p08,4,"Good purchase overall, quiet and steady.",2026-05-29,true,https://example.com/demo/review/r075
+r076,p12,3,"Decent, though the ceramic is easy to chip.",2026-05-27,true,https://example.com/demo/review/r076

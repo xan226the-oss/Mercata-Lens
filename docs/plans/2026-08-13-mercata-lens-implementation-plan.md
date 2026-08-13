@@ -447,6 +447,14 @@ interface QualityReport {
 }
 ```
 
+Task 3 clarification:
+
+- Import/quality issues extend `ParseIssue` with optional `file: "products" | "reviews"` so the UI can identify the source CSV; row parsers remain reusable and the import layer attaches the file.
+- Duplicate counts mean records beyond the first occurrence of each ID. `validProducts` counts unique first-occurrence products; `validReviews` counts unique first-occurrence reviews linked to a known product.
+- Low sample size does not reject an otherwise valid import. It locks only dependent modules and is shown as a warning.
+- `economics` is `locked` when there is no usable product record or product identity is blocked; otherwise it is `incomplete` in Task 3 because the full cost inputs are not collected until Task 6. `incomplete` remains reachable.
+- Dynamic navigation may modify `ResearchLayout.tsx`; `/decision` follows the opportunity module lock because a decision cannot be generated before opportunity evidence is available.
+
 - [ ] **Step 1: Write CSV import RED cases**
 
 Tests must cover quoted commas, UTF-8 English text, Windows newlines, duplicate header, empty file, unknown product reference, duplicate ID and row-number reporting.

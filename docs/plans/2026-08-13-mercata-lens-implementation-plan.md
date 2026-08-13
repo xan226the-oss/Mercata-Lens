@@ -260,7 +260,7 @@ Do not initialize Git in any parent directory. Git root must be exactly `/Users/
 - Create: `src/fixtures/testDataset.ts`
 - Create: `public/demo/products.csv`
 - Create: `public/demo/reviews.csv`
-- Modify: `src/research/ResearchContext.tsx`
+- Create: `src/research/ResearchContext.tsx`
 - Modify: `src/pages/HomePage.tsx`
 
 **Interfaces:**
@@ -319,6 +319,26 @@ interface DataProvenance {
   sourceUrl: string | null;
   observedAt: string | null;
   note: string;
+}
+
+// Task 2 defines these as state-contract types only so ResearchState is complete.
+// Calculation and UI behavior remain strictly deferred to Task 6.
+interface EconomicInputs {
+  salePriceCents: number | null;
+  sourcingCostCents: number | null;
+  inboundFreightCents: number | null;
+  referralFeeRate: number | null;
+  fulfillmentCostCents: number | null;
+  advertisingCostCents: number | null;
+  returnLossCents: number | null;
+  otherCostCents: number | null;
+}
+
+interface EconomicScenario {
+  id: "pessimistic" | "base" | "optimistic";
+  label: string;
+  inputs: EconomicInputs;
+  provenance: Record<keyof EconomicInputs, DataProvenance | null>;
 }
 
 interface ResearchState {

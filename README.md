@@ -19,7 +19,7 @@ Not built: Amazon scraping/API, AI model, sales prediction, real seller analytic
   data processing and saving happen entirely in the browser locally.
 - This is not "only HTML" — it is a single-page application built with
   **React + TypeScript** (Vite build), with route-level tests under
-  `src/app/routes.test.ts` and Vitest as the test runner.
+  `src/app/routes.test.tsx` and Vitest as the test runner.
 
 ## Six-step research flow
 
@@ -62,7 +62,7 @@ src/
 ├── app/
 │   ├── App.tsx              # route wiring shell
 │   ├── routes.tsx           # RESEARCH_STEPS + STEP_ROUTES shared metadata
-│   ├── routes.test.ts       # route contract tests
+│   ├── routes.test.tsx      # route contract tests
 │   └── styles.css
 ├── research/
 │   └── ResearchLayout.tsx   # persistent header, warning, step navigation

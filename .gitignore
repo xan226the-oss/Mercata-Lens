@@ -1,6 +1,9 @@
 # Dependencies
 node_modules/
 
+# WorkBuddy project metadata (not part of the app)
+.workbuddy-ai/
+
 # Build output
 dist/
 dist-ssr/

@@ -83,9 +83,9 @@ function parseCsv<T>(
 }
 
 /**
- * Fetch a demo CSV as text. Wraps both HTTP non-2xx and fetch promise
- * rejections into a structured DemoLoadError with a readable causeMessage
- * (no stack trace leakage).
+ * Fetch a demo CSV as text. Wraps fetch promise rejections, HTTP non-2xx,
+ * and body-read (response.text) failures into a structured DemoLoadError
+ * with a readable causeMessage (no stack trace leakage).
  */
 async function fetchDemoCsv(pathname: string): Promise<string> {
   let response: Response;
@@ -98,7 +98,12 @@ async function fetchDemoCsv(pathname: string): Promise<string> {
   if (!response.ok) {
     throw new DemoLoadError([], `HTTP ${response.status} fetching ${pathname}`);
   }
-  return response.text();
+  try {
+    return await response.text();
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    throw new DemoLoadError([], `Failed to read body of ${pathname}: ${message}`);
+  }
 }
 
 /**

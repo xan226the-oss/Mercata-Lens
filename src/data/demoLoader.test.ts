@@ -178,6 +178,31 @@ describe("loadDemoDataset (public contract returns ResearchDataset)", () => {
       expect(loadError.message).toContain("Failed to load demo data");
     }
   });
+
+  it("wraps a response.text() rejection into a DemoLoadError with a readable causeMessage", async () => {
+    // response.ok is true, but reading the body fails (stream/network error).
+    const responseWithBrokenBody = {
+      ok: true,
+      status: 200,
+      text: () =>
+        Promise.reject(new TypeError("Body stream error")) as unknown as Promise<string>,
+    };
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => Promise.resolve(responseWithBrokenBody as unknown as Response)) as unknown as typeof fetch,
+    );
+    try {
+      await loadDemoDataset();
+      expect.unreachable("should have thrown a DemoLoadError");
+    } catch (err) {
+      expect(err).toBeInstanceOf(DemoLoadError);
+      const loadError = err as DemoLoadError;
+      expect(loadError.issues).toEqual([]);
+      expect(loadError.causeMessage).toMatch(/Body stream error/i);
+      expect(loadError.message).toContain("Failed to load demo data");
+      expect(loadError.message).not.toMatch(/at .+\(.+:\d+:\d+\)/); // no stack leak
+    }
+  });
 });
 
 describe("tryLoadDemoDataset (safe diagnostic variant)", () => {
@@ -250,5 +275,25 @@ describe("tryLoadDemoDataset (safe diagnostic variant)", () => {
     if (result.ok) return;
     expect(result.error).toMatch(/Failed to fetch/i);
     expect(result.error).not.toMatch(/at .+\(.+:\d+:\d+\)/);
+  });
+
+  it("returns { ok: false, issues: [], error } when response.text() rejects (never throws)", async () => {
+    const responseWithBrokenBody = {
+      ok: true,
+      status: 200,
+      text: () =>
+        Promise.reject(new TypeError("Body stream error")) as unknown as Promise<string>,
+    };
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => Promise.resolve(responseWithBrokenBody as unknown as Response)) as unknown as typeof fetch,
+    );
+    const result = await tryLoadDemoDataset();
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.issues).toEqual([]);
+    expect(result.error).toBeTruthy();
+    expect(result.error).toMatch(/Body stream error/i);
+    expect(result.error).not.toMatch(/at .+\(.+:\d+:\d+\)/); // no stack leak
   });
 });

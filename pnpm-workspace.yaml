@@ -1,0 +1,5 @@
+# pnpm workspace / build-script allowlist.
+# pnpm 11 gates dependency build scripts via allowBuilds.
+# esbuild's postinstall is required for its platform binary to work with Vite/Vitest.
+allowBuilds:
+  esbuild: true

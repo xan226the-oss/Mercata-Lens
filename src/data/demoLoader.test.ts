@@ -127,6 +127,57 @@ describe("loadDemoDataset (public contract returns ResearchDataset)", () => {
     );
     await expect(loadDemoDataset()).rejects.toBeInstanceOf(DemoLoadError);
   });
+
+  it("wraps a fetch promise rejection into a DemoLoadError with a readable causeMessage (no stack)", async () => {
+    // Simulate a network-level failure: the fetch promise itself rejects.
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        () =>
+          Promise.reject(
+            new TypeError("Failed to fetch"),
+          ) as unknown as Promise<Response>,
+      ) as unknown as typeof fetch,
+    );
+    try {
+      await loadDemoDataset();
+      expect.unreachable("should have thrown a DemoLoadError");
+    } catch (err) {
+      expect(err).toBeInstanceOf(DemoLoadError);
+      const loadError = err as DemoLoadError;
+      expect(loadError.causeMessage).toBeTruthy();
+      expect(loadError.causeMessage).not.toMatch(/at .+\(.+:\d+:\d+\)/); // no stack frames
+      expect(loadError.message).toContain("Failed to load demo data");
+    }
+  });
+
+  it("wraps a Papa Parse CSV syntax error into a DemoLoadError with a readable message", async () => {
+    // A CSV with an unterminated quoted field forces Papa to report a parse error.
+    const malformed = "product_id,title,brand,price_usd,rating,review_count,category,material,capacity,filter_cost,source_url,observed_at\np01,\"Unclosed quote,29.99,4.0,5,Cat Water Fountain,\"Stainless\"\"\",2.5L,7.99,https://example.com/demo/product/p01,2026-07-01\n";
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((input: RequestInfo | URL) => {
+        const url = String(input);
+        if (url.endsWith("/demo/products.csv")) {
+          return Promise.resolve(new Response(malformed, { status: 200 }));
+        }
+        if (url.endsWith("/demo/reviews.csv")) {
+          return Promise.resolve(new Response(reviewsCsv, { status: 200 }));
+        }
+        return Promise.resolve(new Response("not found", { status: 404 }));
+      }) as unknown as typeof fetch,
+    );
+    try {
+      await loadDemoDataset();
+      expect.unreachable("should have thrown a DemoLoadError");
+    } catch (err) {
+      expect(err).toBeInstanceOf(DemoLoadError);
+      const loadError = err as DemoLoadError;
+      expect(loadError.issues).toEqual([]);
+      expect(loadError.causeMessage).toMatch(/CSV parse error/i);
+      expect(loadError.message).toContain("Failed to load demo data");
+    }
+  });
 });
 
 describe("tryLoadDemoDataset (safe diagnostic variant)", () => {
@@ -167,5 +218,37 @@ describe("tryLoadDemoDataset (safe diagnostic variant)", () => {
     );
     const result = await tryLoadDemoDataset();
     expect(result.ok).toBe(false);
+  });
+
+  it("preserves DemoLoadError.causeMessage into the failure error field (e.g. HTTP 503)", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve(new Response("Service Unavailable", { status: 503 })),
+      ) as unknown as typeof fetch,
+    );
+    const result = await tryLoadDemoDataset();
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.error).toBeTruthy();
+    expect(result.error).toContain("503");
+    expect(result.error).not.toMatch(/at .+\(.+:\d+:\d+\)/); // readable, no stack leak
+  });
+
+  it("preserves a fetch promise rejection message into the failure error field (never throws)", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        () =>
+          Promise.reject(
+            new TypeError("Failed to fetch"),
+          ) as unknown as Promise<Response>,
+      ) as unknown as typeof fetch,
+    );
+    const result = await tryLoadDemoDataset();
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.error).toMatch(/Failed to fetch/i);
+    expect(result.error).not.toMatch(/at .+\(.+:\d+:\d+\)/);
   });
 });

@@ -1,12 +1,38 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import "@testing-library/jest-dom/vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import fs from "node:fs";
+import path from "node:path";
 import type { ReactNode } from "react";
 import { RESEARCH_STEPS, STEP_ROUTES } from "./routes";
 import { ResearchProvider } from "../research/ResearchContext";
 import { ResearchLayout } from "../research/ResearchLayout";
 import { HomePage } from "../pages/HomePage";
+
+const demoDir = path.resolve(__dirname, "../../public/demo");
+const productsCsv = fs.readFileSync(path.join(demoDir, "products.csv"), "utf8");
+const reviewsCsv = fs.readFileSync(path.join(demoDir, "reviews.csv"), "utf8");
+
+function stubDemoFetch() {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn((input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.endsWith("/demo/products.csv")) {
+        return Promise.resolve(new Response(productsCsv, { status: 200 }));
+      }
+      if (url.endsWith("/demo/reviews.csv")) {
+        return Promise.resolve(new Response(reviewsCsv, { status: 200 }));
+      }
+      return Promise.resolve(new Response("not found", { status: 404 }));
+    }) as unknown as typeof fetch,
+  );
+}
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 function RenderWithProviders({ children }: { children: ReactNode }) {
   return (
@@ -18,10 +44,9 @@ function RenderWithProviders({ children }: { children: ReactNode }) {
   );
 }
 
-/** Let the ResearchProvider's async demo load settle to avoid act() warnings. */
+/** Let the ResearchProvider's demo load reach ready (stubbed fetch). */
 async function settleProvider() {
   await waitFor(() => {
-    // Once the async load settles, the "loading" placeholder disappears.
     expect(
       document.body.textContent?.includes("Loading demo research data"),
     ).toBe(false);
@@ -54,6 +79,7 @@ describe("research step route contract", () => {
   });
 
   it("renders persistent header, scope boundary, warning and demo badge", async () => {
+    stubDemoFetch();
     render(
       <RenderWithProviders>
         <HomePage />
@@ -79,6 +105,7 @@ describe("research step route contract", () => {
   });
 
   it("does not claim any analysis is complete on placeholder pages", async () => {
+    stubDemoFetch();
     for (const { Component } of STEP_ROUTES) {
       const { container } = render(
         <RenderWithProviders>

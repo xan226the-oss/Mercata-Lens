@@ -107,7 +107,29 @@ export interface ParseIssue {
   code: ParseIssueCode;
   value: unknown;
   message: string;
+  /** Optional source CSV file, attached by the import layer (Task 3). */
+  file?: "products" | "reviews";
 }
+
+export type AnalysisModule = "category" | "pain_points" | "economics" | "opportunities";
+
+export type ModuleAvailability = "available" | "incomplete" | "locked";
+
+export interface QualityReport {
+  blockingIssues: ParseIssue[];
+  warnings: ParseIssue[];
+  moduleAvailability: Record<AnalysisModule, ModuleAvailability>;
+  summary: {
+    validProducts: number;
+    validReviews: number;
+    duplicateProducts: number;
+    duplicateReviews: number;
+  };
+}
+
+export type ImportResult =
+  | { ok: true; dataset: ResearchDataset; warnings: ParseIssue[] }
+  | { ok: false; issues: ParseIssue[] };
 
 export type ParseResult<T> =
   | {

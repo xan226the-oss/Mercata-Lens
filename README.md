@@ -71,16 +71,35 @@ src/
 ├── domain/
 │   ├── types.ts             # versioned domain contracts
 │   ├── schemas.ts           # strict single-row parsers
-│   └── dataset.ts           # ResearchDataset envelope builder
+│   ├── dataset.ts           # ResearchDataset envelope builder
+│   └── quality.ts           # data quality gate (blocking/warnings/IQR/modules)
 ├── data/
-│   └── demoLoader.ts        # Papa Parse demo loader
+│   ├── demoLoader.ts        # Papa Parse demo loader
+│   └── csvImport.ts         # synchronous CSV import with quality gate
 ├── research/
-│   ├── ResearchContext.tsx  # demo load state (idle/loading/ready/error)
-│   └── ResearchLayout.tsx   # persistent header, warning, step navigation
+│   ├── ResearchContext.tsx  # demo load + CSV import state
+│   └── ResearchLayout.tsx   # persistent header, source badge, locked nav
+├── components/
+│   └── StatusBanner.tsx     # accessible status/alert banner
 ├── fixtures/
 │   └── testDataset.ts       # fixed in-memory test dataset
-└── pages/                   # one placeholder page per step
+└── pages/                   # one page per step (Home, Quality, ...)
 ```
+
+## CSV import and data quality gate
+
+- Pick one Products CSV and one Reviews CSV; nothing is read until you click
+  the exact button `Import and replace current research`.
+- Blocking issues (empty/header-only files, CSV syntax, duplicate headers,
+  row validation errors, duplicate IDs, unknown product references, wrong or
+  mixed category) reject the import and keep the current research intact.
+- Warnings (low sample size, IQR price outliers) still allow import; outliers
+  are never removed.
+- The quality page shows exact valid/duplicate counts, blocking vs warnings,
+  and per-module `available / incomplete / locked`. Locked modules are not
+  clickable and show a text reason; directly opening a locked URL renders a
+  real locked state.
+- Data is not saved anywhere; it lives only in browser memory for the session.
 
 ## Demo dataset provenance
 

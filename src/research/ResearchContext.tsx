@@ -1,6 +1,8 @@
 /**
- * Research context: loads and exposes the Demo dataset only.
- * States: idle | loading | ready | error. No upload, save, or analysis.
+ * Research context: demo loading + CSV import with a quality gate.
+ * States: idle | loading | ready | error (for the demo load path);
+ * import keeps its own success/error state without replacing current data
+ * on failure. No save, no analysis, no AI.
  */
 import {
   createContext,
@@ -10,38 +12,71 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { ParseIssue, ResearchDataset } from "../domain/types";
+import type {
+  ImportResult,
+  ParseIssue,
+  QualityReport,
+  ResearchDataset,
+} from "../domain/types";
 import { tryLoadDemoDataset } from "../data/demoLoader";
+import { importResearchCsv } from "../data/csvImport";
+import { assessQuality } from "../domain/quality";
 
 export type ResearchStatus = "idle" | "loading" | "ready" | "error";
+
+export interface ImportOutcomeState {
+  ok: boolean;
+  issues: ParseIssue[];
+  warnings: ParseIssue[];
+  error: string | null;
+  importedAt: string | null;
+}
 
 export interface ResearchContextValue {
   status: ResearchStatus;
   dataset: ResearchDataset | null;
+  sourceKind: ResearchDataset["sourceKind"] | null;
+  qualityReport: QualityReport | null;
   issues: ParseIssue[];
   error: string | null;
-  /** Re-run the demo load. */
+  importState: ImportOutcomeState;
+  /** Re-run the demo load (replaces any upload). */
   loadDemo: () => void;
+  /** Import two CSV texts; on failure the current research stays intact. */
+  importCsv: (productsText: string, reviewsText: string) => void;
 }
+
+const EMPTY_IMPORT_STATE: ImportOutcomeState = {
+  ok: false,
+  issues: [],
+  warnings: [],
+  error: null,
+  importedAt: null,
+};
 
 const ResearchContext = createContext<ResearchContextValue | null>(null);
 
 export function ResearchProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<ResearchStatus>("idle");
   const [dataset, setDataset] = useState<ResearchDataset | null>(null);
+  const [qualityReport, setQualityReport] = useState<QualityReport | null>(null);
   const [issues, setIssues] = useState<ParseIssue[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [importState, setImportState] = useState<ImportOutcomeState>(EMPTY_IMPORT_STATE);
 
   const loadDemo = useMemo(
     () => () => {
       setStatus("loading");
       setDataset(null);
+      setQualityReport(null);
       setIssues([]);
       setError(null);
+      setImportState(EMPTY_IMPORT_STATE);
       tryLoadDemoDataset()
         .then((result) => {
           if (result.ok) {
             setDataset(result.dataset);
+            setQualityReport(assessQuality(result.dataset));
             setStatus("ready");
           } else {
             const issues = result.issues;
@@ -63,13 +98,54 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const importCsv = useMemo(
+    () => (productsText: string, reviewsText: string) => {
+      const result: ImportResult = importResearchCsv(productsText, reviewsText);
+      if (!result.ok) {
+        // Keep current dataset / quality / badge; only surface the error.
+        setImportState({
+          ok: false,
+          issues: result.issues,
+          warnings: [],
+          error: `Import failed with ${result.issues.length} blocking issue(s).`,
+          importedAt: null,
+        });
+        return;
+      }
+      const nextQuality = assessQuality(result.dataset);
+      setDataset(result.dataset);
+      setQualityReport(nextQuality);
+      setImportState({
+        ok: true,
+        issues: [],
+        warnings: result.warnings,
+        error: null,
+        importedAt: result.dataset.importedAt,
+      });
+      setStatus("ready");
+    },
+    [],
+  );
+
   useEffect(() => {
     loadDemo();
   }, [loadDemo]);
 
+  const sourceKind = dataset?.sourceKind ?? null;
+
   const value = useMemo<ResearchContextValue>(
-    () => ({ status, dataset, issues, error, loadDemo }),
-    [status, dataset, issues, error, loadDemo],
+    () => ({
+      status,
+      dataset,
+      sourceKind,
+      qualityReport,
+      issues,
+      error,
+      importState,
+      loadDemo,
+      importCsv,
+    }),
+    [status, dataset, sourceKind, qualityReport, issues, error, importState, loadDemo, importCsv],
   );
 
   return <ResearchContext.Provider value={value}>{children}</ResearchContext.Provider>;

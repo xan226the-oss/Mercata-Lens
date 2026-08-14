@@ -90,9 +90,8 @@ describe("research step route contract", () => {
 
     expect(screen.getByText("Mercata Lens")).toBeInTheDocument();
     expect(screen.getByText("商机镜")).toBeInTheDocument();
-    expect(
-      screen.getByText("Demo scope: US cat water fountains"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("US market")).toBeInTheDocument();
+    expect(screen.getAllByText("Cat Water Fountain").length).toBeGreaterThan(0);
     expect(screen.getByText("Review count is not sales")).toBeInTheDocument();
     expect(screen.getByTestId("source-badge")).toHaveTextContent("Demo data");
 

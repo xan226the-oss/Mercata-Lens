@@ -50,13 +50,19 @@ export function QualityPage() {
           <p>No import attempted in this session.</p>
         ) : importState.ok ? (
           <StatusBanner tone="success" text="Latest import succeeded. This upload is now the active local research dataset." data-testid="latest-import-success">
-            <p>User upload · {importState.importedAt ? new Date(importState.importedAt).toLocaleString() : "Import time unavailable"}</p>
+            <p>User upload</p>
+            <p>Imported at: {importState.importedAt ? new Date(importState.importedAt).toLocaleString() : "Import time unavailable"}</p>
+            <p>Products reviewed: {dataset?.products.length ?? "—"}</p>
+            <p>Review evidence records: {dataset?.reviews.length ?? "—"}</p>
             <p>Review evidence records are records, not sales, and this import does not establish market validity.</p>
           </StatusBanner>
         ) : (
           <div data-testid="latest-import-failure">
-            <StatusBanner tone="error" text={`Import failed · ${importState.issues.length} blocking issues · Current ${source} was not replaced.`}>
-              <p>The active research remains unchanged.</p>
+            <StatusBanner
+              tone="error"
+              text={dataset ? `Import failed · ${importState.issues.length} blocking issues · Current ${source} was not replaced.` : `Import failed · ${importState.issues.length} blocking issues · No active research data is available.`}
+            >
+              <p>{dataset ? "The active research remains unchanged." : "The failed import did not create an active research dataset."}</p>
             </StatusBanner>
             <IssueTable issues={importState.issues} caption="Latest import issues" />
           </div>

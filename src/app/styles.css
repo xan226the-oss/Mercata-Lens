@@ -960,3 +960,41 @@ input {
     grid-column: 2;
   }
 }
+
+
+/* Quality-only status banner wrapping: keep the status text readable on narrow screens. */
+.quality-page .status-banner {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: start;
+}
+
+.quality-page .status-banner__text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.quality-page .status-banner__body {
+  grid-column: 1 / -1;
+  min-width: 0;
+  width: 100%;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 680px) {
+  .quality-page .status-banner {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .quality-page .status-banner__label {
+    grid-column: 2;
+  }
+
+  .quality-page .status-banner__text {
+    grid-column: 2;
+  }
+
+  .quality-page .status-banner__body {
+    grid-column: 1 / -1;
+  }
+}

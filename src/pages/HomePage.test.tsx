@@ -108,6 +108,70 @@ async function importSmallDataset() {
 }
 
 describe("HomePage import UI", () => {
+  it("shows the latest import section before any import is attempted", async () => {
+    stubFetch();
+    renderHome();
+    await settle();
+    await userEvent.click(screen.getByTestId("navigate-quality"));
+
+    const latestAttempt = screen.getByTestId("latest-import-attempt");
+    expect(latestAttempt).toHaveTextContent("No import attempted in this session");
+    expect(screen.getByTestId("active-data-quality")).toHaveTextContent("Active valid dataset");
+  });
+
+  it("shows a successful User upload summary with counts and import time", async () => {
+    stubFetch();
+    renderHome();
+    await settle();
+    await userEvent.upload(
+      screen.getByLabelText("Products CSV") as HTMLInputElement,
+      new File([productsCsv], "uploaded-products.csv", { type: "text/csv" }),
+    );
+    await userEvent.upload(
+      screen.getByLabelText("Reviews CSV") as HTMLInputElement,
+      new File([reviewsCsv], "uploaded-reviews.csv", { type: "text/csv" }),
+    );
+    await userEvent.click(screen.getByTestId("import-button"));
+    await waitFor(() => expect(screen.getByTestId("source-badge")).toHaveTextContent("User upload"));
+    await userEvent.click(screen.getByTestId("navigate-quality"));
+
+    const latestAttempt = screen.getByTestId("latest-import-attempt");
+    expect(screen.getByTestId("latest-import-success")).toBeInTheDocument();
+    expect(latestAttempt).toHaveTextContent("User upload");
+    expect(latestAttempt).toHaveTextContent("Imported at:");
+    expect(latestAttempt).toHaveTextContent("12");
+    expect(latestAttempt).toHaveTextContent("76");
+    expect(latestAttempt).toHaveTextContent(/review evidence records are records, not sales/i);
+  });
+
+  it("keeps failed diagnostics when Demo loading failed and no active dataset exists", async () => {
+    vi.stubGlobal("fetch", vi.fn(() => Promise.reject(new Error("offline"))));
+    renderHome();
+    await waitFor(() => expect(screen.getByTestId("source-badge")).toHaveTextContent("No active data"));
+
+    const badProducts = [
+      "product_id,title,price_usd,rating,category,source_url,observed_at",
+      "p1,One,20,4,Cat Water Fountain,https://example.com/p1,2026-07-01",
+      "p1,Duplicate,21,4,Cat Water Fountain,https://example.com/p2,2026-07-01",
+      "p2,Bad rating,22,bad,Cat Water Fountain,https://example.com/p3,2026-07-01",
+    ].join("\n");
+    const badReviews = [
+      "review_id,product_id,rating,review_text,source_url",
+      "r1,missing,4,Unknown,https://example.com/r1",
+      "r2,p1,4,Known,https://example.com/r2",
+    ].join("\n");
+    await userEvent.upload(screen.getByLabelText("Products CSV") as HTMLInputElement, new File([badProducts], "bad-products.csv"));
+    await userEvent.upload(screen.getByLabelText("Reviews CSV") as HTMLInputElement, new File([badReviews], "bad-reviews.csv"));
+    await userEvent.click(screen.getByTestId("import-button"));
+    await userEvent.click(screen.getByTestId("navigate-quality"));
+
+    expect(screen.getByTestId("latest-import-attempt")).toHaveTextContent("3 blocking issues");
+    expect(screen.getByTestId("latest-import-attempt")).toHaveTextContent("Latest import issues");
+    expect(screen.getAllByTestId("issue-row")).toHaveLength(3);
+    expect(screen.getByTestId("active-data-quality")).toHaveTextContent("No active research data");
+    expect(screen.getByTestId("active-data-quality")).not.toHaveTextContent("Current No active data was not replaced");
+  });
+
   it("renders the approved overview, evidence, and next-action hierarchy", async () => {
     stubFetch();
     renderHome();

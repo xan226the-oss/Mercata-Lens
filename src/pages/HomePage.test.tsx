@@ -137,6 +137,7 @@ describe("HomePage import UI", () => {
 
     const latestAttempt = screen.getByTestId("latest-import-attempt");
     expect(screen.getByTestId("latest-import-success")).toBeInTheDocument();
+    expect(within(screen.getByTestId("latest-import-attempt")).getByRole("status")).toHaveTextContent(/Latest import succeeded/i);
     expect(latestAttempt).toHaveTextContent("User upload");
     expect(latestAttempt).toHaveTextContent("Imported at:");
     expect(latestAttempt).toHaveTextContent("12");
@@ -169,6 +170,7 @@ describe("HomePage import UI", () => {
     expect(latestAttempt).toHaveTextContent(
       "No active research data is available",
     );
+    expect(within(latestAttempt).getByRole("alert")).toHaveTextContent(/Import failed/i);
     expect(latestAttempt).toHaveTextContent(
       "The failed import did not create an active research dataset",
     );

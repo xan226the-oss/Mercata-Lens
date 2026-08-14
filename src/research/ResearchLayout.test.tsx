@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import "@testing-library/jest-dom/vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import fs from "node:fs";
@@ -117,7 +117,10 @@ describe("ResearchLayout Light Slate shell", () => {
     await userEvent.upload(screen.getByLabelText("Products CSV") as HTMLInputElement, new File([smallProducts], "small-products.csv"));
     await userEvent.upload(screen.getByLabelText("Reviews CSV") as HTMLInputElement, new File([smallReviews], "small-reviews.csv"));
     await userEvent.click(screen.getByTestId("import-button"));
-    expect(screen.getByTestId("step-locked-/category")).toHaveAttribute("aria-disabled", "true");
-    expect(screen.getByTestId("step-locked-/category")).toHaveTextContent("Locked");
+    const lockedCategory = screen.getByTestId("step-locked-/category");
+    expect(lockedCategory).toHaveAttribute("aria-disabled", "true");
+    expect(lockedCategory).toHaveTextContent("Locked");
+    expect(lockedCategory).not.toHaveAttribute("href");
+    expect(within(screen.getByRole("navigation", { name: "Research steps" })).queryByRole("link", { name: /Category overview/i })).not.toBeInTheDocument();
   });
 });

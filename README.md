@@ -32,11 +32,14 @@ Opportunity comparison  /opportunities
 Decision & validation   /decision
 ```
 
-All six routes are wired in the shell app. Each step page currently states
-its one-line responsibility only; no data, statistics, scoring, or
-conclusion logic is implemented yet.
+All six routes are wired in the Light Slate shell. The research home page presents the active evidence source, descriptive record counts, evidence readiness, and the next available research step. The Data quality page separates the latest import attempt from the active valid dataset. Dependent analysis routes remain evidence-gated and do not claim that analysis is complete.
 
-## Getting started
+## Visual workflow
+
+Mercata Lens uses a local Light Slate research workspace. The home page shows the active evidence source, descriptive record counts, evidence readiness, and the next available research step. Data quality separates the latest import attempt from the active valid dataset so a rejected upload cannot appear to replace or validate the current research.
+
+Price distribution, brand structure, rating distribution, review themes and pain points, economics, and opportunity scoring are not part of the visual-refresh task. They remain unavailable until their analysis tasks provide tested contracts.
+
 
 Requirements: Node.js 22 and pnpm 11.
 
@@ -78,8 +81,15 @@ src/
 │   └── csvImport.ts         # synchronous CSV import with quality gate
 ├── research/
 │   ├── ResearchContext.tsx  # demo load + CSV import state
-│   └── ResearchLayout.tsx   # persistent header, source badge, locked nav
+│   └── ResearchLayout.tsx   # Light Slate shell, source badge, locked nav
 ├── components/
+│   ├── PageHeader.tsx       # consistent page title and metadata
+│   ├── MetricStrip.tsx      # descriptive dataset metrics
+│   ├── EvidenceStatus.tsx   # evidence-readiness gates
+│   ├── ImportPanel.tsx      # local CSV selection and import controls
+│   ├── ImportResultSummary.tsx # concise latest-import result
+│   ├── IssueTable.tsx       # full import diagnostics
+│   ├── ModuleStatus.tsx     # analysis-module availability
 │   └── StatusBanner.tsx     # accessible status/alert banner
 ├── fixtures/
 │   └── testDataset.ts       # fixed in-memory test dataset

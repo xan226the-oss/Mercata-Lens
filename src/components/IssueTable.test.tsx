@@ -37,6 +37,7 @@ describe("IssueTable", () => {
 
     const table = screen.getByRole("table", { name: "Latest import issues" });
     expect(table).toBeInTheDocument();
+    expect(within(table).getByText("Latest import issues")).toBeInTheDocument();
     expect(screen.getAllByTestId("issue-row")).toHaveLength(3);
 
     for (const heading of ["File", "Row", "Field", "Bad value", "Reason"]) {

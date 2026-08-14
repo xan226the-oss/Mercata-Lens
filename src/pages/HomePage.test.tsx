@@ -165,8 +165,18 @@ describe("HomePage import UI", () => {
     await userEvent.click(screen.getByTestId("import-button"));
     await userEvent.click(screen.getByTestId("navigate-quality"));
 
-    expect(screen.getByTestId("latest-import-attempt")).toHaveTextContent("3 blocking issues");
-    expect(screen.getByTestId("latest-import-attempt")).toHaveTextContent("Latest import issues");
+    const latestAttempt = screen.getByTestId("latest-import-attempt");
+    expect(latestAttempt).toHaveTextContent(
+      "No active research data is available",
+    );
+    expect(latestAttempt).toHaveTextContent(
+      "The failed import did not create an active research dataset",
+    );
+    expect(latestAttempt).not.toHaveTextContent(
+      "Current No active data was not replaced",
+    );
+    expect(latestAttempt).toHaveTextContent("3 blocking issues");
+    expect(latestAttempt).toHaveTextContent("Latest import issues");
     expect(screen.getAllByTestId("issue-row")).toHaveLength(3);
     expect(screen.getByTestId("active-data-quality")).toHaveTextContent("No active research data");
     expect(screen.getByTestId("active-data-quality")).not.toHaveTextContent("Current No active data was not replaced");

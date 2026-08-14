@@ -278,6 +278,182 @@ input {
   background: var(--color-surface);
 }
 
+.page {
+  padding: 28px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.page-header h1 {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-size: clamp(30px, 4vw, 44px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.page-header p,
+.page-header__meta,
+.section-heading p {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.page-header__meta {
+  margin-top: 14px;
+  font-size: 13px;
+}
+
+.section-heading h2,
+.analysis-next-step h2,
+.decision-cautions h2 {
+  margin: 0 0 8px;
+  font-size: 19px;
+}
+
+.metric-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.metric-item {
+  display: flex;
+  min-height: 128px;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-subtle);
+}
+
+.metric-item__label,
+.metric-item__note {
+  color: var(--color-muted);
+  font-size: 12px;
+}
+
+.metric-item__value {
+  font-size: clamp(22px, 3vw, 32px);
+  line-height: 1.1;
+}
+
+.home-analysis-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.evidence-status,
+.analysis-next-step,
+.decision-cautions {
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.evidence-gates {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.evidence-gate {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.evidence-gate__icon {
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border-radius: 50%;
+  font-weight: 700;
+}
+
+.evidence-gate__copy {
+  display: grid;
+  gap: 2px;
+}
+
+.evidence-gate__copy small {
+  color: var(--color-muted);
+}
+
+.evidence-gate__state {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.evidence-gate--passed .evidence-gate__icon,
+.evidence-gate--passed .evidence-gate__state { color: var(--color-success); }
+.evidence-gate--warning .evidence-gate__icon,
+.evidence-gate--warning .evidence-gate__state { color: var(--color-warning); }
+.evidence-gate--blocked .evidence-gate__icon,
+.evidence-gate--blocked .evidence-gate__state { color: var(--color-danger); }
+
+.analysis-next-step {
+  background: var(--color-primary-soft);
+}
+
+.analysis-next-step p {
+  margin: 0 0 18px;
+  color: var(--color-muted);
+}
+
+.analysis-next-step a {
+  color: #245578;
+  font-weight: 600;
+}
+
+.decision-cautions {
+  margin-top: 16px;
+  background: var(--color-surface-subtle);
+}
+
+.decision-cautions ul {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0 0;
+  padding-left: 20px;
+  color: var(--color-muted);
+}
+
+.import-panel {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.import-panel > .section-heading { margin-bottom: 16px; }
+
+.import-result-summary { margin-top: 12px; }
+
 /* Existing Home and Quality content surfaces remain structurally unchanged. */
 .home-facts {
   display: grid;
@@ -480,6 +656,14 @@ input {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+
+  .home-analysis-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metric-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 560px) {
@@ -504,5 +688,25 @@ input {
   .lock-reason {
     margin-right: 18px;
     margin-left: 18px;
+  }
+
+  .page {
+    padding: 20px 16px;
+  }
+
+  .page-header {
+    flex-direction: column;
+  }
+
+  .metric-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .evidence-gate {
+    grid-template-columns: 28px minmax(0, 1fr);
+  }
+
+  .evidence-gate__state {
+    grid-column: 2;
   }
 }

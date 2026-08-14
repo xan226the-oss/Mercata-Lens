@@ -1,232 +1,70 @@
-/**
- * Start of the research flow. Shows the current dataset overview, source
- * truth, and the CSV import UI (two file pickers + explicit confirm).
- * No analysis or statistics beyond the quality gate.
- */
-import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useResearch } from "../research/ResearchContext";
-import { StatusBanner } from "../components/StatusBanner";
-
-const DEMO_DISCLAIMER =
-  "Curated demo fixture. It does not represent live Amazon inventory, sales, or current market share.";
-
-const UPLOAD_DISCLAIMER =
-  "User-uploaded data does not represent sales, demand, or market share.";
-
-const IMPORT_BUTTON_TEXT = "Import and replace current research";
-const IMPORT_NOTE =
-  "A successful import replaces the current local research with the selected files.";
-
-interface SelectedFile {
-  name: string;
-}
+import type { EvidenceGate } from "../components/EvidenceStatus";
+import { EvidenceStatus } from "../components/EvidenceStatus";
+import { ImportPanel } from "../components/ImportPanel";
+import { ImportResultSummary } from "../components/ImportResultSummary";
+import { MetricStrip, type MetricItem } from "../components/MetricStrip";
+import { PageHeader } from "../components/PageHeader";
 
 export function HomePage() {
-  const { status, dataset, sourceKind, importState, error, loadDemo, importCsv } =
-    useResearch();
-  const [productsFile, setProductsFile] = useState<SelectedFile | null>(null);
-  const [reviewsFile, setReviewsFile] = useState<SelectedFile | null>(null);
-  const [fileError, setFileError] = useState<string | null>(null);
+  const { status, dataset, sourceKind, qualityReport, importState, error, loadDemo, importCsv } = useResearch();
+  const sourceLabel = sourceKind === "demo" ? "Demo data" : sourceKind === "user_upload" ? "User upload" : status === "loading" ? "Loading data" : "No active data";
 
-  const canImport = productsFile !== null && reviewsFile !== null && fileError === null;
+  const metrics: MetricItem[] = dataset
+    ? [
+        { id: "products", label: "Products reviewed", value: dataset.products.length, note: "Active comparison set" },
+        { id: "reviews", label: "Review evidence", value: dataset.reviews.length, note: "Evidence records — not sales" },
+        { id: "source", label: "Data source", value: sourceLabel, note: "Current active research" },
+        { id: "updated", label: "Imported", value: new Date(dataset.importedAt).toLocaleDateString(), note: "Check observation dates before use" },
+      ]
+    : [];
 
-  function onPickProducts(file: File | undefined) {
-    setFileError(null);
-    if (!file) {
-      setProductsFile(null);
-      return;
-    }
-    if (!/\.csv$/i.test(file.name)) {
-      setProductsFile(null);
-      setFileError(`"${file.name}" is not a .csv file. Only .csv is supported.`);
-      return;
-    }
-    setProductsFile({ name: file.name });
-  }
-
-  function onPickReviews(file: File | undefined) {
-    setFileError(null);
-    if (!file) {
-      setReviewsFile(null);
-      return;
-    }
-    if (!/\.csv$/i.test(file.name)) {
-      setReviewsFile(null);
-      setFileError(`"${file.name}" is not a .csv file. Only .csv is supported.`);
-      return;
-    }
-    setReviewsFile({ name: file.name });
-  }
-
-  function readFileAsText(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    // Prefer the standard File.text(); fall back to FileReader for
-    // environments/mocks where text() is unavailable.
-    if (typeof file.text === "function") {
-      file.text().then(resolve, reject);
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result ?? ""));
-    reader.onerror = () => reject(new Error(`Failed to read "${file.name}".`));
-    reader.readAsText(file);
-  });
-}
-
-function onImport() {
-    if (!canImport || !productsFile || !reviewsFile) return;
-    // Re-read the current selection through the input elements to get text.
-    const pInput = document.getElementById(
-      "products-csv-input",
-    ) as HTMLInputElement | null;
-    const rInput = document.getElementById(
-      "reviews-csv-input",
-    ) as HTMLInputElement | null;
-    const pFile = pInput?.files?.[0];
-    const rFile = rInput?.files?.[0];
-    if (!pFile || !rFile) return;
-    setFileError(null);
-    Promise.all([readFileAsText(pFile), readFileAsText(rFile)])
-      .then(([productsText, reviewsText]) => {
-        importCsv(productsText, reviewsText);
-      })
-      .catch((err: unknown) => {
-        const message = err instanceof Error ? err.message : String(err);
-        setFileError(`Failed to read files: ${message}`);
-      });
-  }
+  const productBlocking = qualityReport?.blockingIssues.some((issue) => issue.file === "products") ?? false;
+  const reviewBlocking = qualityReport?.blockingIssues.some((issue) => issue.file === "reviews") ?? false;
+  const gates: EvidenceGate[] = qualityReport
+    ? [
+        { id: "identity", label: "Identity and references", status: productBlocking || reviewBlocking ? "blocked" : "passed", detail: productBlocking || reviewBlocking ? "Resolve blocking record issues" : "No identity or reference blocks" },
+        { id: "category-sample", label: "Category sample", status: productBlocking ? "blocked" : qualityReport.moduleAvailability.category === "available" ? "passed" : "warning", detail: `${qualityReport.summary.validProducts} valid products` },
+        { id: "review-sample", label: "Review sample", status: reviewBlocking ? "blocked" : qualityReport.moduleAvailability.pain_points === "available" ? "passed" : "warning", detail: `${qualityReport.summary.validReviews} valid review records` },
+      ]
+    : [];
 
   return (
-    <section className="page">
-      <h1>Research project</h1>
+    <div className="page home-page">
+      <PageHeader
+        eyebrow="Market research brief"
+        title="Cat Water Fountain research"
+        description="Review the active evidence before deciding whether this category deserves deeper investment."
+        meta={<span>United States market / {dataset?.category ?? "Cat Water Fountain"}</span>}
+      />
 
-      {status === "idle" && <p>Waiting to load the demo research data…</p>}
+      {status === "idle" ? <p aria-live="polite">Waiting to load the demo research data…</p> : null}
+      {status === "loading" ? <p aria-live="polite">Loading demo research data…</p> : null}
+      {status === "error" ? <div className="home-error" data-testid="home-error"><p>Demo data could not be loaded.</p>{error ? <p>{error}</p> : null}<button type="button" onClick={loadDemo}>Retry loading demo data</button></div> : null}
 
-      {status === "loading" && <p aria-live="polite">Loading demo research data…</p>}
+      {dataset ? <MetricStrip items={metrics} /> : null}
 
-      {status === "error" && (
-        <div className="home-error" data-testid="home-error">
-          <p>Demo data could not be loaded.</p>
-          {error ? <p>{error}</p> : null}
-          <button type="button" onClick={loadDemo}>
-            Retry loading demo data
-          </button>
-        </div>
-      )}
+      {dataset && qualityReport ? (
+        <>
+          <div className="home-analysis-grid">
+            <EvidenceStatus gates={gates} />
+            <section className="analysis-next-step" data-testid="category-analysis-next-step">
+              <span className="section-kicker">Next analysis</span>
+              <h2>Price landscape and brand structure</h2>
+              {qualityReport.moduleAvailability.category === "available" ? <><p>Available in Category overview after its tested analysis module is implemented.</p><Link to="/category">Open Category overview</Link></> : <p>Category overview is locked until the active evidence meets its requirements. Do not infer price or brand structure from this page.</p>}
+            </section>
+          </div>
+          <section className="decision-cautions" aria-labelledby="decision-cautions-title">
+            <span className="section-kicker">Decision cautions</span>
+            <h2 id="decision-cautions-title">Keep the evidence boundary visible</h2>
+            <ul><li>Review count is not sales.</li><li>{sourceKind === "demo" ? "Demo data is not live market data." : "User-uploaded data is not a market forecast."}</li><li>Economics is incomplete until required cost inputs exist.</li></ul>
+          </section>
+        </>
+      ) : null}
 
-      {status === "ready" && dataset && (
-        <div className="home-overview" data-testid="home-overview">
-          <dl className="home-facts">
-            <div>
-              <dt>Source</dt>
-              <dd>{sourceKind === "demo" ? "Demo data" : sourceKind === "user_upload" ? "User upload" : "No active data"}</dd>
-            </div>
-            <div>
-              <dt>Products</dt>
-              <dd>{dataset.products.length}</dd>
-            </div>
-            <div>
-              <dt>Reviews</dt>
-              <dd>{dataset.reviews.length}</dd>
-            </div>
-            <div>
-              <dt>Imported</dt>
-              <dd>{new Date(dataset.importedAt).toLocaleString()}</dd>
-            </div>
-            <div>
-              <dt>Category</dt>
-              <dd>{dataset.category}</dd>
-            </div>
-          </dl>
-          <p className="home-disclaimer">
-            {sourceKind === "demo" ? DEMO_DISCLAIMER : sourceKind === "user_upload" ? UPLOAD_DISCLAIMER : null}
-          </p>
-        </div>
-      )}
-
-      {/* ---- CSV import ---- */}
-      <section className="import-panel" aria-labelledby="import-heading">
-        <h2 id="import-heading">Import CSV research data</h2>
-
-        <div className="import-fields">
-          <label className="import-field">
-            <span className="import-field__label">Products CSV</span>
-            <input
-              id="products-csv-input"
-              type="file"
-              accept=".csv,text/csv"
-              aria-label="Products CSV"
-              onChange={(e) => onPickProducts(e.target.files?.[0])}
-            />
-            <span className="import-field__name" data-testid="products-file-name">
-              {productsFile ? productsFile.name : "No file selected"}
-            </span>
-          </label>
-
-          <label className="import-field">
-            <span className="import-field__label">Reviews CSV</span>
-            <input
-              id="reviews-csv-input"
-              type="file"
-              accept=".csv,text/csv"
-              aria-label="Reviews CSV"
-              onChange={(e) => onPickReviews(e.target.files?.[0])}
-            />
-            <span className="import-field__name" data-testid="reviews-file-name">
-              {reviewsFile ? reviewsFile.name : "No file selected"}
-            </span>
-          </label>
-        </div>
-
-        {fileError && (
-          <StatusBanner tone="error" text={fileError} data-testid="import-file-error" />
-        )}
-
-        <div className="import-actions">
-          <button
-            type="button"
-            onClick={onImport}
-            disabled={!canImport}
-            data-testid="import-button"
-          >
-            {IMPORT_BUTTON_TEXT}
-          </button>
-          <p className="import-note">{IMPORT_NOTE}</p>
-        </div>
-
-        {importState.ok && (
-          <StatusBanner tone="success" text="Import succeeded.">
-            <ul>
-              <li>Source: {sourceKind}</li>
-              <li>Products: {dataset?.products.length}</li>
-              <li>Reviews: {dataset?.reviews.length}</li>
-              <li>Imported at: {new Date(importState.importedAt ?? "").toLocaleString()}</li>
-            </ul>
-          </StatusBanner>
-        )}
-
-        {!importState.ok && importState.error && (
-          <StatusBanner tone="error" text={importState.error} data-testid="import-error">
-            <ul>
-              {importState.issues.map((issue, i) => (
-                <li key={i}>
-                  [{issue.file ?? "?"} row {issue.row}] {issue.field}: {issue.message} (value: {JSON.stringify(issue.value)})
-                </li>
-              ))}
-            </ul>
-          </StatusBanner>
-        )}
-
-        <div className="import-samples">
-          <span>Sample files (synthetic, not Amazon template data):</span>
-          <a href="/demo/products.csv" download>
-            products.csv
-          </a>
-          <a href="/demo/reviews.csv" download>
-            reviews.csv
-          </a>
-        </div>
-      </section>
-    </section>
+      <ImportPanel importCsv={importCsv} />
+      <ImportResultSummary state={importState} sourceLabel={sourceLabel} productCount={dataset?.products.length ?? null} reviewCount={dataset?.reviews.length ?? null} />
+    </div>
   );
 }

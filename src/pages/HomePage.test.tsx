@@ -108,6 +108,20 @@ async function importSmallDataset() {
 }
 
 describe("HomePage import UI", () => {
+  it("renders the approved overview, evidence, and next-action hierarchy", async () => {
+    stubFetch();
+    renderHome();
+    await settle();
+
+    expect(screen.getByRole("heading", { name: "Cat Water Fountain research" })).toBeInTheDocument();
+    expect(screen.getByTestId("metric-products")).toHaveTextContent("12");
+    expect(screen.getByTestId("metric-reviews")).toHaveTextContent("76");
+    expect(screen.getByTestId("metric-reviews")).toHaveTextContent(/evidence records/i);
+    expect(screen.getByTestId("metric-source")).toHaveTextContent("Demo data");
+    expect(screen.getByTestId("category-analysis-next-step")).toHaveTextContent(/available in Category overview/i);
+    expect(screen.queryByTestId("price-distribution-chart")).not.toBeInTheDocument();
+  });
+
   it("disables the import button until both files are selected", async () => {
     stubFetch();
     renderHome();
@@ -156,14 +170,31 @@ describe("HomePage import UI", () => {
     await settle();
     await userEvent.upload(
       screen.getByLabelText("Products CSV") as HTMLInputElement,
-      new File(["product_id,title\n"], "bad-products.csv", { type: "text/csv" }),
+      new File([
+        [
+          "product_id,title,price_usd,rating,category,source_url,observed_at",
+          "p1,One,20,4,Cat Water Fountain,https://example.com/p1,2026-07-01",
+          "p1,Duplicate,21,4,Cat Water Fountain,https://example.com/p2,2026-07-01",
+          "p2,Bad rating,22,bad,Cat Water Fountain,https://example.com/p3,2026-07-01",
+        ].join("\n"),
+      ], "bad-products.csv", { type: "text/csv" }),
     );
     await userEvent.upload(
       screen.getByLabelText("Reviews CSV") as HTMLInputElement,
-      new File([reviewsCsv], "reviews.csv", { type: "text/csv" }),
+      new File([
+        [
+          "review_id,product_id,rating,review_text,source_url",
+          "r1,missing,4,Unknown,https://example.com/r1",
+          "r2,p1,4,Known,https://example.com/r2",
+        ].join("\n"),
+      ], "reviews.csv", { type: "text/csv" }),
     );
     await userEvent.click(screen.getByTestId("import-button"));
     expect(await screen.findByTestId("import-error")).toBeInTheDocument();
+    expect(screen.getByTestId("import-error")).toHaveTextContent("3 blocking issues");
+    expect(screen.getByTestId("import-error")).toHaveTextContent("Current Demo data was not replaced");
+    expect(screen.getByTestId("import-error")).not.toHaveTextContent("products row 4");
+    expect(screen.getByRole("link", { name: /Review data quality/i })).toHaveAttribute("href", "/quality");
     expect(screen.getByTestId("source-badge")).toHaveTextContent("Demo data");
     expect(screen.getByText(/current research remains unchanged/i)).toBeInTheDocument();
   });

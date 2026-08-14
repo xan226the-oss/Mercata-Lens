@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import "@testing-library/jest-dom/vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import fs from "node:fs";
 import path from "node:path";
@@ -95,8 +95,9 @@ describe("research step route contract", () => {
     expect(screen.getByText("Review count is not sales")).toBeInTheDocument();
     expect(screen.getByTestId("source-badge")).toHaveTextContent("Demo data");
 
+    const navigation = screen.getByRole("navigation", { name: "Research steps" });
     for (const step of RESEARCH_STEPS) {
-      const link = screen.getByRole("link", {
+      const link = within(navigation).getByRole("link", {
         name: new RegExp(step.label, "i"),
       });
       expect(link).toHaveAttribute("href", step.path);

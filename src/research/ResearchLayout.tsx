@@ -10,7 +10,7 @@ import type { ModuleAvailability } from "../domain/types";
  * navigation locking. Locked steps are not clickable and show text + reason.
  */
 export function ResearchLayout({ children }: { children: React.ReactNode }) {
-  const { sourceKind, qualityReport } = useResearch();
+  const { status, sourceKind, qualityReport } = useResearch();
   const location = useLocation();
   const availability = qualityReport?.moduleAvailability ?? null;
 
@@ -19,6 +19,8 @@ export function ResearchLayout({ children }: { children: React.ReactNode }) {
       ? "Demo data"
       : sourceKind === "user_upload"
         ? "User upload"
+        : status === "loading"
+        ? "Loading data"
         : "No active data";
 
   /** Map each research path to the module that gates it. */

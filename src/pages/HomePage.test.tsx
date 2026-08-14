@@ -130,10 +130,10 @@ describe("HomePage import UI", () => {
     expect(screen.getByText(/current research remains unchanged/i)).toBeInTheDocument();
   });
 
-  it("does not show User upload when there is no active dataset", () => {
+  it("does not show User upload when there is no active dataset", async () => {
     vi.stubGlobal("fetch", vi.fn(() => Promise.reject(new Error("offline"))));
     renderHome();
-    expect(screen.getByTestId("source-badge")).toHaveTextContent("No active data");
+    await waitFor(() => expect(screen.getByTestId("source-badge")).toHaveTextContent("No active data"));
     expect(screen.getByTestId("source-badge")).not.toHaveTextContent("User upload");
   });
   it("keeps the demo research intact when an invalid import fails", async () => {

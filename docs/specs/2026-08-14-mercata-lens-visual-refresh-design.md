@@ -91,6 +91,16 @@ The refresh must not alter the existing route or module-availability rules.
 
 The home page follows the reading order **overview → evidence → next action**.
 
+### Implementation phasing
+
+This document describes the intended visual system and the final home-page hierarchy, but delivery remains evidence-gated:
+
+- The visual-refresh task may render only facts already available from the Task 3 dataset and quality report: source, category, observation/import date, product count, review-record count, quality gates, and module availability.
+- Observed price range, represented brand count, price distribution, and extracted review themes are implemented only with the corresponding Task 4 analysis contracts and tests.
+- Until those contracts exist, the home page uses an honest next-step panel or unavailable state. It must not render illustrative chart values in the working product.
+
+The concept mockup is a design target, not permission to fabricate unimplemented analysis.
+
 ### 4.1 Research scope
 
 The first section identifies:
@@ -114,6 +124,8 @@ Show four descriptive metrics derived from the active dataset:
 
 Labels must state the evidence boundary. For example, review records must not be labelled customers or sales. If a metric cannot be derived from the active data, display an explicit unavailable state rather than guessing.
 
+During the visual-refresh task, the strip shows the two existing counts plus source and observation/import date. Price range and brand count replace those contextual items only after Task 4 provides tested derivations.
+
 ### 4.3 Primary analysis area
 
 The main content row contains:
@@ -122,6 +134,8 @@ The main content row contains:
 - an evidence-readiness panel.
 
 The price panel may show the observed comparison-set distribution and price band. It must state that the pattern does not establish the best launch price or total market distribution.
+
+Before Task 4, this position displays a clearly labelled next-step panel explaining that category analysis will provide the price landscape. No static or illustrative bars appear in the product.
 
 The evidence-readiness panel displays individual gates, not a fabricated quality score:
 
@@ -142,6 +156,8 @@ Show review topics that the product will investigate, such as:
 - pet acceptance.
 
 Before the pain-point analysis module is implemented and verified, these must be labelled **research themes** or **topics to investigate**, not confirmed pain points or opportunities.
+
+Before that module exists, the refresh may show the types of questions the workflow will investigate, but it must not claim that the active review corpus produced those themes.
 
 ### 4.5 Research progress
 

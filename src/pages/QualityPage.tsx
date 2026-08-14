@@ -1,150 +1,99 @@
-/**
- * Data quality gate page: exact counts, blocking errors vs warnings, and
- * per-module availability. Text + icon, never color alone.
- */
 import { useResearch } from "../research/ResearchContext";
 import { StatusBanner } from "../components/StatusBanner";
-import type { AnalysisModule, ModuleAvailability } from "../domain/types";
+import { EvidenceStatus, type EvidenceGate } from "../components/EvidenceStatus";
+import { IssueTable } from "../components/IssueTable";
+import { ModuleStatus } from "../components/ModuleStatus";
+import { PageHeader } from "../components/PageHeader";
 
-const MODULE_LABEL: Record<AnalysisModule, string> = {
-  category: "Category overview",
-  pain_points: "Customer pain points",
-  economics: "Economics",
-  opportunities: "Opportunity comparison",
-};
+function sourceLabel(sourceKind: "demo" | "user_upload" | null): string {
+  return sourceKind === "demo" ? "Demo data" : sourceKind === "user_upload" ? "User upload" : "No active data";
+}
 
-function availabilityText(status: ModuleAvailability): string {
-  if (status === "available") return "Available";
-  if (status === "incomplete") return "Incomplete";
-  return "Locked";
+function evidenceGates(qualityReport: NonNullable<ReturnType<typeof useResearch>["qualityReport"]>): EvidenceGate[] {
+  const productBlocking = qualityReport.blockingIssues.some((issue) => issue.file === "products");
+  const reviewBlocking = qualityReport.blockingIssues.some((issue) => issue.file === "reviews");
+  return [
+    {
+      id: "identity",
+      label: "Identity and references",
+      status: productBlocking || reviewBlocking ? "blocked" : "passed",
+      detail: productBlocking || reviewBlocking ? "Resolve blocking record issues" : "No identity or reference blocks",
+    },
+    {
+      id: "category-sample",
+      label: "Category sample",
+      status: productBlocking ? "blocked" : qualityReport.moduleAvailability.category === "available" ? "passed" : "warning",
+      detail: `${qualityReport.summary.validProducts} valid products`,
+    },
+    {
+      id: "review-sample",
+      label: "Review sample",
+      status: reviewBlocking ? "blocked" : qualityReport.moduleAvailability.pain_points === "available" ? "passed" : "warning",
+      detail: `${qualityReport.summary.validReviews} valid review records`,
+    },
+  ];
 }
 
 export function QualityPage() {
   const { dataset, qualityReport, sourceKind, importState } = useResearch();
-
-  if (!dataset || !qualityReport) {
-    return (
-      <section className="page">
-        <h1>Data quality</h1>
-        {importState.error && importState.issues.length > 0 ? (
-          <StatusBanner tone="error" text={`Latest import attempt failed (${importState.issues.length} issue(s)).`} data-testid="latest-import-failure">
-            <p>No active research data is available.</p>
-            <ul>{importState.issues.map((issue, i) => <li key={i}>[{issue.file ?? "?"} row {issue.row}] {issue.field}: {issue.message} (value: {JSON.stringify(issue.value)})</li>)}</ul>
-          </StatusBanner>
-        ) : null}
-        {!importState.error ? <p>No research data loaded yet.</p> : null}
-      </section>
-    );
-  }
-
-  const { blockingIssues, warnings, moduleAvailability, summary } = qualityReport;
+  const source = sourceLabel(sourceKind);
+  const gates = qualityReport ? evidenceGates(qualityReport) : [];
 
   return (
-    <section className="page">
-      <h1>Data quality</h1>
+    <div className="page quality-page">
+      <PageHeader eyebrow="Evidence control" title="Data quality" description="Validate evidence before analysis." />
 
-      {importState.error && importState.issues.length > 0 ? (
-        <StatusBanner tone="error" text={`Latest import attempt failed (${importState.issues.length} issue(s)).`} data-testid="latest-import-failure">
-          <p>The active {sourceKind === "demo" ? "Demo data" : "User upload"} research was not replaced.</p>
-          <ul>
-            {importState.issues.map((issue, i) => (
-              <li key={i}>
-                [{issue.file ?? "?"} row {issue.row}] {issue.field}: {issue.message} (value: {JSON.stringify(issue.value)})
-              </li>
-            ))}
-          </ul>
-        </StatusBanner>
-      ) : null}
-
-      <div className="quality-summary">
-        <dl className="home-facts">
-          <div>
-            <dt>Valid products</dt>
-            <dd>{summary.validProducts}</dd>
-          </div>
-          <div>
-            <dt>Valid reviews</dt>
-            <dd>{summary.validReviews}</dd>
-          </div>
-          <div>
-            <dt>Duplicate products</dt>
-            <dd>{summary.duplicateProducts}</dd>
-          </div>
-          <div>
-            <dt>Duplicate reviews</dt>
-            <dd>{summary.duplicateReviews}</dd>
-          </div>
-        </dl>
-        <p className="quality-source">Source: {sourceKind}</p>
-      </div>
-
-      <div className="quality-modules">
-        <h2>Module availability</h2>
-        <ul className="quality-module-list">
-          {(Object.keys(moduleAvailability) as AnalysisModule[]).map((mod) => {
-            const state = moduleAvailability[mod];
-            const icon =
-              state === "available" ? "✅" : state === "incomplete" ? "🟡" : "🔒";
-            return (
-              <li key={mod} data-testid={`module-${mod}`}>
-                <span className="quality-module-icon" aria-hidden="true">
-                  {icon}
-                </span>
-                <span className="quality-module-name">{MODULE_LABEL[mod]}</span>
-                <span className={`quality-module-state quality-module-state--${state}`}>
-                  {availabilityText(state)}
-                </span>
-                {state === "locked" ? (
-                  <span className="quality-module-reason">Locked until data requirements are met</span>
-                ) : null}
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-
-      <div className="quality-issues">
-        <h2>Blocking errors</h2>
-        {blockingIssues.length === 0 ? (
-          <StatusBanner
-            tone="success"
-            text="No blocking issues found. This does not mean the data is real or market-valid."
-          />
-        ) : (
-          <StatusBanner tone="error" text={`${blockingIssues.length} blocking issue(s).`}>
-            <ul>
-              {blockingIssues.map((issue, i) => (
-                <li key={i} data-testid="blocking-issue">
-                  [{issue.file ?? "?"} row {issue.row}] {issue.field}: {issue.message}
-                  {issue.value !== undefined && issue.value !== null ? (
-                    <> (value: {JSON.stringify(issue.value)})</>
-                  ) : null}
-                </li>
-              ))}
-            </ul>
+      <section className="quality-attempt" aria-labelledby="latest-import-title" data-testid="latest-import-attempt">
+        <span className="section-kicker">Latest attempt</span>
+        <h2 id="latest-import-title">Latest import attempt</h2>
+        {!importState.ok && importState.issues.length === 0 ? (
+          <p>No import attempted in this session.</p>
+        ) : importState.ok ? (
+          <StatusBanner tone="success" text="Latest import succeeded. This upload is now the active local research dataset." data-testid="latest-import-success">
+            <p>User upload · {importState.importedAt ? new Date(importState.importedAt).toLocaleString() : "Import time unavailable"}</p>
+            <p>Review evidence records are records, not sales, and this import does not establish market validity.</p>
           </StatusBanner>
-        )}
-      </div>
-
-      <div className="quality-issues">
-        <h2>Warnings</h2>
-        {warnings.length === 0 ? (
-          <StatusBanner tone="info" text="No warnings." />
         ) : (
-          <StatusBanner tone="warning" text={`${warnings.length} warning(s).`}>
-            <ul>
-              {warnings.map((warning, i) => (
-                <li key={i} data-testid="quality-warning">
-                  [{warning.file ?? "?"} row {warning.row}] {warning.field}: {warning.message}
-                  {warning.value !== undefined && warning.value !== null ? (
-                    <> (value: {JSON.stringify(warning.value)})</>
-                  ) : null}
-                </li>
-              ))}
-            </ul>
-          </StatusBanner>
+          <div data-testid="latest-import-failure">
+            <StatusBanner tone="error" text={`Import failed · ${importState.issues.length} blocking issues · Current ${source} was not replaced.`}>
+              <p>The active research remains unchanged.</p>
+            </StatusBanner>
+            <IssueTable issues={importState.issues} caption="Latest import issues" />
+          </div>
         )}
-      </div>
-    </section>
+      </section>
+
+      <section className="quality-active" aria-labelledby="active-quality-title" data-testid="active-data-quality">
+        <span className="section-kicker">Active evidence</span>
+        <h2 id="active-quality-title">Active valid dataset</h2>
+        {!dataset || !qualityReport ? (
+          <p>No active research data</p>
+        ) : (
+          <>
+            <p className="quality-source">Source: {source}</p>
+            <dl className="quality-summary">
+              <div><dt>Valid products</dt><dd>{qualityReport.summary.validProducts}</dd></div>
+              <div><dt>Valid review evidence records</dt><dd>{qualityReport.summary.validReviews}</dd></div>
+              <div><dt>Duplicate products</dt><dd>{qualityReport.summary.duplicateProducts}</dd></div>
+              <div><dt>Duplicate reviews</dt><dd>{qualityReport.summary.duplicateReviews}</dd></div>
+            </dl>
+            {qualityReport.blockingIssues.length === 0 ? (
+              <StatusBanner tone="success" text="No blocking issues in the active dataset. This does not mean the data is real or market-valid." />
+            ) : (
+              <StatusBanner tone="error" text={`${qualityReport.blockingIssues.length} blocking issue(s) in the active dataset.`}>
+                <IssueTable issues={qualityReport.blockingIssues} caption="Active dataset blocking issues" />
+              </StatusBanner>
+            )}
+            <div className="quality-active__warnings">
+              <h3>Warnings</h3>
+              {qualityReport.warnings.length === 0 ? <p>No warnings.</p> : <IssueTable issues={qualityReport.warnings} caption="Active dataset warnings" />}
+            </div>
+            <EvidenceStatus gates={gates} />
+          </>
+        )}
+      </section>
+
+      {qualityReport ? <ModuleStatus availability={qualityReport.moduleAvailability} /> : <p className="module-status-unavailable">Module availability cannot be evaluated without active research data</p>}
+    </div>
   );
 }

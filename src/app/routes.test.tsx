@@ -94,7 +94,7 @@ describe("research step route contract", () => {
       screen.getByText("Demo scope: US cat water fountains"),
     ).toBeInTheDocument();
     expect(screen.getByText("Review count is not sales")).toBeInTheDocument();
-    expect(screen.getByText("Demo data")).toBeInTheDocument();
+    expect(screen.getByTestId("source-badge")).toHaveTextContent("Demo data");
 
     for (const step of RESEARCH_STEPS) {
       const link = screen.getByRole("link", {

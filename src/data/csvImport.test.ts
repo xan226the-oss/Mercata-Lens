@@ -119,9 +119,106 @@ describe("importResearchCsv - lexical parsing", () => {
     const result = importResearchCsv(p, MIN_REVIEWS);
     expect(result.ok).toBe(true);
   });
-});
 
-describe("importResearchCsv - blocking failures", () => {
+  it("allows valid product CSVs to omit every optional column", () => {
+    const products = [
+      "product_id,title,price_usd,rating,category,source_url,observed_at",
+      "p1,Fountain One,29.99,4.0,Cat Water Fountain,https://example.com/p1,2026-07-01",
+      "p2,Fountain Two,31.99,4.2,Cat Water Fountain,https://example.com/p2,2026-07-01",
+      "p3,Fountain Three,35.99,4.4,Cat Water Fountain,https://example.com/p3,2026-07-01",
+    ].join("\n");
+    const result = importResearchCsv(products, MIN_REVIEWS);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.dataset.products[0]).toMatchObject({
+      reviewCount: null,
+      brand: null,
+      material: null,
+      capacity: null,
+      filterCost: null,
+    });
+  });
+
+  it("allows valid review CSVs to omit every optional column", () => {
+    const reviews = [
+      "review_id,product_id,rating,review_text,source_url",
+      ...Array.from({ length: 10 }, (_, i) => `r${i + 1},p${(i % 3) + 1},4,Works fine,https://example.com/r${i + 1}`),
+    ].join("\n");
+    const result = importResearchCsv(MIN_PRODUCTS, reviews);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.dataset.reviews[0]).toMatchObject({ reviewDate: null, verifiedPurchase: null });
+  });
+
+  it("still rejects a missing required header", () => {
+    const products = [
+      "product_id,title,price_usd,rating,category,source_url",
+      "p1,Fountain One,29.99,4.0,Cat Water Fountain,https://example.com/p1",
+    ].join("\n");
+    const result = importResearchCsv(products, MIN_REVIEWS);
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.issues.some((issue) => issue.message.includes("observed_at"))).toBe(true);
+  });
+
+  it("reports record diagnostics with their original CSV row numbers", () => {
+    const products = productsCsv([
+      productRow("p1"),
+      productRow("p2"),
+      productRow("p3"),
+      productRow("p4"),
+      productRow("p5"),
+      productRow("p6"),
+      productRow("p7"),
+      productRow("p8", { price_usd: "999" }),
+    ]);
+    const result = importResearchCsv(products, MIN_REVIEWS);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.warnings.find((issue) => issue.field === "price_usd")).toMatchObject({ row: 9 });
+  });
+
+  it("reports duplicate IDs, unknown references, and category errors at their record rows", () => {
+    const products = productsCsv([
+      productRow("p1"),
+      productRow("p1"),
+      productRow("p3", { category: "Dog Fountain" }),
+    ]);
+    const reviews = reviewsCsv([
+      reviewRow("r1", "p1"),
+      reviewRow("r1", "p1"),
+      reviewRow("r3", "missing"),
+      ...Array.from({ length: 7 }, (_, i) => reviewRow(`r${i + 4}`, "p1")),
+    ]);
+    const result = importResearchCsv(products, reviews);
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.issues).toEqual(expect.arrayContaining([
+      expect.objectContaining({ field: "product_id", file: "products", row: 3 }),
+      expect.objectContaining({ field: "review_id", file: "reviews", row: 3 }),
+      expect.objectContaining({ field: "product_id", file: "reviews", row: 4 }),
+      expect.objectContaining({ field: "category", file: "products", row: 4 }),
+    ]));
+  });
+
+  it("aggregates row parsing and structural issues from the same import", () => {
+    const products = productsCsv([
+      productRow("p1"),
+      productRow("p1"),
+      productRow("p3", { rating: "bad" }),
+    ]);
+    const reviews = reviewsCsv([
+      reviewRow("r1", "missing"),
+      ...Array.from({ length: 9 }, (_, i) => reviewRow(`r${i + 2}`, "p3")),
+    ]);
+    const result = importResearchCsv(products, reviews);
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.issues.some((issue) => issue.field === "rating")).toBe(true);
+    expect(result.issues.some((issue) => issue.field === "product_id" && issue.file === "products")).toBe(true);
+    expect(result.issues.some((issue) => issue.field === "product_id" && issue.file === "reviews")).toBe(true);
+  });
+
   it("fails when either file is empty", () => {
     expect(importResearchCsv("", MIN_REVIEWS).ok).toBe(false);
     expect(importResearchCsv(MIN_PRODUCTS, "").ok).toBe(false);

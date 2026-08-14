@@ -38,7 +38,7 @@ export interface CsvLexicalResult<T> {
 function parseCsvLexically<T>(
   text: string,
   file: "products" | "reviews",
-  expectedHeaders: readonly string[],
+  requiredHeaders: readonly string[],
 ): CsvLexicalResult<T> {
   const issues: ParseIssue[] = [];
 
@@ -103,7 +103,7 @@ function parseCsvLexically<T>(
   }
 
   // Required header check from the same raw array.
-  const missing = expectedHeaders.filter((h) => !headerSet.has(h));
+  const missing = requiredHeaders.filter((h) => !headerSet.has(h));
   if (missing.length > 0) {
     issues.push({
       row: 1,
@@ -150,30 +150,23 @@ function parseCsvLexically<T>(
   return { rows: parsed.data, issues };
 }
 
-const PRODUCT_HEADERS = [
+const PRODUCT_REQUIRED_HEADERS = [
   "product_id",
   "title",
   "price_usd",
   "rating",
-  "review_count",
   "category",
   "source_url",
   "observed_at",
-  "brand",
-  "material",
-  "capacity",
-  "filter_cost",
-];
+] as const;
 
-const REVIEW_HEADERS = [
+const REVIEW_REQUIRED_HEADERS = [
   "review_id",
   "product_id",
   "rating",
   "review_text",
-  "review_date",
-  "verified_purchase",
   "source_url",
-];
+] as const;
 
 /**
  * Synchronous, deterministic import. Returns ok:false (never a half-built
@@ -186,8 +179,8 @@ export function importResearchCsv(
   const nowIso = new Date().toISOString();
 
   // 1. Lexical + structural parse of both files.
-  const productLex = parseCsvLexically<ProductRow>(productsText, "products", PRODUCT_HEADERS);
-  const reviewLex = parseCsvLexically<ReviewRow>(reviewsText, "reviews", REVIEW_HEADERS);
+  const productLex = parseCsvLexically<ProductRow>(productsText, "products", PRODUCT_REQUIRED_HEADERS);
+  const reviewLex = parseCsvLexically<ReviewRow>(reviewsText, "reviews", REVIEW_REQUIRED_HEADERS);
 
   const lexicalIssues = [...productLex.issues, ...reviewLex.issues];
   if (lexicalIssues.length > 0) {
@@ -201,7 +194,7 @@ export function importResearchCsv(
   const reviewRows: ReviewRecord[] = [];
 
   productLex.rows.forEach((row, index) => {
-    const csvRowNumber = index + 2; // header = row 1, first data = row 2
+    const csvRowNumber = index + 2;
     const result = parseProductRow(row, csvRowNumber);
     if (result.ok) {
       productRows.push(result.value);
@@ -225,14 +218,12 @@ export function importResearchCsv(
   });
 
   const rowIssues = [...productIssues, ...reviewIssues];
-  if (rowIssues.length > 0) {
-    return { ok: false, issues: rowIssues };
-  }
-
-  // 3. Structural integrity: duplicate IDs, category scope, references.
+  // Structural checks intentionally run on the valid subset so independent
+  // duplicate/reference/category diagnostics are not hidden by row errors.
   const structuralIssues = detectStructuralIssues(productRows, reviewRows);
-  if (structuralIssues.length > 0) {
-    return { ok: false, issues: structuralIssues };
+  const allIssues = [...rowIssues, ...structuralIssues];
+  if (allIssues.length > 0) {
+    return { ok: false, issues: allIssues };
   }
 
   // 4. Build dataset (first-occurrence uniqueness already guaranteed by
@@ -258,10 +249,10 @@ function detectStructuralIssues(
 
   // Duplicate product IDs.
   const seenProducts = new Set<string>();
-  products.forEach((p, index) => {
+  products.forEach((p) => {
     if (seenProducts.has(p.productId)) {
       issues.push({
-        row: 2 + index,
+        row: p.csvRow ?? 0,
         field: "product_id",
         code: "invalid_format",
         value: p.productId,
@@ -273,25 +264,30 @@ function detectStructuralIssues(
   });
 
   // Category must be exactly the validated demo category, and uniform.
+  const categoryRows = products.filter((p) => p.category !== EXPECTED_CATEGORY);
   const categorySet = new Set(products.map((p) => p.category));
   if (categorySet.size > 1) {
-    issues.push({
-      row: 1,
-      field: "category",
-      code: "invalid_format",
-      value: [...categorySet],
-      message: "Multiple categories found; MVP only validates Cat Water Fountain.",
-      file: "products",
-    });
+    for (const p of categoryRows) {
+      issues.push({
+        row: p.csvRow ?? 0,
+        field: "category",
+        code: "invalid_format",
+        value: p.category,
+        message: `Category must be exactly "${EXPECTED_CATEGORY}".`,
+        file: "products",
+      });
+    }
   } else if (categorySet.size === 1 && !categorySet.has(EXPECTED_CATEGORY)) {
-    issues.push({
-      row: 1,
-      field: "category",
-      code: "invalid_format",
-      value: [...categorySet][0],
-      message: `Category must be exactly "${EXPECTED_CATEGORY}".`,
-      file: "products",
-    });
+    for (const p of products) {
+      issues.push({
+        row: p.csvRow ?? 0,
+        field: "category",
+        code: "invalid_format",
+        value: p.category,
+        message: `Category must be exactly "${EXPECTED_CATEGORY}".`,
+        file: "products",
+      });
+    }
   }
 
   // Known product ids for reference checks (only after products are unique).
@@ -299,10 +295,10 @@ function detectStructuralIssues(
 
   // Duplicate review IDs and unknown product references.
   const seenReviews = new Set<string>();
-  reviews.forEach((r, index) => {
+  reviews.forEach((r) => {
     if (seenReviews.has(r.reviewId)) {
       issues.push({
-        row: 2 + index,
+        row: r.csvRow ?? 0,
         field: "review_id",
         code: "invalid_format",
         value: r.reviewId,
@@ -314,7 +310,7 @@ function detectStructuralIssues(
 
     if (!knownProductIds.has(r.productId)) {
       issues.push({
-        row: 2 + index,
+        row: r.csvRow ?? 0,
         field: "product_id",
         code: "invalid_format",
         value: r.productId,

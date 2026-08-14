@@ -25,6 +25,19 @@ function datasetWithPrices(prices: number[]): ResearchDataset {
 }
 
 describe("assessQuality summary counts", () => {
+  it("keeps record-level quality diagnostics tied to dataset row metadata", () => {
+    const base = buildTestDataset();
+    const report = assessQuality({
+      ...base,
+      products: [...base.products, { ...base.products[0], productId: "p01", csvRow: 3 }],
+      reviews: [...base.reviews, { ...base.reviews[0], reviewId: "r001", csvRow: 6 }],
+    });
+    expect(report.blockingIssues).toEqual(expect.arrayContaining([
+      expect.objectContaining({ field: "product_id", row: 3 }),
+      expect.objectContaining({ field: "review_id", row: 6 }),
+    ]));
+  });
+
   it("counts validProducts as unique first-occurrence products", () => {
     const base = buildTestDataset();
     const withDup = {

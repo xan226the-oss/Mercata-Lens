@@ -39,6 +39,7 @@ export interface ResearchContextValue {
   qualityReport: QualityReport | null;
   issues: ParseIssue[];
   error: string | null;
+  /** Latest import attempt, including failure diagnostics. */
   importState: ImportOutcomeState;
   /** Re-run the demo load (replaces any upload). */
   loadDemo: () => void;
@@ -107,7 +108,7 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
           ok: false,
           issues: result.issues,
           warnings: [],
-          error: `Import failed with ${result.issues.length} blocking issue(s).`,
+          error: `Import failed with ${result.issues.length} blocking issue(s). Current research remains unchanged.`,
           importedAt: null,
         });
         return;

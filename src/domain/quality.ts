@@ -28,7 +28,7 @@ export function assessQuality(dataset: ResearchDataset): QualityReport {
     if (seenProducts.has(p.productId)) {
       duplicateProducts += 1;
       blockingIssues.push({
-        row: 0,
+        row: p.csvRow ?? 0,
         field: "product_id",
         code: "invalid_format",
         value: p.productId,
@@ -50,7 +50,7 @@ export function assessQuality(dataset: ResearchDataset): QualityReport {
     if (seenReviews.has(r.reviewId)) {
       duplicateReviews += 1;
       blockingIssues.push({
-        row: 0,
+        row: r.csvRow ?? 0,
         field: "review_id",
         code: "invalid_format",
         value: r.reviewId,
@@ -63,7 +63,7 @@ export function assessQuality(dataset: ResearchDataset): QualityReport {
         uniqueReviews.push(r);
       } else {
         blockingIssues.push({
-          row: 0,
+          row: r.csvRow ?? 0,
           field: "product_id",
           code: "invalid_format",
           value: r.productId,
@@ -77,23 +77,27 @@ export function assessQuality(dataset: ResearchDataset): QualityReport {
   // ---- Category scope (blocking) ----
   const categorySet = new Set(uniqueProducts.map((p) => p.category));
   if (categorySet.size > 1) {
-    blockingIssues.push({
-      row: 1,
-      field: "category",
-      code: "invalid_format",
-      value: [...categorySet],
-      message: "Multiple categories found; MVP only validates Cat Water Fountain.",
-      file: "products",
-    });
+    for (const p of uniqueProducts.filter((item) => item.category !== EXPECTED_CATEGORY)) {
+      blockingIssues.push({
+        row: p.csvRow ?? 0,
+        field: "category",
+        code: "invalid_format",
+        value: p.category,
+        message: `Category must be exactly "${EXPECTED_CATEGORY}".`,
+        file: "products",
+      });
+    }
   } else if (categorySet.size === 1 && !categorySet.has(EXPECTED_CATEGORY)) {
-    blockingIssues.push({
-      row: 1,
-      field: "category",
-      code: "invalid_format",
-      value: [...categorySet][0],
-      message: `Category must be exactly "${EXPECTED_CATEGORY}".`,
-      file: "products",
-    });
+    for (const p of uniqueProducts) {
+      blockingIssues.push({
+        row: p.csvRow ?? 0,
+        field: "category",
+        code: "invalid_format",
+        value: p.category,
+        message: `Category must be exactly "${EXPECTED_CATEGORY}".`,
+        file: "products",
+      });
+    }
   }
 
   // ---- Warnings: low sample size ----
@@ -124,7 +128,7 @@ export function assessQuality(dataset: ResearchDataset): QualityReport {
     const outlierIndexes = findIqrOutliers(prices);
     for (const idx of outlierIndexes) {
       warnings.push({
-        row: 0,
+        row: uniqueProducts[idx].csvRow ?? 0,
         field: "price_usd",
         code: "out_of_range",
         value: prices[idx],

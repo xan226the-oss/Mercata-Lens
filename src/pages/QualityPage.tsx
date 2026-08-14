@@ -20,13 +20,19 @@ function availabilityText(status: ModuleAvailability): string {
 }
 
 export function QualityPage() {
-  const { dataset, qualityReport, sourceKind } = useResearch();
+  const { dataset, qualityReport, sourceKind, importState } = useResearch();
 
   if (!dataset || !qualityReport) {
     return (
       <section className="page">
         <h1>Data quality</h1>
-        <p>No research data loaded yet.</p>
+        {importState.error && importState.issues.length > 0 ? (
+          <StatusBanner tone="error" text={`Latest import attempt failed (${importState.issues.length} issue(s)).`} data-testid="latest-import-failure">
+            <p>No active research data is available.</p>
+            <ul>{importState.issues.map((issue, i) => <li key={i}>[{issue.file ?? "?"} row {issue.row}] {issue.field}: {issue.message} (value: {JSON.stringify(issue.value)})</li>)}</ul>
+          </StatusBanner>
+        ) : null}
+        {!importState.error ? <p>No research data loaded yet.</p> : null}
       </section>
     );
   }
@@ -36,6 +42,19 @@ export function QualityPage() {
   return (
     <section className="page">
       <h1>Data quality</h1>
+
+      {importState.error && importState.issues.length > 0 ? (
+        <StatusBanner tone="error" text={`Latest import attempt failed (${importState.issues.length} issue(s)).`} data-testid="latest-import-failure">
+          <p>The active {sourceKind === "demo" ? "Demo data" : "User upload"} research was not replaced.</p>
+          <ul>
+            {importState.issues.map((issue, i) => (
+              <li key={i}>
+                [{issue.file ?? "?"} row {issue.row}] {issue.field}: {issue.message} (value: {JSON.stringify(issue.value)})
+              </li>
+            ))}
+          </ul>
+        </StatusBanner>
+      ) : null}
 
       <div className="quality-summary">
         <dl className="home-facts">

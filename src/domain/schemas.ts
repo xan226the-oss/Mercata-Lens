@@ -316,6 +316,7 @@ export function parseProductRow(
     filterCost,
     sourceUrl: sourceUrl!,
     observedAt: observedAt!,
+    csvRow: rowNumber,
   };
 
   return {
@@ -363,6 +364,7 @@ export function parseReviewRow(
     reviewDate,
     verifiedPurchase,
     sourceUrl: sourceUrl!,
+    csvRow: rowNumber,
   };
 
   return {

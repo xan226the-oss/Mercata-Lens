@@ -19,6 +19,8 @@ export interface ProductRecord {
   filterCost: number | null;
   sourceUrl: string;
   observedAt: string;
+  /** Original CSV data row when available; not part of the business evidence. */
+  csvRow?: number;
 }
 
 export interface ReviewRecord {
@@ -29,6 +31,7 @@ export interface ReviewRecord {
   reviewDate: string | null;
   verifiedPurchase: boolean | null;
   sourceUrl: string;
+  csvRow?: number;
 }
 
 export interface ResearchDataset {

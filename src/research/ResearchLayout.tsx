@@ -14,7 +14,12 @@ export function ResearchLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const availability = qualityReport?.moduleAvailability ?? null;
 
-  const isDemo = sourceKind === "demo";
+  const sourceLabel =
+    sourceKind === "demo"
+      ? "Demo data"
+      : sourceKind === "user_upload"
+        ? "User upload"
+        : "No active data";
 
   /** Map each research path to the module that gates it. */
   function lockReasonFor(path: string): string | null {
@@ -49,8 +54,8 @@ export function ResearchLayout({ children }: { children: React.ReactNode }) {
         <div className="brand">
           <span className="brand-en">Mercata Lens</span>
           <span className="brand-zh">商机镜</span>
-          <span className={`badge ${isDemo ? "badge-demo" : "badge-upload"}`} data-testid="source-badge">
-            {isDemo ? "Demo data" : "User upload"}
+          <span className={`badge ${sourceKind === "demo" ? "badge-demo" : sourceKind === "user_upload" ? "badge-upload" : "badge-empty"}`} data-testid="source-badge">
+            {sourceLabel}
           </span>
         </div>
         <p className="scope-line">Demo scope: US cat water fountains</p>

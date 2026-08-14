@@ -119,7 +119,7 @@ function onImport() {
           <dl className="home-facts">
             <div>
               <dt>Source</dt>
-              <dd>{sourceKind ?? "unknown"}</dd>
+              <dd>{sourceKind === "demo" ? "Demo data" : sourceKind === "user_upload" ? "User upload" : "No active data"}</dd>
             </div>
             <div>
               <dt>Products</dt>
@@ -139,7 +139,7 @@ function onImport() {
             </div>
           </dl>
           <p className="home-disclaimer">
-            {sourceKind === "demo" ? DEMO_DISCLAIMER : UPLOAD_DISCLAIMER}
+            {sourceKind === "demo" ? DEMO_DISCLAIMER : sourceKind === "user_upload" ? UPLOAD_DISCLAIMER : null}
           </p>
         </div>
       )}
@@ -208,9 +208,9 @@ function onImport() {
         {!importState.ok && importState.error && (
           <StatusBanner tone="error" text={importState.error} data-testid="import-error">
             <ul>
-              {importState.issues.slice(0, 5).map((issue, i) => (
+              {importState.issues.map((issue, i) => (
                 <li key={i}>
-                  [{issue.file ?? "?"} row {issue.row}] {issue.field}: {issue.message}
+                  [{issue.file ?? "?"} row {issue.row}] {issue.field}: {issue.message} (value: {JSON.stringify(issue.value)})
                 </li>
               ))}
             </ul>

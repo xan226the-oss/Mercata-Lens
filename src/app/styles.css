@@ -541,6 +541,10 @@ input {
   gap: 14px;
 }
 
+.import-fields {
+  margin-bottom: 12px;
+}
+
 .import-field {
   display: flex;
   flex-direction: column;

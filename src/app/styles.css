@@ -541,15 +541,15 @@ input {
   gap: 14px;
 }
 
-.import-fields {
-  margin-bottom: 12px;
-}
-
 .import-field {
   display: flex;
   flex-direction: column;
   gap: 6px;
   font-size: 14px;
+}
+
+.import-field input[type="file"] {
+  min-height: 40px;
 }
 
 .import-field__label {
@@ -922,7 +922,18 @@ input {
     white-space: nowrap;
   }
 
-  .issue-table,
+  .issue-table {
+    display: block;
+  }
+
+  .issue-table caption {
+    display: block;
+    width: 100%;
+    overflow-wrap: normal;
+    word-break: normal;
+    white-space: normal;
+  }
+
   .issue-table tbody,
   .issue-table tr,
   .issue-table td {

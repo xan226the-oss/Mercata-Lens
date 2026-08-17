@@ -40,6 +40,7 @@ Mercata Lens uses a local Light Slate research workspace. The home page shows th
 
 Price distribution, brand structure, rating distribution, review themes and pain points, economics, and opportunity scoring are not part of the visual-refresh task. They remain unavailable until their analysis tasks provide tested contracts.
 
+## Getting started
 
 Requirements: Node.js 22 and pnpm 11.
 

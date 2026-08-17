@@ -122,5 +122,8 @@ describe("ResearchLayout Light Slate shell", () => {
     expect(lockedCategory).toHaveTextContent("Locked");
     expect(lockedCategory).not.toHaveAttribute("href");
     expect(within(screen.getByRole("navigation", { name: "Research steps" })).queryByRole("link", { name: /Category overview/i })).not.toBeInTheDocument();
+    expect(screen.getByTestId("lock-reason")).toHaveTextContent(
+      /current data does not meet its evidence requirements/i,
+    );
   });
 });

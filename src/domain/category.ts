@@ -156,7 +156,7 @@ function buildPriceBands(
     if (values.length > 0) {
       bands.push(
         band(
-          `price_${cutPoint}`,
+          `price_${bands.length}`,
           previousCut === null ? `Up to ${cutPoint}` : `>${previousCut} to ${cutPoint}`,
           previousCut,
           false,
@@ -174,7 +174,7 @@ function buildPriceBands(
   if (previousCut !== null && aboveLastCut.length > 0) {
     bands.push(
       band(
-        `price_${previousCut}`,
+        `price_${bands.length}`,
         `>${previousCut}`,
         previousCut,
         false,

@@ -247,3 +247,34 @@ describe("analyzeCategory evidence, limitations, and status", () => {
     expect(twoProductResult.status).not.toBe("pause");
   });
 });
+
+describe("price band identifiers", () => {
+  it("uses unique stable sequential IDs for the six-product fixture", () => {
+    const result = analyzeCategory(sixProductDataset);
+    const ids = result.priceBands.map((band) => band.id);
+
+    expect(ids.length).toBe(new Set(ids).size);
+    expect(ids).toEqual(["price_0", "price_1", "price_2", "price_3"]);
+  });
+
+  it.each([
+    {
+      name: "repeated quartile boundaries",
+      products: [
+        product("repeated-1", 10),
+        product("repeated-2", 10),
+        product("repeated-3", 20),
+        product("repeated-4", 20),
+        product("repeated-5", 30),
+      ],
+    },
+    {
+      name: "same-price sample",
+      products: [product("same-id-1", 20), product("same-id-2", 20), product("same-id-3", 20)],
+    },
+  ])("does not duplicate IDs for $name", ({ products }) => {
+    const ids = analyzeCategory(dataset(products)).priceBands.map((band) => band.id);
+
+    expect(ids.length).toBe(new Set(ids).size);
+  });
+});

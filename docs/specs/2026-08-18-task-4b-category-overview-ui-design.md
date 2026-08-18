@@ -155,9 +155,11 @@ When an active dataset exists, the Home metric strip becomes:
 3. `Observed price range` — formatted `analysis.priceRange`, or `Unavailable`;
 4. `Provided brand labels` — count of non-null brand groups, explicitly limited to this sample.
 
-The old Data source and Imported metric positions are removed from the strip. Source and date context remain elsewhere in the existing page/header workflow; Task 4B does not erase provenance from the product.
+The old Data source and Imported metric positions are removed from the strip. Source remains in the persistent shell badge. Because the current observation/import date exists only in the metric being replaced, Task 4B must move a visible observation-date range into the Home `PageHeader` metadata. Use the minimum and maximum non-empty product `observedAt` values; show one date when they are equal, a date range when they differ, and `Observation dates unavailable` when none exist. This is presentation of existing record provenance, not a new market statistic.
 
-Replace `category-analysis-next-step` placeholder copy with a compact, truthful price-distribution panel derived from `analysis.priceBands`. Keep the link to `/category`. Supporting copy must state that this is the active comparison set and does not establish a recommended price or total-market distribution.
+When `qualityReport.moduleAvailability.category === "available"`, replace `category-analysis-next-step` placeholder copy with a compact, truthful price-distribution panel derived from `analysis.priceBands`. Keep the link to `/category`. Supporting copy must state that this is the active comparison set and does not establish a recommended price or total-market distribution.
+
+When category availability is `locked`, keep an evidence-insufficient message, render no distribution bars, and provide no active Category link. Raw Home metrics may remain visible but must not imply that the locked Category module has produced a decision.
 
 If no active dataset exists, do not render fabricated metric or distribution values. Existing loading/error handling remains intact.
 

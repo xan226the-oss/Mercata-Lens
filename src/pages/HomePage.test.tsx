@@ -193,9 +193,25 @@ describe("HomePage import UI", () => {
     expect(screen.getByTestId("metric-products")).toHaveTextContent("12");
     expect(screen.getByTestId("metric-reviews")).toHaveTextContent("76");
     expect(screen.getByTestId("metric-reviews")).toHaveTextContent(/evidence records/i);
-    expect(screen.getByTestId("metric-source")).toHaveTextContent("Demo data");
-    expect(screen.getByTestId("category-analysis-next-step")).toHaveTextContent(/available in Category overview/i);
-    expect(screen.queryByTestId("price-distribution-chart")).not.toBeInTheDocument();
+    expect(screen.getByTestId("metric-price-range")).toHaveTextContent("$");
+    expect(screen.getByTestId("metric-brands")).toHaveTextContent(/provided brand/i);
+    expect(screen.queryByTestId("metric-source")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("metric-updated")).not.toBeInTheDocument();
+    expect(screen.getByTestId("home-observation-range")).toHaveTextContent("Observed 2026-07-01");
+    expect(screen.getByTestId("home-price-distribution")).toBeVisible();
+    expect(screen.getByRole("link", { name: /Open Category overview/i })).toHaveAttribute("href", "/category");
+    expect(screen.queryByText(/after its tested analysis module is implemented/i)).not.toBeInTheDocument();
+  });
+
+  it("shows no compact distribution or active Category link when the accepted upload is locked", async () => {
+    stubFetch();
+    renderHome();
+    await settle();
+    await importSmallDataset();
+
+    expect(screen.queryByTestId("home-price-distribution")).not.toBeInTheDocument();
+    expect(screen.getByTestId("category-analysis-next-step")).toHaveTextContent(/locked until/i);
+    expect(screen.queryByRole("link", { name: /Open Category overview/i })).not.toBeInTheDocument();
   });
 
   it("disables the import button until both files are selected", async () => {

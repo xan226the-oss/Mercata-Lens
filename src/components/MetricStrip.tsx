@@ -1,7 +1,7 @@
 import type { ReactElement } from "react";
 
 export interface MetricItem {
-  id: "products" | "reviews" | "source" | "updated";
+  id: "products" | "reviews" | "price-range" | "brands";
   label: string;
   value: string | number;
   note: string;

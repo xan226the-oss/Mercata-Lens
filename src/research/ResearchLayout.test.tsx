@@ -117,6 +117,9 @@ describe("ResearchLayout Light Slate shell", () => {
     await userEvent.upload(screen.getByLabelText("Products CSV") as HTMLInputElement, new File([smallProducts], "small-products.csv"));
     await userEvent.upload(screen.getByLabelText("Reviews CSV") as HTMLInputElement, new File([smallReviews], "small-reviews.csv"));
     await userEvent.click(screen.getByTestId("import-button"));
+    await waitFor(() => {
+      expect(screen.getByTestId("source-badge")).toHaveTextContent("User upload");
+    });
     const lockedCategory = screen.getByTestId("step-locked-/category");
     expect(lockedCategory).toHaveAttribute("aria-disabled", "true");
     expect(lockedCategory).toHaveTextContent("Locked");

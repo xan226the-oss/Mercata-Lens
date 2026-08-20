@@ -15,8 +15,7 @@ Not built: Amazon scraping/API, AI model, sales prediction, real seller analytic
   predict best sellers.
 - Demo values are labelled as demo; user-provided costs are treated as
   assumptions, never as market costs.
-- This product has **no backend**, **no login**, and **no cloud database**:
-  data processing and saving happen entirely in the browser locally.
+- This product has **no backend**, **no login**, and **no cloud database**. Data processing happens in browser memory for the current session and is not persisted.
 - This is not "only HTML" — it is a single-page application built with
   **React + TypeScript** (Vite build), with route-level tests under
   `src/app/routes.test.tsx` and Vitest as the test runner.
@@ -36,9 +35,11 @@ All six routes are wired in the Light Slate shell. The research home page presen
 
 ## Visual workflow
 
-Mercata Lens uses a local Light Slate research workspace. The home page shows the active evidence source, descriptive record counts, evidence readiness, and the next available research step. Data quality separates the latest import attempt from the active valid dataset so a rejected upload cannot appear to replace or validate the current research.
+Mercata Lens uses a local Light Slate research workspace. Home shows the active evidence source, descriptive record counts, observed price range, provided-brand-label count, evidence readiness, and a compact price distribution when Category evidence is available. Data quality keeps the latest import attempt separate from the active valid dataset, so a rejected upload cannot appear to replace current research.
 
-Price distribution, brand structure, rating distribution, review themes and pain points, economics, and opportunity scoring are not part of the visual-refresh task. They remain unavailable until their analysis tasks provide tested contracts.
+Category Overview renders tested descriptive statistics for the active local sample: median and observed price range, sample-relative price bands, rating and displayed review-count bands, represented brand labels, attribute coverage, contributing product IDs, cut points, source boundaries, and limitations. The independent Demo calculation is recorded in [`docs/evidence/manual-category-check.md`](docs/evidence/manual-category-check.md).
+
+Customer pain points, economics, opportunity scoring, and final decision logic remain unimplemented. The current category statistics do not establish wider-market coverage, sales, demand, profitability, or purchase advice.
 
 ## Getting started
 
@@ -76,7 +77,8 @@ src/
 │   ├── types.ts             # versioned domain contracts
 │   ├── schemas.ts           # strict single-row parsers
 │   ├── dataset.ts           # ResearchDataset envelope builder
-│   └── quality.ts           # data quality gate (blocking/warnings/IQR/modules)
+│   ├── quality.ts            # data quality gate (blocking/warnings/IQR/modules)
+│   └── category.ts           # traceable descriptive category analysis
 ├── data/
 │   ├── demoLoader.ts        # Papa Parse demo loader
 │   └── csvImport.ts         # synchronous CSV import with quality gate
@@ -91,6 +93,10 @@ src/
 │   ├── ImportResultSummary.tsx # concise latest-import result
 │   ├── IssueTable.tsx       # full import diagnostics
 │   ├── ModuleStatus.tsx     # analysis-module availability
+│   ├── MetricCard.tsx       # descriptive category metric
+│   ├── SampleDistribution.tsx # exact-count sample bands
+│   ├── DataSourceBadge.tsx  # category-analysis source boundary
+│   ├── EvidenceDrawer.tsx   # native calculation disclosure
 │   └── StatusBanner.tsx     # accessible status/alert banner
 ├── fixtures/
 │   └── testDataset.ts       # fixed in-memory test dataset
@@ -131,13 +137,8 @@ The app loads the demo dataset automatically on the home page:
 pnpm dev
 ```
 
-Open the printed local URL. The home page shows product count, review count,
-source kind, imported timestamp, category, and the demo disclaimer. All six
-routes remain reachable.
+Open the printed local URL. Home shows the synthetic Demo source, 12 products, 76 review evidence records, observed price range, represented brand-label count, observation date, and compact price distribution. Category Overview exposes the corresponding descriptive statistics, exact sample denominators, contributing product IDs, cut points, and limitations.
 
 ## License and status
 
-Exploratory project scaffold for product research. No production claims are
-made about sales, margins, or market share. Data, statistics, CSV import,
-pain-point rules, economics, scoring, and decision logic land in later
-development tasks.
+Exploratory project scaffold for product research. No production claims are made about sales, margins, or market share. Category statistics and traceability are implemented for the active local sample. Customer pain points, economics, opportunity scoring, decision logic, AI, backend services, persistence, scraping, and production validation remain unimplemented.

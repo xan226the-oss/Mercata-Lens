@@ -40,12 +40,16 @@ describe("EvidenceDrawer", () => {
     const analysis = analyzeCategory(dataset);
 
     render(<EvidenceDrawer analysis={analysis} />);
+    const disclosure = screen.getByTestId("category-evidence");
+    expect(disclosure.tagName).toBe("DETAILS");
+    expect(disclosure).not.toHaveAttribute("open");
     expect(screen.getByText("Calculation evidence").closest("summary")).toBeInTheDocument();
     expect(screen.getAllByText(/p1, p2, p3/).length).toBeGreaterThan(0);
     expect(screen.getByText(/Q1:/)).toBeInTheDocument();
     expect(screen.getByText(/Excluded products: None/)).toBeInTheDocument();
 
     await userEvent.click(screen.getByText("Calculation evidence"));
+    expect(disclosure).toHaveAttribute("open");
 
     for (const id of ["p1", "p2", "p3", ...analysis.priceBands.flatMap((band) => band.productIds), ...analysis.ratingBands.flatMap((band) => band.productIds), ...analysis.reviewCountBands.flatMap((band) => band.productIds)]) {
       expect(screen.getAllByText(id, { exact: false }).length).toBeGreaterThan(0);

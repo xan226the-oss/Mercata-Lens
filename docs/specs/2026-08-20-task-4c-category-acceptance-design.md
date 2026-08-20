@@ -126,7 +126,8 @@ At both desktop and 390px width, verify with real keyboard input:
 - available navigation links and the Home-to-Category link receive focus;
 - the calculation summary receives focus and toggles with keyboard activation;
 - the focus indicator is visually discernible;
-- file inputs and the import button remain reachable on Home;
+- both file inputs remain reachable on Home;
+- the disabled import button is visibly distinguishable and is not expected to receive focus; after both local synthetic CSV files are selected, the enabled button receives keyboard focus;
 - no locked step becomes interactive.
 
 The delivery report records the tested interaction and observed result. DOM presence alone is not keyboard evidence.

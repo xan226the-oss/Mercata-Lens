@@ -191,12 +191,14 @@ Verify and record:
 
 - [ ] **Step 5: Perform real keyboard checks at desktop and mobile widths**
 
-At `1440 x 900` and `390 x 844`, use keyboard input rather than DOM mutation:
+At `1440 x 900` and `390 x 844`, use keyboard input rather than DOM mutation. Complete the Demo calculation comparison before selecting files. Use only the repository's synthetic `public/demo/products.csv` and `public/demo/reviews.csv` for the control-state check:
 
 ```text
 - Tab reaches available research navigation links
 - Tab reaches Open Category overview on Home
-- Tab reaches Products CSV, Reviews CSV, and the import button
+- Tab reaches Products CSV and Reviews CSV
+- the disabled import button is visibly distinguishable and is skipped by normal Tab navigation
+- after selecting `public/demo/products.csv` and `public/demo/reviews.csv`, the enabled import button receives focus
 - Tab reaches Calculation evidence on Category
 - Enter or Space toggles the native disclosure
 - focus indication is visually discernible on each checked control

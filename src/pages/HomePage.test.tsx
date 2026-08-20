@@ -94,6 +94,45 @@ function smallReviewsCsv() {
   ].join("\n");
 }
 
+function changedProductsCsv() {
+  return [
+    "product_id,title,price_usd,rating,category,source_url,observed_at,brand",
+    "c1,Changed One,101,4.1,Cat Water Fountain,https://example.com/c1,2026-08-11,NewBrand",
+    "c2,Changed Two,202,4.2,Cat Water Fountain,https://example.com/c2,2026-08-12,NewBrand",
+    "c3,Changed Three,303,4.9,Cat Water Fountain,https://example.com/c3,2026-08-13,OtherBrand",
+  ].join("\n");
+}
+
+function changedReviewsCsv() {
+  return [
+    "review_id,product_id,rating,review_text,source_url",
+    "cr1,c1,4,Changed,https://example.com/cr1",
+    "cr2,c2,4,Changed,https://example.com/cr2",
+    "cr3,c3,5,Changed,https://example.com/cr3",
+  ].join("\n");
+}
+
+async function importChangedDataset() {
+  await userEvent.upload(screen.getByLabelText("Products CSV") as HTMLInputElement, new File([changedProductsCsv()], "changed-products.csv", { type: "text/csv" }));
+  await userEvent.upload(screen.getByLabelText("Reviews CSV") as HTMLInputElement, new File([changedReviewsCsv()], "changed-reviews.csv", { type: "text/csv" }));
+  await userEvent.click(screen.getByTestId("import-button"));
+  await waitFor(() => expect(screen.getByTestId("source-badge")).toHaveTextContent("User upload"));
+}
+
+function rejectedProductsCsv() {
+  return [
+    "product_id,title,price_usd,rating,category,source_url,observed_at",
+    "bad-1,Bad One,1,4,Cat Water Fountain,https://example.com/bad-1,2026-08-20",
+    "bad-1,Duplicate,2,4,Cat Water Fountain,https://example.com/bad-2,2026-08-20",
+  ].join("\n");
+}
+
+function rejectedReviewsCsv() {
+  return [
+    "review_id,product_id,rating,review_text,source_url",
+    "bad-review,missing,4,Bad,https://example.com/bad-review",
+  ].join("\n");
+}
 async function importSmallDataset() {
   await userEvent.upload(
     screen.getByLabelText("Products CSV") as HTMLInputElement,
@@ -203,6 +242,40 @@ describe("HomePage import UI", () => {
     expect(screen.queryByText(/after its tested analysis module is implemented/i)).not.toBeInTheDocument();
   });
 
+  it("updates Home analysis and compact distribution after a successful changed upload", async () => {
+    stubFetch();
+    renderHome();
+    await settle();
+    await importChangedDataset();
+
+    expect(screen.getByTestId("metric-price-range")).toHaveTextContent("$101.00");
+    expect(screen.getByTestId("metric-price-range")).toHaveTextContent("$303.00");
+    expect(screen.getByTestId("metric-brands")).toHaveTextContent("2");
+    expect(screen.getByTestId("home-price-distribution")).toHaveTextContent("Up to 101");
+    expect(screen.getByTestId("home-price-distribution")).toHaveTextContent("total-market distribution");
+    expect(screen.getByTestId("home-observation-range")).toHaveTextContent("Observed 2026-08-11 to 2026-08-13");
+    expect(screen.getByRole("link", { name: /Open Category overview/i })).toBeInTheDocument();
+    expect(screen.getByTestId("source-badge")).toHaveTextContent("User upload");
+  });
+
+  it("keeps Demo analysis and compact distribution after a rejected import", async () => {
+    stubFetch();
+    renderHome();
+    await settle();
+    const beforePrice = screen.getByTestId("metric-price-range").textContent;
+    const beforeBrands = screen.getByTestId("metric-brands").textContent;
+    const beforeDistribution = screen.getByTestId("home-price-distribution").textContent;
+
+    await userEvent.upload(screen.getByLabelText("Products CSV") as HTMLInputElement, new File([rejectedProductsCsv()], "rejected-products.csv", { type: "text/csv" }));
+    await userEvent.upload(screen.getByLabelText("Reviews CSV") as HTMLInputElement, new File([rejectedReviewsCsv()], "rejected-reviews.csv", { type: "text/csv" }));
+    await userEvent.click(screen.getByTestId("import-button"));
+    await waitFor(() => expect(screen.getByTestId("import-error")).toBeInTheDocument());
+
+    expect(screen.getByTestId("source-badge")).toHaveTextContent("Demo data");
+    expect(screen.getByTestId("metric-price-range")).toHaveTextContent(beforePrice ?? "");
+    expect(screen.getByTestId("metric-brands")).toHaveTextContent(beforeBrands ?? "");
+    expect(screen.getByTestId("home-price-distribution")).toHaveTextContent(beforeDistribution ?? "");
+  });
   it("shows no compact distribution or active Category link when the accepted upload is locked", async () => {
     stubFetch();
     renderHome();

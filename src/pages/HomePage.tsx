@@ -64,7 +64,7 @@ export function HomePage() {
               <span className="section-kicker">Next analysis</span>
               <h2>Price landscape and brand structure</h2>
               {qualityReport.moduleAvailability.category === "available" ? (
-                <div data-testid="home-price-distribution"><SampleDistribution id="home-price" title="Observed price distribution" description="Active comparison set only; not a recommended price or total-market distribution." bands={categoryAnalysis.priceBands} productCount={categoryAnalysis.productCount} compact /><Link to="/category">Open Category overview</Link></div>
+                <div data-testid="home-price-distribution"><SampleDistribution id="home-price" title="Observed price distribution" description="Active comparison set only; not a total-market distribution." bands={categoryAnalysis.priceBands} productCount={categoryAnalysis.productCount} compact /><Link to="/category">Open Category overview</Link></div>
               ) : <p>Category overview is locked until the active evidence meets its requirements. Do not infer price or brand structure from this page.</p>}
             </section>
           </div>

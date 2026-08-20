@@ -42,14 +42,14 @@ export function CategoryPage() {
         <MetricCard id="price-range" label="Observed price range" value={`${price(analysis.priceRange.min)} – ${price(analysis.priceRange.max)}`} evidenceNote="Observed comparison set only" />
         <MetricCard id="brands" label="Provided brand labels" value={representedBrands} evidenceNote="Represented brands in this sample" />
       </section>
-      <SampleDistribution id="price" title="Observed price distribution" description="Sample-relative price bands; not a recommended price or total-market distribution." bands={analysis.priceBands} productCount={analysis.productCount} />
+      <SampleDistribution id="price" title="Observed price distribution" description="Sample-relative price bands for descriptive comparison only; not a total-market distribution." bands={analysis.priceBands} productCount={analysis.productCount} />
       <div className="category-distribution-grid">
         <SampleDistribution id="rating" title="Rating distribution" description="Displayed product ratings in the active sample." bands={analysis.ratingBands} productCount={analysis.productCount} />
         <SampleDistribution id="reviews" title="Review-count distribution" description="Displayed review counts only; reviewCount is not sales." bands={analysis.reviewCountBands} productCount={analysis.productCount} missingCount={analysis.missingReviewCount} />
       </div>
       <section className="category-brand-share" data-testid="category-brand-share" aria-labelledby="category-brand-share-title">
-        <div className="section-heading"><span className="section-kicker">Current sample</span><h2 id="category-brand-share-title">Represented brand share in this sample</h2><p>These are sample shares, not market share.</p></div>
-        <ul>{analysis.brandShares.map((row) => <li key={row.label}><strong>{row.label}</strong><span>{row.count} / {row.denominator}</span><span>{percent.format(row.shareOfProducts)}</span></li>)}</ul>
+        <div className="section-heading"><span className="section-kicker">Current sample</span><h2 id="category-brand-share-title">Represented brand labels in this sample</h2><p>These percentages describe only represented brand labels in the active sample and do not describe the wider market.</p></div>
+        <ul>{analysis.brandShares.map((row) => <li key={row.brand === null ? "missing-brand" : `brand:${row.brand}`}><strong>{row.label}</strong><span>{row.count} / {row.denominator}</span><span>{percent.format(row.shareOfProducts)}</span></li>)}</ul>
       </section>
       <section className="category-attribute-coverage" data-testid="category-attribute-coverage" aria-labelledby="category-attribute-title">
         <div className="section-heading"><span className="section-kicker">Field coverage</span><h2 id="category-attribute-title">Attribute completeness</h2><p>Coverage is calculated against all products in the active sample.</p></div>

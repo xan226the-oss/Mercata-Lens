@@ -52,7 +52,7 @@ export function EvidenceDrawer({ analysis }: EvidenceDrawerProps): ReactElement 
         <section>
           <h3>Brand groups</h3>
           <ul>
-            {analysis.brandShares.map((row) => <li key={row.label}><strong>{row.label}</strong>: {row.count} / {row.denominator} — {ids(row.productIds)}</li>)}
+            {analysis.brandShares.map((row) => <li key={row.brand === null ? "missing-brand" : `brand:${row.brand}`}><strong>{row.label}</strong>: {row.count} / {row.denominator} — {ids(row.productIds)}</li>)}
           </ul>
         </section>
         <section>

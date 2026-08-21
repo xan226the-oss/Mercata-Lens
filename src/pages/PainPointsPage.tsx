@@ -70,8 +70,8 @@ export function PainPointsPage() {
   const clearLabel = useCallback(() => {
     const nextRows = filterReviewQueueRows(rows, statusFilter, null);
     setLabelFilter(null);
-    selectFromQueue(nextRows, selectedReviewId);
-  }, [rows, selectFromQueue, selectedReviewId, statusFilter]);
+    selectFromQueue(nextRows, null);
+  }, [rows, selectFromQueue, statusFilter]);
 
   const changeStatus = useCallback((nextStatus: ReviewQueueStatus) => {
     const nextRows = filterReviewQueueRows(rows, nextStatus, labelFilter);

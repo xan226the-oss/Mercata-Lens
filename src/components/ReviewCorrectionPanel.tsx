@@ -53,7 +53,6 @@ export function ReviewCorrectionPanel({ row, hasPrevious, hasNext, onPrevious, o
     setSelectedLabels(initialLabels(row.classification));
     setReason(initialReason(row.classification));
     setError(null);
-    setAnnouncement("");
   }, [row?.review.reviewId, row?.classification.correction?.reason, row?.classification.effectiveLabels.join("|")]);
 
   const automaticLabels = row?.classification.automaticLabels ?? [];

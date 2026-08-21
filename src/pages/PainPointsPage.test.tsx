@@ -92,6 +92,32 @@ describe("PainPointsPage workbench", () => {
     expect(screen.getByText(/Mercata Lens has not fetched/i)).toBeVisible();
   });
 
+  it("coordinates apply, persistent announcements, filter clearing, and corrected review evidence", async () => {
+    stubDemoFetch();
+    renderPage();
+    await waitFor(() => expect(screen.getByRole("heading", { name: "Customer pain-point evidence" })).toBeVisible());
+    const user = userEvent.setup();
+    await waitFor(() => expect(screen.getAllByRole("checkbox")).toHaveLength(7));
+    const noiseCheckbox = screen.getAllByRole("checkbox")[1];
+    await user.click(noiseCheckbox);
+    await user.type(screen.getByRole("textbox", { name: "Correction reason" }), "Manual noise annotation");
+    await user.click(screen.getByRole("button", { name: "Apply correction & next" }));
+    await waitFor(() => expect(screen.getByRole("button", { name: "r002" })).toHaveAttribute("aria-pressed", "true"));
+    expect(screen.getAllByRole("status").some((element) => element.textContent?.includes("Correction applied to r001."))).toBe(true);
+    expect(screen.getByRole("button", { name: "Corrected" })).toHaveAttribute("aria-pressed", "false");
+
+    await user.click(screen.getByRole("button", { name: "Corrected" }));
+    await waitFor(() => expect(screen.getByRole("button", { name: "r001" })).toBeVisible());
+    await user.click(screen.getByRole("button", { name: "r001" }));
+    expect(screen.getAllByText("noise", { exact: true }).length).toBeGreaterThanOrEqual(1);
+    expect(screen.queryByText("No automatic phrase match.")).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /Cleaning difficulty/i }));
+    await waitFor(() => expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "true"));
+    await user.click(screen.getByRole("button", { name: "r003" }));
+    await user.click(screen.getByRole("button", { name: "Clear signal filter" }));
+    await waitFor(() => expect(screen.getByRole("button", { name: "r001" })).toHaveAttribute("aria-pressed", "true"));
+  });
   it("renders the direct no-data fallback outside the shell", async () => {
     vi.stubGlobal("fetch", vi.fn(() => Promise.reject(new Error("offline"))) as unknown as typeof fetch);
     renderDirectPage();

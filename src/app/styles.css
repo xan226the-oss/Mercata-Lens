@@ -1376,7 +1376,7 @@ input {
   font-weight: 600;
 }
 
-.text-button {
+.pain-point-page .text-button {
   margin-top: 12px;
 }
 
@@ -1387,7 +1387,7 @@ input {
   margin: 14px 0;
 }
 
-.filter-button[aria-pressed="true"] {
+.pain-point-page .filter-button[aria-pressed="true"] {
   background: var(--color-primary-soft);
   border-color: var(--color-primary);
 }

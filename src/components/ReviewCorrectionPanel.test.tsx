@@ -62,6 +62,7 @@ describe("ReviewCorrectionPanel", () => {
 
     const correctedRow = rowFor(source, { add: ["noise"], remove: ["hard_to_clean"], reason: "Manual" });
     rerender(<ReviewCorrectionPanel row={correctedRow} hasPrevious={false} hasNext={false} onPrevious={vi.fn()} onNext={vi.fn()} onApply={onApply} onClear={onClear} onDirtyChange={onDirtyChange} />);
+    expect(screen.getAllByRole("status").some((element) => element.textContent?.includes("Correction applied to r1."))).toBe(true);
     expect(screen.getByRole("button", { name: "Clear correction" })).toBeVisible();
     await user.click(screen.getAllByRole("checkbox", { name: "noise" })[0]);
     expect(screen.getByRole("button", { name: "Clear correction" })).toBeDisabled();

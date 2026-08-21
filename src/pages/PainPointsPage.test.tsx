@@ -6,6 +6,7 @@ import fs from "node:fs";
 import path from "node:path";
 import userEvent from "@testing-library/user-event";
 import { ResearchProvider } from "../research/ResearchContext";
+import { useResearch } from "../research/ResearchContext";
 import { ResearchLayout } from "../research/ResearchLayout";
 import { PainPointsPage } from "./PainPointsPage";
 
@@ -22,6 +23,17 @@ function stubDemoFetch() {
   }) as unknown as typeof fetch);
 }
 
+function ResearchProbe() {
+  const { dataset, corrections, applyReviewCorrection, importCsv } = useResearch();
+  const reviewId = dataset?.reviews[0]?.reviewId ?? "";
+  return <div>
+    <output data-testid="probe-correction-count">{Object.keys(corrections).length}</output>
+    <button type="button" onClick={() => applyReviewCorrection(reviewId, { add: ["noise"], remove: [], reason: "Probe correction" })}>Probe apply</button>
+    <button type="button" onClick={() => importCsv("", "")}>Probe failed import</button>
+    <button type="button" onClick={() => importCsv(productsCsv, reviewsCsv)}>Probe successful import</button>
+  </div>;
+}
+
 function renderPage() {
   return render(
     <ResearchProvider>
@@ -33,6 +45,21 @@ function renderPage() {
     </ResearchProvider>,
   );
 }
+
+function renderProbe() {
+  return render(<ResearchProvider><ResearchProbe /></ResearchProvider>);
+}
+
+function renderDirectPage() {
+  return render(
+    <ResearchProvider>
+      <MemoryRouter initialEntries={["/pain-points"]}>
+        <Routes><Route path="/pain-points" element={<PainPointsPage />} /></Routes>
+      </MemoryRouter>
+    </ResearchProvider>,
+  );
+}
+
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -65,11 +92,22 @@ describe("PainPointsPage workbench", () => {
     expect(screen.getByText(/Mercata Lens has not fetched/i)).toBeVisible();
   });
 
-  it("provides a truthful no-data fallback", async () => {
+  it("renders the direct no-data fallback outside the shell", async () => {
     vi.stubGlobal("fetch", vi.fn(() => Promise.reject(new Error("offline"))) as unknown as typeof fetch);
-    renderPage();
-    await waitFor(() => expect(screen.getByTestId("source-badge")).toHaveTextContent("No active data"));
-    await waitFor(() => expect(screen.getByRole("heading", { name: "Module locked" })).toBeVisible());
-    expect(screen.queryByText(/No active review evidence is available\./)).not.toBeInTheDocument();
+    renderDirectPage();
+    await waitFor(() => expect(screen.getByText("No active review evidence is available.")).toBeVisible());
   });
+
+  it("keeps corrections on failed import and clears them on successful replacement", async () => {
+    stubDemoFetch();
+    renderProbe();
+    await waitFor(() => expect(screen.getByRole("button", { name: "Probe apply" })).toBeEnabled());
+    await userEvent.click(screen.getByRole("button", { name: "Probe apply" }));
+    await waitFor(() => expect(screen.getByTestId("probe-correction-count")).toHaveTextContent("1"));
+    await userEvent.click(screen.getByRole("button", { name: "Probe failed import" }));
+    expect(screen.getByTestId("probe-correction-count")).toHaveTextContent("1");
+    await userEvent.click(screen.getByRole("button", { name: "Probe successful import" }));
+    await waitFor(() => expect(screen.getByTestId("probe-correction-count")).toHaveTextContent("0"));
+  });
+
 });

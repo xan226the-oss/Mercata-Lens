@@ -85,6 +85,7 @@ export function ReviewCorrectionPanel({ row, hasPrevious, hasNext, onPrevious, o
 
   const { review } = row;
   const clear = () => {
+    if (draftDirty) return;
     onClear(review.reviewId);
     setAnnouncement(`Correction cleared for ${review.reviewId}.`);
   };
@@ -163,7 +164,7 @@ export function ReviewCorrectionPanel({ row, hasPrevious, hasNext, onPrevious, o
         <div className="review-correction__actions">
           <button type="submit" disabled={!canApply}>Apply correction &amp; next</button>
           <button type="button" className="text-button" disabled={!draftDirty} onClick={reset}>Reset draft</button>
-          {row.classification.correctionValidity === "applied" ? <button type="button" className="text-button" onClick={clear}>Clear correction</button> : null}
+          {row.classification.correctionValidity === "applied" ? <button type="button" className="text-button" disabled={draftDirty} onClick={clear}>Clear correction</button> : null}
         </div>
       </form>
       <div className="sr-only" role="status" aria-live="polite">{announcement}</div>

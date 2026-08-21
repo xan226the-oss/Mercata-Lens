@@ -43,7 +43,7 @@ describe("ReviewCorrectionPanel", () => {
     const onClear = vi.fn();
     const onDirtyChange = vi.fn();
     const user = userEvent.setup();
-    render(<ReviewCorrectionPanel row={row} hasPrevious={true} hasNext={true} onPrevious={vi.fn()} onNext={vi.fn()} onApply={onApply} onClear={onClear} onDirtyChange={onDirtyChange} />);
+    const { rerender } = render(<ReviewCorrectionPanel row={row} hasPrevious={true} hasNext={true} onPrevious={vi.fn()} onNext={vi.fn()} onApply={onApply} onClear={onClear} onDirtyChange={onDirtyChange} />);
     const checkboxes = screen.getAllByRole("checkbox");
     await user.click(checkboxes[1]);
     expect(screen.getByRole("button", { name: "Apply correction & next" })).toBeDisabled();
@@ -51,6 +51,7 @@ describe("ReviewCorrectionPanel", () => {
     expect(screen.getByRole("button", { name: "Apply correction & next" })).toBeEnabled();
     expect(screen.getByRole("button", { name: "Previous review" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Next review" })).toBeDisabled();
+    expect(screen.queryByRole("button", { name: "Clear correction" })).not.toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Reset draft" }));
     expect(screen.getByRole("button", { name: "Previous review" })).toBeEnabled();
     await user.click(checkboxes[1]);
@@ -60,14 +61,19 @@ describe("ReviewCorrectionPanel", () => {
     expect(screen.getAllByRole("status").some((element) => element.textContent?.includes("Correction applied to r1."))).toBe(true);
 
     const correctedRow = rowFor(source, { add: ["noise"], remove: ["hard_to_clean"], reason: "Manual" });
-    const { rerender } = render(<ReviewCorrectionPanel row={correctedRow} hasPrevious={false} hasNext={false} onPrevious={vi.fn()} onNext={vi.fn()} onApply={onApply} onClear={onClear} onDirtyChange={onDirtyChange} />);
+    rerender(<ReviewCorrectionPanel row={correctedRow} hasPrevious={false} hasNext={false} onPrevious={vi.fn()} onNext={vi.fn()} onApply={onApply} onClear={onClear} onDirtyChange={onDirtyChange} />);
     expect(screen.getByRole("button", { name: "Clear correction" })).toBeVisible();
+    await user.click(screen.getAllByRole("checkbox", { name: "noise" })[0]);
+    expect(screen.getByRole("button", { name: "Clear correction" })).toBeDisabled();
+    expect(onClear).not.toHaveBeenCalled();
+    await user.click(screen.getByRole("button", { name: "Reset draft" }));
+    expect(screen.getByRole("button", { name: "Clear correction" })).toBeEnabled();
     await user.click(screen.getByRole("button", { name: "Clear correction" }));
     expect(onClear).toHaveBeenCalledWith("r1");
     rerender(<ReviewCorrectionPanel row={rowFor(review("No automatic phrase match."))} hasPrevious={false} hasNext={false} onPrevious={vi.fn()} onNext={vi.fn()} onApply={vi.fn(() => false)} onClear={vi.fn()} onDirtyChange={onDirtyChange} />);
     expect(screen.getAllByText("No automatic phrase match.")).toHaveLength(2);
-    expect(screen.getAllByText("Product title unavailable")).toHaveLength(2);
-    expect(screen.getAllByText("Not provided")).toHaveLength(4);
+    expect(screen.getAllByText("Product title unavailable")).toHaveLength(1);
+    expect(screen.getAllByText("Not provided")).toHaveLength(2);
     expect(screen.getAllByText("None").length).toBeGreaterThan(0);
     expect(PAIN_POINT_IDS).toHaveLength(7);
   });

@@ -107,11 +107,23 @@ export function PainPointsPage() {
 
   const clearCorrection = useCallback((reviewId: string) => {
     const oldIndex = filteredRows.findIndex((row) => row.review.reviewId === reviewId);
+    const nextCorrections = { ...corrections };
+    delete nextCorrections[reviewId];
+    const nextRows = rows.map((row) => ({
+      ...row,
+      classification: classifyReview(row.review, nextCorrections),
+      corrected: Boolean(nextCorrections[row.review.reviewId]),
+    }));
+    const nextFilteredRows = filterReviewQueueRows(nextRows, statusFilter, labelFilter);
+    const sameReview = nextFilteredRows.some((row) => row.review.reviewId === reviewId)
+      ? reviewId
+      : nextFilteredRows[oldIndex]?.review.reviewId
+        ?? nextFilteredRows.at(-1)?.review.reviewId
+        ?? null;
     clearReviewCorrection(reviewId);
-    const nextRows = filterReviewQueueRows(rows.filter((row) => row.review.reviewId !== reviewId || row.classification.effectiveLabels.length > 0), statusFilter, labelFilter);
-    setPendingSelection(nextRows[oldIndex]?.review.reviewId ?? nextRows.at(-1)?.review.reviewId ?? null);
+    setPendingSelection(sameReview);
     setDraftDirty(false);
-  }, [clearReviewCorrection, filteredRows, labelFilter, rows, statusFilter]);
+  }, [clearReviewCorrection, corrections, filteredRows, labelFilter, rows, statusFilter]);
 
   if (!dataset || !sourceKind) {
     return <section className="page"><PageHeader eyebrow="Rule-matched review evidence" title="Customer pain-point evidence" description="Deterministic review signals for the active US cat water fountain sample." /><p>No active review evidence is available.</p></section>;

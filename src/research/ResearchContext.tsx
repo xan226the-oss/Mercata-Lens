@@ -6,12 +6,17 @@
  */
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from "react";
+import type {
+  PainPointCorrection,
+  PainPointCorrections,
+} from "../domain/painPoints";
 import type {
   ImportResult,
   ParseIssue,
@@ -45,6 +50,12 @@ export interface ResearchContextValue {
   loadDemo: () => void;
   /** Import two CSV texts; on failure the current research stays intact. */
   importCsv: (productsText: string, reviewsText: string) => void;
+  corrections: PainPointCorrections;
+  applyReviewCorrection: (
+    reviewId: string,
+    correction: PainPointCorrection,
+  ) => boolean;
+  clearReviewCorrection: (reviewId: string) => void;
 }
 
 const EMPTY_IMPORT_STATE: ImportOutcomeState = {
@@ -64,9 +75,37 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
   const [issues, setIssues] = useState<ParseIssue[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [importState, setImportState] = useState<ImportOutcomeState>(EMPTY_IMPORT_STATE);
+  const [corrections, setCorrections] = useState<PainPointCorrections>({});
+
+  const applyReviewCorrection = useCallback(
+    (reviewId: string, correction: PainPointCorrection): boolean => {
+      if (!dataset?.reviews.some((review) => review.reviewId === reviewId)) return false;
+      if (correction.reason.trim() === "") return false;
+      setCorrections((current) => ({
+        ...current,
+        [reviewId]: {
+          add: [...correction.add],
+          remove: [...correction.remove],
+          reason: correction.reason,
+        },
+      }));
+      return true;
+    },
+    [dataset],
+  );
+
+  const clearReviewCorrection = useCallback((reviewId: string) => {
+    setCorrections((current) => {
+      if (!(reviewId in current)) return current;
+      const next = { ...current };
+      delete next[reviewId];
+      return next;
+    });
+  }, []);
 
   const loadDemo = useMemo(
     () => () => {
+      setCorrections({});
       setStatus("loading");
       setDataset(null);
       setQualityReport(null);
@@ -114,6 +153,7 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
         return;
       }
       const nextQuality = assessQuality(result.dataset);
+      setCorrections({});
       setDataset(result.dataset);
       setQualityReport(nextQuality);
       setImportState({
@@ -145,8 +185,11 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
       importState,
       loadDemo,
       importCsv,
+      corrections,
+      applyReviewCorrection,
+      clearReviewCorrection,
     }),
-    [status, dataset, sourceKind, qualityReport, issues, error, importState, loadDemo, importCsv],
+    [status, dataset, sourceKind, qualityReport, issues, error, importState, loadDemo, importCsv, corrections, applyReviewCorrection, clearReviewCorrection],
   );
 
   return <ResearchContext.Provider value={value}>{children}</ResearchContext.Provider>;

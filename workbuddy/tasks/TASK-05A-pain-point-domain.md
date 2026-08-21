@@ -19,7 +19,7 @@ Read completely:
 5. `docs/specs/2026-08-20-task-5a-pain-point-domain-design.md`;
 6. `docs/plans/2026-08-21-task-5a-pain-point-domain-implementation-plan.md`;
 7. `workbuddy/README.md` and this task sheet;
-8. `src/domain/types.ts`, `src/domain/dataset.ts`, `src/domain/dataset.test.ts`, `src/domain/quality.ts`, and `src/domain/quality.test.ts`;
+8. `src/domain/types.ts`, `src/domain/dataset.ts`, `src/domain/schemas.ts`, `src/domain/schemas.test.ts`, `src/domain/quality.ts`, and `src/domain/quality.test.ts`;
 9. `src/domain/category.ts` and `src/domain/category.test.ts` for existing domain style only, not for behavior reuse;
 10. `src/fixtures/testDataset.ts`;
 11. `public/demo/reviews.csv` to verify the approved phrases are fixture-grounded, without changing the fixture or tuning rules for a desired count;

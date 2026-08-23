@@ -42,4 +42,3 @@ Follow the Task 6B plan exactly, including the fixed Demo values and provenance 
 Run Task 6A/6B focused tests plus import/layout/route regressions, then full test, build, lint, frozen install, and diff check. Browser-check all existing routes at the three approved viewports, with keyboard labels, wrapping, no overflow, and application-warning review.
 
 Commit once as `feat: add unit economics workspace`; release the port, finish clean, and stop. Do not begin Task 7A.
-

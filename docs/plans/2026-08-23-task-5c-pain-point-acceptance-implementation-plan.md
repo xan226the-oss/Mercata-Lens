@@ -33,7 +33,7 @@ Read the evidence CSV with Papa Parse and assert the exact seven headers, 50 row
 
 - [ ] **Step 2: Run the focused test and confirm RED**
 
-Run: `pnpm vitest run src/domain/painPointAudit.test.ts`  
+Run: `pnpm vitest run src/domain/painPointAudit.test.ts`
 Expected: FAIL because `docs/evidence/review-audit.csv` does not exist.
 
 - [ ] **Step 3: Create the exact CSV**

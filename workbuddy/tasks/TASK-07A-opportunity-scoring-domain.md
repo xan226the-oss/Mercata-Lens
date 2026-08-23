@@ -32,4 +32,3 @@ Follow the Task 7A plan in order. Lock exact IDs/dimensions/default weights. Tes
 Run focused Task 7A plus Task 6A and relevant existing domain tests, then full test, build, lint, frozen install, diff check, and prohibited-capability scan.
 
 Commit once as `feat: add bounded opportunity scoring`; finish clean and stop. Do not begin Task 7B.
-

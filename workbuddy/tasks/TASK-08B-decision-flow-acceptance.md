@@ -53,4 +53,3 @@ Run all Task 8B focused tests, every upstream domain and integration regression,
 Update README and `manual-mvp-acceptance.md` truthfully. Human audit, sensitivity answers, thresholds, external research, market validation, realized economics, persistence, deployment, and production use remain incomplete/not implemented.
 
 Commit once as `test: complete the local research decision flow`; stop Vite, release ports, finish clean, and stop for final Codex review.
-

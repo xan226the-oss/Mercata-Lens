@@ -1,6 +1,6 @@
 # Mercata Lens Task 5C: Pain-Point Acceptance Design
 
-**Date:** 2026-08-23  
+**Date:** 2026-08-23
 **Normative parent:** `docs/specs/2026-08-23-remaining-mvp-delivery-design.md`
 
 ## Goal
@@ -29,4 +29,3 @@ Observed browser evidence, automated evidence, and human-audit evidence are sepa
 ## Change boundary
 
 Task 5C may add evidence documents and acceptance-only tests and update README. It may not change Task 5A rules, classification, correction semantics, dataset contracts, routing, or any Task 6 feature. If acceptance finds a runtime or CSS defect, WorkBuddy stops and reports it; a later Codex repair prompt must authorize exact files.
-

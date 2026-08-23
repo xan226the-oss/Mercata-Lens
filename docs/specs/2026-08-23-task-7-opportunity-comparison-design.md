@@ -1,6 +1,6 @@
 # Mercata Lens Task 7: Evidence-Linked Opportunity Comparison Design
 
-**Date:** 2026-08-23  
+**Date:** 2026-08-23
 **Normative parent:** `docs/specs/2026-08-23-remaining-mvp-delivery-design.md`
 
 ## Goal
@@ -50,4 +50,3 @@ Weights are current-session state and reset on successful dataset replacement wh
 ## Acceptance
 
 Task 7A tests validation, contribution math, threshold boundaries, incompleteness, order, and immutability. Task 7B tests evidence traceability, Demo/user behavior, weight reset lifecycle, no-forced-winner copy, keyboard controls, and runtime/layout regression.
-

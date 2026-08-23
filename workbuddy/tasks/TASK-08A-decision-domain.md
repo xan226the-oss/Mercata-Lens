@@ -32,4 +32,3 @@ Follow Task 8A RED/GREEN order. Prove precedence, exact stop-condition matching,
 Run Task 8A plus all upstream domain focused tests, then full test, build, lint, frozen install, diff check, and prohibited-capability scan.
 
 Commit once as `feat: add bounded decision reports`; finish clean and stop. Do not begin Task 8B.
-

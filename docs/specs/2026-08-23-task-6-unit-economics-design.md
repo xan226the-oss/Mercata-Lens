@@ -1,6 +1,6 @@
 # Mercata Lens Task 6: Transparent Unit Economics Design
 
-**Date:** 2026-08-23  
+**Date:** 2026-08-23
 **Normative parent:** `docs/specs/2026-08-23-remaining-mvp-delivery-design.md`
 
 ## Goal

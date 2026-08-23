@@ -56,4 +56,3 @@ Return winner only when all three exact candidates are complete. Run focused, fu
 - [ ] **Step 3: Commit and stop**
 
 Confirm only the two allowed files changed.
-

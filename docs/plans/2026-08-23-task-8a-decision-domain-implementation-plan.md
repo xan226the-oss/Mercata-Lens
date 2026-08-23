@@ -32,4 +32,3 @@
 - [ ] Implement deterministic normalization and report composition. Every output limitation must be supplied or a fixed factual product limitation; do not generate persuasive prose.
 - [ ] Run Task 8A plus Task 3–7 domain suites, then full test, build, lint, frozen install, and diff check.
 - [ ] Confirm only two files changed, commit, and stop.
-

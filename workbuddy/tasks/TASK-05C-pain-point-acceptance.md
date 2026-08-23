@@ -53,4 +53,3 @@ git diff --check
 Perform the exact browser/keyboard checks in the design at all three viewports, stop Vite, release its port, and report actual counts and observations separately.
 
 Commit once as `test: complete pain point acceptance`; finish clean and stop. Do not begin Task 6A.
-

@@ -33,7 +33,7 @@ Use `3999` sale, `1200` sourcing, `300` freight, `0.15` referral, `650` fulfillm
 
 - [ ] **Step 2: Run focused RED**
 
-Run: `pnpm vitest run src/domain/economics.test.ts`  
+Run: `pnpm vitest run src/domain/economics.test.ts`
 Expected: FAIL because `./economics` does not exist.
 
 - [ ] **Step 3: Implement minimal complete calculation**
@@ -61,4 +61,3 @@ Run the domain test, related types/quality tests, full test, build, lint, frozen
 - [ ] **Step 4: Commit**
 
 Confirm only `src/domain/economics.ts` and `.test.ts` changed, commit, and stop.
-

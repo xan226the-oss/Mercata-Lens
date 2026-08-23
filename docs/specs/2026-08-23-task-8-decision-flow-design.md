@@ -1,6 +1,6 @@
 # Mercata Lens Task 8: Decision and Validation Flow Design
 
-**Date:** 2026-08-23  
+**Date:** 2026-08-23
 **Normative parent:** `docs/specs/2026-08-23-remaining-mvp-delivery-design.md`
 
 ## Goal
@@ -51,4 +51,3 @@ The JSON export is a one-way local download with schema version, dataset provena
 Task 8B owns the complete Demo path, invalid-import path, keyboard/semantic checks, console and page-error failure behavior, desktop acceptance, and minimal `390 x 844` regression. It may add Playwright configuration and focused local fixtures without changing the validated public Demo CSV.
 
 The final report separates automated results, observed browser results, incomplete user exercises, and excluded commercial claims. No deployment or production validation occurs.
-

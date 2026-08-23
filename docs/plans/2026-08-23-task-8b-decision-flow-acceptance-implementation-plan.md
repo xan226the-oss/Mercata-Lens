@@ -63,4 +63,3 @@
 - [ ] Run focused suites, full test, build, lint, frozen install, `git diff --check`, and `pnpm exec playwright test` with no skipped core spec.
 - [ ] Perform keyboard and browser acceptance at `1440 x 900`, `900 x 900`, and minimal `390 x 844`; record automated, observed, and incomplete human exercises separately.
 - [ ] Confirm allowed-file scope, stop Vite, release ports, commit once, and stop for final Codex review.
-

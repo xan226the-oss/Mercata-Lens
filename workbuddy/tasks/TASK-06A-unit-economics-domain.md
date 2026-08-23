@@ -34,4 +34,3 @@ Follow the plan's RED/GREEN order and exact public contracts. Test the `$39.99` 
 Run focused economics tests, relevant existing domain tests, full test, build, lint, frozen install, and `git diff --check`. Scan the two new files for prohibited commercial/AI/network capabilities.
 
 Commit once as `feat: add transparent unit economics`; finish clean and stop. Do not begin Task 6B.
-

@@ -45,4 +45,3 @@ Use the exact Demo values and evidence-ID rules in the Task 7B plan. All numeric
 Run Task 7A/7B plus relevant Task 5/6/import/layout/route focused tests, then full test, build, lint, frozen install, diff check, and browser acceptance at the approved viewports. Append only scoped styles and verify all prior routes.
 
 Commit once as `feat: compare evidence linked opportunities`; release the port, finish clean, and stop. Do not begin Task 8A.
-

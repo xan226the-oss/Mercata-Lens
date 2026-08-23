@@ -10,7 +10,7 @@ Render three evidence-linked opportunity hypotheses, editable current-session we
 
 ## Required reading
 
-Read completely: all global/product/visual and remaining-MVP sources; Task 7 design; Task 7A/7B plans; approved Task 5–7 domain/UI files; Context and tests; Opportunity page and tests; styles; Demo/import/quality; package/config; Git history/status; `workbuddy/README.md`; this sheet.
+Read completely: `AGENTS.md`; `docs/specs/2026-08-13-mercata-lens-design.md`; the Product Task 7 section of `docs/plans/2026-08-13-mercata-lens-implementation-plan.md`; `docs/specs/2026-08-14-mercata-lens-visual-refresh-design.md`; `docs/plans/2026-08-14-mercata-lens-visual-refresh-implementation-plan.md`; `docs/specs/2026-08-23-remaining-mvp-delivery-design.md`; `docs/specs/2026-08-23-task-7-opportunity-comparison-design.md`; `docs/plans/2026-08-23-task-7a-opportunity-scoring-domain-implementation-plan.md`; `docs/plans/2026-08-23-task-7b-opportunity-comparison-ui-implementation-plan.md`; approved Task 5–7 domain/UI files; Context/tests; Opportunity page/tests; styles; Demo/import/quality; package/configuration; Git history/status; `workbuddy/README.md`; this sheet. Do not invent alternate filenames.
 
 ## Starting gate
 

@@ -10,7 +10,7 @@ Implement only the pure cents-based unit-economics contract for complete, incomp
 
 ## Required reading
 
-Read completely: `AGENTS.md`; the product design and Product Task 6 plan; remaining-MVP design; Task 6 design; Task 6A plan; `workbuddy/README.md`; this sheet; `src/domain/types.ts`; all existing domain/test patterns; package/TS/Vitest config; Git log/diff/status.
+Read completely: `AGENTS.md`; `docs/specs/2026-08-13-mercata-lens-design.md`; the Product Task 6 section of `docs/plans/2026-08-13-mercata-lens-implementation-plan.md`; `docs/specs/2026-08-23-remaining-mvp-delivery-design.md`; `docs/specs/2026-08-23-task-6-unit-economics-design.md`; `docs/plans/2026-08-23-task-6a-unit-economics-domain-implementation-plan.md`; `workbuddy/README.md`; this sheet; `src/domain/types.ts`; all existing domain/test patterns; package/TypeScript/Vitest configuration; Git log/diff/status. Do not invent alternate filenames.
 
 Normative files are `docs/specs/2026-08-23-task-6-unit-economics-design.md` and `docs/plans/2026-08-23-task-6a-unit-economics-domain-implementation-plan.md`.
 

@@ -10,7 +10,7 @@ Add current-session pessimistic/base/optimistic economic inputs and an accessibl
 
 ## Required reading
 
-Read completely: all global/product/visual and remaining-MVP sources; Task 6 design; Task 6A and 6B plans; approved economics domain files; `ResearchContext` and tests; `OpportunitiesPage`; relevant components/tests; styles; Demo/import/quality contracts; package/config; Git log/diff/status; `workbuddy/README.md`; this sheet.
+Read completely: `AGENTS.md`; `docs/specs/2026-08-13-mercata-lens-design.md`; the Product Task 6 section of `docs/plans/2026-08-13-mercata-lens-implementation-plan.md`; `docs/specs/2026-08-14-mercata-lens-visual-refresh-design.md`; `docs/plans/2026-08-14-mercata-lens-visual-refresh-implementation-plan.md`; `docs/specs/2026-08-23-remaining-mvp-delivery-design.md`; `docs/specs/2026-08-23-task-6-unit-economics-design.md`; `docs/plans/2026-08-23-task-6a-unit-economics-domain-implementation-plan.md`; `docs/plans/2026-08-23-task-6b-unit-economics-ui-implementation-plan.md`; approved economics domain files; `src/research/ResearchContext.tsx` and its tests; `src/pages/OpportunitiesPage.tsx`; relevant components/tests; `src/app/styles.css`; Demo/import/quality contracts; package/configuration; Git log/diff/status; `workbuddy/README.md`; this sheet. Do not invent alternate filenames.
 
 ## Starting gate
 

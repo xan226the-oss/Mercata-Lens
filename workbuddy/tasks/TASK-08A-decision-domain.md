@@ -10,7 +10,7 @@ Implement only the deterministic decision truth table and evidence-bounded valid
 
 ## Required reading
 
-Read completely: `AGENTS.md`; product Task 8; remaining-MVP and Task 8 designs; Task 8A plan; approved quality, pain-point, economics, and opportunity domain contracts/tests; types; package/config; Git history/status; `workbuddy/README.md`; this sheet.
+Read completely: `AGENTS.md`; `docs/specs/2026-08-13-mercata-lens-design.md`; the Product Task 8 section of `docs/plans/2026-08-13-mercata-lens-implementation-plan.md`; `docs/specs/2026-08-23-remaining-mvp-delivery-design.md`; `docs/specs/2026-08-23-task-8-decision-flow-design.md`; `docs/plans/2026-08-23-task-8a-decision-domain-implementation-plan.md`; approved quality, pain-point, economics, and opportunity domain contracts/tests; `src/domain/types.ts`; package/configuration; Git history/status; `workbuddy/README.md`; this sheet. Do not invent alternate filenames.
 
 ## Starting gate
 

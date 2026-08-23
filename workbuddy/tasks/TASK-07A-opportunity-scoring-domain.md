@@ -10,7 +10,7 @@ Implement only pure opportunity weight validation, contribution scoring, complet
 
 ## Required reading
 
-Read completely: `AGENTS.md`; product Task 7; remaining-MVP and Task 7 designs; Task 7A plan; approved economics contracts; current types/domain test patterns; package/config; Git history/status; `workbuddy/README.md`; this sheet.
+Read completely: `AGENTS.md`; `docs/specs/2026-08-13-mercata-lens-design.md`; the Product Task 7 section of `docs/plans/2026-08-13-mercata-lens-implementation-plan.md`; `docs/specs/2026-08-23-remaining-mvp-delivery-design.md`; `docs/specs/2026-08-23-task-7-opportunity-comparison-design.md`; `docs/plans/2026-08-23-task-7a-opportunity-scoring-domain-implementation-plan.md`; approved economics contracts; current types/domain test patterns; package/configuration; Git history/status; `workbuddy/README.md`; this sheet. Do not invent alternate filenames.
 
 ## Starting gate
 

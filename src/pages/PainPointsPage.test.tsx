@@ -39,9 +39,10 @@ function stubDemoFetch() {
 }
 
 function ImportHarness() {
-  const { dataset, importCsv } = useResearch();
+  const { dataset, corrections, importCsv } = useResearch();
   return <div>
     <output data-testid="harness-review-count">{dataset?.reviews.length ?? 0}</output>
+    <output data-testid="harness-correction-count">{Object.keys(corrections).length}</output>
     <button type="button" onClick={() => importCsv("", "")}>Harness failed import</button>
     <button type="button" onClick={() => importCsv(uploadProductsCsv, uploadReviewsCsv)}>Harness successful import</button>
   </div>;
@@ -169,10 +170,12 @@ describe("PainPointsPage workbench", () => {
     await user.click(screen.getAllByRole("checkbox")[1]);
     await user.type(screen.getByRole("textbox", { name: "Correction reason" }), "Manual noise annotation");
     await user.click(screen.getByRole("button", { name: "Apply correction & next" }));
+    await waitFor(() => expect(screen.getByTestId("harness-correction-count")).toHaveTextContent("1"));
     await waitFor(() => expect(screen.getByRole("button", { name: "r002" })).toHaveAttribute("aria-pressed", "true"));
     await user.click(screen.getByRole("button", { name: /Cleaning difficulty/i }));
     await waitFor(() => expect(screen.getByRole("button", { name: "r001" })).toHaveAttribute("aria-pressed", "true"));
     await user.click(screen.getByRole("button", { name: "Harness failed import" }));
+    await waitFor(() => expect(screen.getByTestId("harness-correction-count")).toHaveTextContent("1"));
     expect(screen.getByTestId("analysis-source-badge")).toHaveTextContent("Synthetic demo");
     expect(screen.getByText(/76 review records/i)).toBeVisible();
     expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "true");
@@ -181,6 +184,7 @@ describe("PainPointsPage workbench", () => {
     expect(screen.getAllByText("noise", { exact: true }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole("status").some((element) => element.textContent?.includes("Correction applied to r001."))).toBe(true);
     await user.click(screen.getByRole("button", { name: "Harness successful import" }));
+    await waitFor(() => expect(screen.getByTestId("harness-correction-count")).toHaveTextContent("0"));
     await waitFor(() => expect(screen.getByTestId("analysis-source-badge")).toHaveTextContent("User upload"));
     await waitFor(() => expect(screen.getByText(/10 review records/i)).toBeVisible());
     await waitFor(() => expect(screen.getByRole("button", { name: "u-r001" })).toHaveAttribute("aria-pressed", "true"));

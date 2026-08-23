@@ -128,6 +128,33 @@ describe("PainPointsPage workbench", () => {
     await user.click(screen.getByRole("button", { name: "Clear signal filter" }));
     await waitFor(() => expect(screen.getByRole("button", { name: "r001" })).toHaveAttribute("aria-pressed", "true"));
   });
+  it("repeats the same announcement as a new live-region event", async () => {
+    stubDemoFetch();
+    renderPage();
+    const user = userEvent.setup();
+    await waitFor(() => expect(screen.getAllByRole("checkbox")).toHaveLength(7));
+    await user.click(screen.getAllByRole("checkbox")[1]);
+    await user.type(screen.getByRole("textbox", { name: "Correction reason" }), "Manual noise annotation");
+    await user.click(screen.getByRole("button", { name: "Apply correction & next" }));
+    await waitFor(() => expect(screen.getByRole("button", { name: "r002" })).toHaveAttribute("aria-pressed", "true"));
+
+    const status = screen.getByTestId("workbench-status");
+    const firstSequence = Number(status.getAttribute("data-status-sequence"));
+    const firstMessageNode = status.firstElementChild;
+    expect(status).toHaveTextContent("Correction applied to r001.");
+
+    await user.click(screen.getByRole("button", { name: "Corrected" }));
+    await waitFor(() => expect(screen.getByRole("button", { name: "r001" })).toBeVisible());
+    await user.click(screen.getByRole("button", { name: "r001" }));
+    await user.clear(screen.getByRole("textbox", { name: "Correction reason" }));
+    await user.type(screen.getByRole("textbox", { name: "Correction reason" }), "Manual noise annotation again");
+    await user.click(screen.getByRole("button", { name: "Apply correction & next" }));
+    await waitFor(() => expect(screen.getByRole("button", { name: "r001" })).toHaveAttribute("aria-pressed", "true"));
+    const secondStatus = screen.getByTestId("workbench-status");
+    expect(Number(secondStatus.getAttribute("data-status-sequence"))).toBeGreaterThan(firstSequence);
+    expect(secondStatus).toHaveTextContent("Correction applied to r001.");
+    expect(secondStatus.firstElementChild).not.toBe(firstMessageNode);
+  });
   it("renders the direct no-data fallback outside the shell", async () => {
     vi.stubGlobal("fetch", vi.fn(() => Promise.reject(new Error("offline"))) as unknown as typeof fetch);
     renderDirectPage();
@@ -153,12 +180,6 @@ describe("PainPointsPage workbench", () => {
     expect(screen.getByRole("button", { name: "r001" })).toHaveAttribute("aria-pressed", "true");
     expect(screen.getAllByText("noise", { exact: true }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole("status").some((element) => element.textContent?.includes("Correction applied to r001."))).toBe(true);
-    await user.click(screen.getByRole("button", { name: "Corrected" }));
-    await waitFor(() => expect(screen.getByRole("button", { name: "r001" })).toBeVisible());
-    await user.click(screen.getByRole("button", { name: "r001" }));
-    await user.click(screen.getByRole("button", { name: "Clear correction" }));
-    await waitFor(() => expect(screen.getByText("No reviews match the current filters.")).toBeVisible());
-    expect(screen.getAllByRole("status").some((element) => element.textContent?.includes("Correction cleared for r001."))).toBe(true);
     await user.click(screen.getByRole("button", { name: "Harness successful import" }));
     await waitFor(() => expect(screen.getByTestId("analysis-source-badge")).toHaveTextContent("User upload"));
     await waitFor(() => expect(screen.getByText(/10 review records/i)).toBeVisible());

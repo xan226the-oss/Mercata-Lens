@@ -142,6 +142,73 @@ describe("calculateContribution incomplete inputs", () => {
 });
 
 describe("calculateContribution invalid inputs", () => {
+  it("rejects a complete input when finite cost additions exceed safe integer range", () => {
+    const result = calculateContribution({
+      ...completeInputs(),
+      salePriceCents: Number.MAX_SAFE_INTEGER,
+      sourcingCostCents: Number.MAX_SAFE_INTEGER,
+      inboundFreightCents: 1,
+      fulfillmentCostCents: 0,
+      advertisingCostCents: 0,
+      returnLossCents: 0,
+      otherCostCents: 0,
+    });
+
+    expect(result).toEqual({
+      status: "invalid",
+      issues: [
+        {
+          field: "inboundFreightCents",
+          code: "not_finite",
+          message: "inboundFreightCents produces an unsafe total.",
+        },
+      ],
+    });
+  });
+
+  it("returns invalid rather than incomplete when known costs overflow with a missing field", () => {
+    const result = calculateContribution({
+      salePriceCents: null,
+      sourcingCostCents: Number.MAX_SAFE_INTEGER,
+      inboundFreightCents: Number.MAX_SAFE_INTEGER,
+      referralFeeRate: null,
+      fulfillmentCostCents: 1,
+      advertisingCostCents: null,
+      returnLossCents: null,
+      otherCostCents: null,
+    });
+
+    expect(result).toEqual({
+      status: "invalid",
+      issues: [
+        {
+          field: "inboundFreightCents",
+          code: "not_finite",
+          message: "inboundFreightCents produces an unsafe total.",
+        },
+      ],
+    });
+  });
+
+  it("rejects a cent input outside the safe integer range", () => {
+    const result = calculateContribution({
+      ...completeInputs(),
+      otherCostCents: Number.MAX_SAFE_INTEGER + 1,
+    });
+
+    expect(result).toEqual({
+      status: "invalid",
+      issues: [
+        {
+          field: "otherCostCents",
+          code: "not_finite",
+          message: "otherCostCents must be a finite safe integer.",
+        },
+      ],
+    });
+    expect(JSON.stringify(result)).not.toMatch(/NaN|Infinity/);
+  });
+
   it("collects invalid issues in stable input order and takes precedence over incomplete", () => {
     const result = calculateContribution({
       salePriceCents: -1,
@@ -158,10 +225,10 @@ describe("calculateContribution invalid inputs", () => {
       status: "invalid",
       issues: [
         { field: "salePriceCents", code: "negative", message: "salePriceCents must be non-negative." },
-        { field: "sourcingCostCents", code: "not_finite", message: "sourcingCostCents must be a finite integer." },
-        { field: "inboundFreightCents", code: "not_finite", message: "inboundFreightCents must be a finite integer." },
+        { field: "sourcingCostCents", code: "not_finite", message: "sourcingCostCents must be a finite safe integer." },
+        { field: "inboundFreightCents", code: "not_finite", message: "inboundFreightCents must be a finite safe integer." },
         { field: "referralFeeRate", code: "rate_out_of_range", message: "referralFeeRate must be between 0 and 1." },
-        { field: "fulfillmentCostCents", code: "not_finite", message: "fulfillmentCostCents must be a finite integer." },
+        { field: "fulfillmentCostCents", code: "not_finite", message: "fulfillmentCostCents must be a finite safe integer." },
         { field: "returnLossCents", code: "negative", message: "returnLossCents must be non-negative." },
       ],
     });

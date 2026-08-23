@@ -48,6 +48,10 @@ function isFiniteInteger(value: number): boolean {
   return Number.isFinite(value) && Number.isInteger(value);
 }
 
+function isSafeCent(value: number): boolean {
+  return Number.isSafeInteger(value);
+}
+
 function validate(inputs: EconomicInputs): EconomicIssue[] {
   const issues: EconomicIssue[] = [];
 
@@ -72,11 +76,11 @@ function validate(inputs: EconomicInputs): EconomicIssue[] {
       continue;
     }
 
-    if (typeof value !== "number" || !isFiniteInteger(value)) {
+    if (typeof value !== "number" || !isFiniteInteger(value) || !isSafeCent(value)) {
       issues.push({
         field,
         code: "not_finite",
-        message: `${field} must be a finite integer.`,
+        message: `${field} must be a finite safe integer.`,
       });
     } else if (value < 0) {
       issues.push({
@@ -90,15 +94,54 @@ function validate(inputs: EconomicInputs): EconomicIssue[] {
   return issues;
 }
 
-function sumKnownCosts(inputs: EconomicInputs): number {
+function checkedAdd(total: number, value: number, field: EconomicInputKey): number | EconomicIssue {
+  const next = total + value;
+  return Number.isSafeInteger(next)
+    ? next
+    : {
+        field,
+        code: "not_finite",
+        message: `${field} produces an unsafe total.`,
+      };
+}
+
+function checkedReferralFee(salePriceCents: number, referralFeeRate: number): number | EconomicIssue {
+  const rawFee = salePriceCents * referralFeeRate;
+  if (!Number.isFinite(rawFee)) {
+    return {
+      field: "referralFeeRate",
+      code: "not_finite",
+      message: "referralFeeRate produces an unsafe referral fee.",
+    };
+  }
+
+  const referralFeeCents = Math.round(rawFee);
+  return Number.isSafeInteger(referralFeeCents)
+    ? referralFeeCents
+    : {
+        field: "referralFeeRate",
+        code: "not_finite",
+        message: "referralFeeRate produces an unsafe referral fee.",
+      };
+}
+
+function sumKnownCosts(inputs: EconomicInputs): number | EconomicIssue {
   let total = 0;
   for (const field of COST_KEYS) {
     const value = inputs[field];
-    if (value !== null) total += value;
+    if (value !== null) {
+      const next = checkedAdd(total, value, field);
+      if (typeof next !== "number") return next;
+      total = next;
+    }
   }
 
   if (inputs.salePriceCents !== null && inputs.referralFeeRate !== null) {
-    total += Math.round(inputs.salePriceCents * inputs.referralFeeRate);
+    const referralFeeCents = checkedReferralFee(inputs.salePriceCents, inputs.referralFeeRate);
+    if (typeof referralFeeCents !== "number") return referralFeeCents;
+    const next = checkedAdd(total, referralFeeCents, "referralFeeRate");
+    if (typeof next !== "number") return next;
+    total = next;
   }
 
   return total;
@@ -109,18 +152,33 @@ export function calculateContribution(inputs: EconomicInputs): EconomicResult {
   if (issues.length > 0) return { status: "invalid", issues };
 
   const missingFields = INPUT_KEYS.filter((field) => inputs[field] === null);
+  const knownCosts = sumKnownCosts(inputs);
+  if (typeof knownCosts !== "number") return { status: "invalid", issues: [knownCosts] };
+
   if (missingFields.length > 0) {
     return {
       status: "incomplete",
       missingFields,
-      partialKnownCostsCents: sumKnownCosts(inputs),
+      partialKnownCostsCents: knownCosts,
     };
   }
 
   const salePriceCents = inputs.salePriceCents as number;
-  const referralFeeCents = Math.round(salePriceCents * (inputs.referralFeeRate as number));
-  const totalCostCents = sumKnownCosts(inputs);
+  const referralFeeResult = checkedReferralFee(salePriceCents, inputs.referralFeeRate as number);
+  if (typeof referralFeeResult !== "number") return { status: "invalid", issues: [referralFeeResult] };
+  const referralFeeCents = referralFeeResult;
+  const totalCostCents = knownCosts;
   const contributionCents = salePriceCents - totalCostCents;
+  if (!Number.isSafeInteger(contributionCents)) {
+    return {
+      status: "invalid",
+      issues: [{
+        field: "salePriceCents",
+        code: "not_finite",
+        message: "salePriceCents produces an unsafe contribution.",
+      }],
+    };
+  }
 
   return {
     status: "complete",

@@ -13,6 +13,21 @@ import { PainPointsPage } from "./PainPointsPage";
 const demoDir = path.resolve(__dirname, "../../public/demo");
 const productsCsv = fs.readFileSync(path.join(demoDir, "products.csv"), "utf8");
 const reviewsCsv = fs.readFileSync(path.join(demoDir, "reviews.csv"), "utf8");
+const uploadProductsCsv = `product_id,title,price_usd,rating,category,source_url,observed_at
+u01,Upload Steel Fountain,29.99,4.1,Cat Water Fountain,https://example.com/upload/product/u01,2026-08-22
+u02,Upload Quiet Fountain,39.99,4.4,Cat Water Fountain,https://example.com/upload/product/u02,2026-08-22
+u03,Upload Compact Fountain,24.99,3.9,Cat Water Fountain,https://example.com/upload/product/u03,2026-08-22`;
+const uploadReviewsCsv = `review_id,product_id,rating,review_text,review_date,verified_purchase,source_url
+u-r001,u01,2,"Hard to clean and noisy.",2026-08-21,true,https://example.com/upload/review/u-r001
+u-r002,u01,3,"The pump died after a week.",2026-08-20,true,https://example.com/upload/review/u-r002
+u-r003,u02,4,"My cat ignores it completely.",2026-08-19,false,https://example.com/upload/review/u-r003
+u-r004,u02,2,"The filter replacements add up quickly.",2026-08-18,true,https://example.com/upload/review/u-r004
+u-r005,u03,3,"It leaks around the base.",2026-08-17,false,https://example.com/upload/review/u-r005
+u-r006,u03,4,"The bowl is too small.",2026-08-16,true,https://example.com/upload/review/u-r006
+u-r007,u01,5,"The fountain works well.",2026-08-15,true,https://example.com/upload/review/u-r007
+u-r008,u02,4,"Water flow is steady.",2026-08-14,false,https://example.com/upload/review/u-r008
+u-r009,u03,3,"Setup was straightforward.",2026-08-13,true,https://example.com/upload/review/u-r009
+u-r010,u01,2,"Cleaning takes forever and it leaks.",2026-08-12,false,https://example.com/upload/review/u-r010`;
 
 function stubDemoFetch() {
   vi.stubGlobal("fetch", vi.fn((input: RequestInfo | URL) => {
@@ -23,14 +38,12 @@ function stubDemoFetch() {
   }) as unknown as typeof fetch);
 }
 
-function ResearchProbe() {
-  const { dataset, corrections, applyReviewCorrection, importCsv } = useResearch();
-  const reviewId = dataset?.reviews[0]?.reviewId ?? "";
+function ImportHarness() {
+  const { dataset, importCsv } = useResearch();
   return <div>
-    <output data-testid="probe-correction-count">{Object.keys(corrections).length}</output>
-    <button type="button" onClick={() => applyReviewCorrection(reviewId, { add: ["noise"], remove: [], reason: "Probe correction" })}>Probe apply</button>
-    <button type="button" onClick={() => importCsv("", "")}>Probe failed import</button>
-    <button type="button" onClick={() => importCsv(productsCsv, reviewsCsv)}>Probe successful import</button>
+    <output data-testid="harness-review-count">{dataset?.reviews.length ?? 0}</output>
+    <button type="button" onClick={() => importCsv("", "")}>Harness failed import</button>
+    <button type="button" onClick={() => importCsv(uploadProductsCsv, uploadReviewsCsv)}>Harness successful import</button>
   </div>;
 }
 
@@ -42,12 +55,9 @@ function renderPage() {
           <Routes><Route path="/pain-points" element={<PainPointsPage />} /></Routes>
         </ResearchLayout>
       </MemoryRouter>
+      <ImportHarness />
     </ResearchProvider>,
   );
-}
-
-function renderProbe() {
-  return render(<ResearchProvider><ResearchProbe /></ResearchProvider>);
 }
 
 function renderDirectPage() {
@@ -124,16 +134,88 @@ describe("PainPointsPage workbench", () => {
     await waitFor(() => expect(screen.getByText("No active review evidence is available.")).toBeVisible());
   });
 
-  it("keeps corrections on failed import and clears them on successful replacement", async () => {
+  it("keeps the real page correction through failed import and resets it after a distinct successful replacement", async () => {
     stubDemoFetch();
-    renderProbe();
-    await waitFor(() => expect(screen.getByRole("button", { name: "Probe apply" })).toBeEnabled());
-    await userEvent.click(screen.getByRole("button", { name: "Probe apply" }));
-    await waitFor(() => expect(screen.getByTestId("probe-correction-count")).toHaveTextContent("1"));
-    await userEvent.click(screen.getByRole("button", { name: "Probe failed import" }));
-    expect(screen.getByTestId("probe-correction-count")).toHaveTextContent("1");
-    await userEvent.click(screen.getByRole("button", { name: "Probe successful import" }));
-    await waitFor(() => expect(screen.getByTestId("probe-correction-count")).toHaveTextContent("0"));
+    renderPage();
+    const user = userEvent.setup();
+    await waitFor(() => expect(screen.getAllByRole("checkbox")).toHaveLength(7));
+    await user.click(screen.getAllByRole("checkbox")[1]);
+    await user.type(screen.getByRole("textbox", { name: "Correction reason" }), "Manual noise annotation");
+    await user.click(screen.getByRole("button", { name: "Apply correction & next" }));
+    await waitFor(() => expect(screen.getByRole("button", { name: "r002" })).toHaveAttribute("aria-pressed", "true"));
+    await user.click(screen.getByRole("button", { name: /Cleaning difficulty/i }));
+    await waitFor(() => expect(screen.getByRole("button", { name: "r001" })).toHaveAttribute("aria-pressed", "true"));
+    await user.click(screen.getByRole("button", { name: "Harness failed import" }));
+    expect(screen.getByTestId("analysis-source-badge")).toHaveTextContent("Synthetic demo");
+    expect(screen.getByText(/76 review records/i)).toBeVisible();
+    expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: /Cleaning difficulty/i })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "r001" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getAllByText("noise", { exact: true }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("status").some((element) => element.textContent?.includes("Correction applied to r001."))).toBe(true);
+    await user.click(screen.getByRole("button", { name: "Corrected" }));
+    await waitFor(() => expect(screen.getByRole("button", { name: "r001" })).toBeVisible());
+    await user.click(screen.getByRole("button", { name: "r001" }));
+    await user.click(screen.getByRole("button", { name: "Clear correction" }));
+    await waitFor(() => expect(screen.getByText("No reviews match the current filters.")).toBeVisible());
+    expect(screen.getAllByRole("status").some((element) => element.textContent?.includes("Correction cleared for r001."))).toBe(true);
+    await user.click(screen.getByRole("button", { name: "Harness successful import" }));
+    await waitFor(() => expect(screen.getByTestId("analysis-source-badge")).toHaveTextContent("User upload"));
+    await waitFor(() => expect(screen.getByText(/10 review records/i)).toBeVisible());
+    await waitFor(() => expect(screen.getByRole("button", { name: "u-r001" })).toHaveAttribute("aria-pressed", "true"));
+    expect(screen.queryByRole("button", { name: "r001" })).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Original review" })).toBeVisible();
+    expect(screen.getAllByText("u-r001", { exact: true })).toHaveLength(2);
+    expect(screen.getAllByText("Hard to clean and noisy.", { exact: true })).toHaveLength(2);
+    expect(screen.getByRole("button", { name: "Rule-matched" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: /Cleaning difficulty/i })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getAllByText("Hard to clean and noisy.")).toHaveLength(2);
+    expect(screen.queryByText("Hard to clean. The inside has corners that trap slime no matter how many times I scrub.")).not.toBeInTheDocument();
+    expect(screen.queryByText("Correction applied to r001.")).not.toBeInTheDocument();
+    expect(screen.queryByText("Correction cleared for r001.")).not.toBeInTheDocument();
+    expect(screen.getAllByText("noise", { exact: true }).length).toBeGreaterThan(0);
+  });
+
+  it("keeps the clear announcement after the only corrected row is removed", async () => {
+    stubDemoFetch();
+    renderPage();
+    const user = userEvent.setup();
+    await waitFor(() => expect(screen.getAllByRole("checkbox")).toHaveLength(7));
+    await user.click(screen.getAllByRole("checkbox")[1]);
+    await user.type(screen.getByRole("textbox", { name: "Correction reason" }), "Manual noise annotation");
+    await user.click(screen.getByRole("button", { name: "Apply correction & next" }));
+    await waitFor(() => expect(screen.getByRole("button", { name: "r002" })).toHaveAttribute("aria-pressed", "true"));
+    await user.click(screen.getByRole("button", { name: "Corrected" }));
+    await waitFor(() => expect(screen.getByRole("button", { name: "r001" })).toBeVisible());
+    await user.click(screen.getByRole("button", { name: "r001" }));
+    await user.click(screen.getByRole("button", { name: "Clear correction" }));
+    await waitFor(() => expect(screen.getByText("No reviews match the current filters.")).toBeVisible());
+    expect(screen.getByText("No review selected.")).toBeVisible();
+    expect(screen.getAllByRole("status").some((element) => element.textContent?.includes("Correction cleared for r001."))).toBe(true);
+  });
+  it("supports a manual-only correction through All and No automatic match", async () => {
+    stubDemoFetch();
+    renderPage();
+    const user = userEvent.setup();
+    await waitFor(() => expect(screen.getAllByRole("checkbox")).toHaveLength(7));
+    await user.click(screen.getByRole("button", { name: "All" }));
+    await user.click(screen.getByRole("button", { name: "No automatic match" }));
+    await waitFor(() => expect(screen.getByText("No automatic phrase match.")).toBeVisible());
+    const manualReviewId = screen.getAllByRole("button", { name: /^r\d+$/ })[0].textContent ?? "";
+    await user.click(screen.getAllByRole("checkbox")[0]);
+    await user.type(screen.getByRole("textbox", { name: "Correction reason" }), "Manual acceptance annotation");
+    await user.click(screen.getByRole("button", { name: "Apply correction & next" }));
+    await user.click(screen.getByRole("button", { name: "Corrected" }));
+    await waitFor(() => expect(screen.getByRole("button", { name: manualReviewId ?? "" })).toBeVisible());
+    await user.click(screen.getByRole("button", { name: manualReviewId ?? "" }));
+    expect(screen.getByText("No automatic phrase match.")).toBeVisible();
+    expect(screen.getByText("Manually added").parentElement).toHaveTextContent("hard_to_clean");
+    expect(screen.getAllByText("Effective labels")[1].parentElement).toHaveTextContent("hard_to_clean");
+    expect(screen.queryByText(/Configured phrase:/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Rule:/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Offsets:/)).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Cleaning difficulty/i })).toHaveTextContent(/10 \/ 76 reviews/);
   });
 
 });

@@ -41,7 +41,6 @@ export function ReviewCorrectionPanel({ row, hasPrevious, hasNext, onPrevious, o
   const [selectedLabels, setSelectedLabels] = useState<PainPointId[]>([]);
   const [reason, setReason] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [announcement, setAnnouncement] = useState("");
 
   useEffect(() => {
     if (!row) {
@@ -86,7 +85,6 @@ export function ReviewCorrectionPanel({ row, hasPrevious, hasNext, onPrevious, o
   const clear = () => {
     if (draftDirty) return;
     onClear(review.reviewId);
-    setAnnouncement(`Correction cleared for ${review.reviewId}.`);
   };
   const apply = () => {
     if (!derivedCorrection) return;
@@ -100,7 +98,6 @@ export function ReviewCorrectionPanel({ row, hasPrevious, hasNext, onPrevious, o
       return;
     }
     setError(null);
-    setAnnouncement(`Correction applied to ${review.reviewId}.`);
   };
   const reset = () => {
     setSelectedLabels(initialLabels(row.classification));
@@ -166,7 +163,6 @@ export function ReviewCorrectionPanel({ row, hasPrevious, hasNext, onPrevious, o
           {row.classification.correctionValidity === "applied" ? <button type="button" className="text-button" disabled={draftDirty} onClick={clear}>Clear correction</button> : null}
         </div>
       </form>
-      <div className="sr-only" role="status" aria-live="polite">{announcement}</div>
     </section>
   );
 }

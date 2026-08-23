@@ -15,6 +15,7 @@ export function PainPointsPage() {
   const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
   const [draftDirty, setDraftDirty] = useState(false);
   const [pendingSelection, setPendingSelection] = useState<string | null | undefined>(undefined);
+  const [statusMessage, setStatusMessage] = useState("");
 
   const summaries = useMemo(() => dataset ? summarizePainPoints(dataset, corrections) : [], [dataset, corrections]);
   const rows = useMemo<ReviewQueueRow[]>(() => {
@@ -39,6 +40,7 @@ export function PainPointsPage() {
     setLabelFilter(null);
     setDraftDirty(false);
     setPendingSelection(undefined);
+    setStatusMessage("");
     const first = filterReviewQueueRows(rows, "rule_matched", null)[0];
     setSelectedReviewId(first?.review.reviewId ?? null);
   }, [dataset]);
@@ -98,6 +100,7 @@ export function PainPointsPage() {
     const previousId = filteredRows[oldIndex - 1]?.review.reviewId ?? null;
     const accepted = applyReviewCorrection(reviewId, correction);
     if (!accepted) return false;
+    setStatusMessage(`Correction applied to ${reviewId}.`);
     const nextRows = filterReviewQueueRows(rows.map((row) => row.review.reviewId === reviewId ? { ...row, classification: classifyReview(row.review, { ...corrections, [reviewId]: correction }), corrected: true } : row), statusFilter, labelFilter);
     const fallback = nextId && nextRows.some((row) => row.review.reviewId === nextId) ? nextId : previousId && nextRows.some((row) => row.review.reviewId === previousId) ? previousId : reviewId && nextRows.some((row) => row.review.reviewId === reviewId) ? reviewId : nextRows[oldIndex]?.review.reviewId ?? nextRows.at(-1)?.review.reviewId ?? null;
     setPendingSelection(fallback);
@@ -121,6 +124,7 @@ export function PainPointsPage() {
         ?? nextFilteredRows.at(-1)?.review.reviewId
         ?? null;
     clearReviewCorrection(reviewId);
+    setStatusMessage(`Correction cleared for ${reviewId}.`);
     setPendingSelection(sameReview);
     setDraftDirty(false);
   }, [clearReviewCorrection, corrections, filteredRows, labelFilter, rows, statusFilter]);
@@ -131,6 +135,14 @@ export function PainPointsPage() {
 
   return (
     <section className="pain-point-page">
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        style={{ position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clip: "rect(0, 0, 0, 0)", whiteSpace: "nowrap", border: 0 }}
+      >
+        {statusMessage}
+      </div>
       <PageHeader
         eyebrow="Rule-matched review evidence"
         title="Customer pain-point evidence"

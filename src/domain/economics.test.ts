@@ -142,6 +142,42 @@ describe("calculateContribution incomplete inputs", () => {
 });
 
 describe("calculateContribution invalid inputs", () => {
+  it("attributes complete overflow to referralFeeRate at its public input position", () => {
+    const result = calculateContribution({
+      salePriceCents: 1,
+      sourcingCostCents: Number.MAX_SAFE_INTEGER,
+      inboundFreightCents: 0,
+      referralFeeRate: 1,
+      fulfillmentCostCents: 1,
+      advertisingCostCents: 0,
+      returnLossCents: 0,
+      otherCostCents: 0,
+    });
+
+    expect(result).toMatchObject({
+      status: "invalid",
+      issues: [expect.objectContaining({ field: "referralFeeRate" })],
+    });
+  });
+
+  it("attributes incomplete overflow to referralFeeRate before later missing fields", () => {
+    const result = calculateContribution({
+      salePriceCents: 1,
+      sourcingCostCents: Number.MAX_SAFE_INTEGER,
+      inboundFreightCents: 0,
+      referralFeeRate: 1,
+      fulfillmentCostCents: 1,
+      advertisingCostCents: 0,
+      returnLossCents: null,
+      otherCostCents: 0,
+    });
+
+    expect(result).toMatchObject({
+      status: "invalid",
+      issues: [expect.objectContaining({ field: "referralFeeRate" })],
+    });
+  });
+
   it("rejects a complete input when finite cost additions exceed safe integer range", () => {
     const result = calculateContribution({
       ...completeInputs(),

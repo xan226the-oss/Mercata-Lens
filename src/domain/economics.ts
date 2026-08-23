@@ -35,15 +35,6 @@ const INPUT_KEYS: readonly EconomicInputKey[] = [
   "otherCostCents",
 ];
 
-const COST_KEYS: readonly EconomicInputKey[] = [
-  "sourcingCostCents",
-  "inboundFreightCents",
-  "fulfillmentCostCents",
-  "advertisingCostCents",
-  "returnLossCents",
-  "otherCostCents",
-];
-
 function isFiniteInteger(value: number): boolean {
   return Number.isFinite(value) && Number.isInteger(value);
 }
@@ -127,21 +118,24 @@ function checkedReferralFee(salePriceCents: number, referralFeeRate: number): nu
 
 function sumKnownCosts(inputs: EconomicInputs): number | EconomicIssue {
   let total = 0;
-  for (const field of COST_KEYS) {
+  for (const field of INPUT_KEYS) {
+    if (field === "salePriceCents") continue;
+    if (field === "referralFeeRate") {
+      if (inputs.salePriceCents === null || inputs.referralFeeRate === null) continue;
+      const referralFeeCents = checkedReferralFee(inputs.salePriceCents, inputs.referralFeeRate);
+      if (typeof referralFeeCents !== "number") return referralFeeCents;
+      const next = checkedAdd(total, referralFeeCents, "referralFeeRate");
+      if (typeof next !== "number") return next;
+      total = next;
+      continue;
+    }
+
     const value = inputs[field];
     if (value !== null) {
       const next = checkedAdd(total, value, field);
       if (typeof next !== "number") return next;
       total = next;
     }
-  }
-
-  if (inputs.salePriceCents !== null && inputs.referralFeeRate !== null) {
-    const referralFeeCents = checkedReferralFee(inputs.salePriceCents, inputs.referralFeeRate);
-    if (typeof referralFeeCents !== "number") return referralFeeCents;
-    const next = checkedAdd(total, referralFeeCents, "referralFeeRate");
-    if (typeof next !== "number") return next;
-    total = next;
   }
 
   return total;

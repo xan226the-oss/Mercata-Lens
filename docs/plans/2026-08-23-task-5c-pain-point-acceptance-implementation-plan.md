@@ -79,5 +79,4 @@ At `1440 x 900`, `900 x 900`, and `390 x 844`, verify the Task 5C design contrac
 
 - [ ] **Step 3: Commit only after every gate passes**
 
-Commit the four allowed files with `test: complete pain point acceptance`, stop the server, verify port release and a clean worktree.
-
+Commit the five allowed files with `test: complete pain point acceptance`, stop the server, verify port release and a clean worktree.

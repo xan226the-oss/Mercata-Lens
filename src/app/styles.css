@@ -1670,3 +1670,28 @@ input {
     grid-template-columns: 1fr;
   }
 }
+
+/* Unit economics workspace: scoped additions only. */
+.economics-workspace,
+.economics-results {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+.economics-heading { display: grid; gap: 8px; }
+.economics-heading h2 { margin: 0; font-family: var(--font-display); }
+.economics-heading p, .economics-results p { margin: 0; color: var(--color-muted); }
+.economics-results { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.economics-results p { min-width: 0; padding: 14px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface-subtle); overflow-wrap: anywhere; }
+.economics-scenarios { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.economics-scenario { min-width: 0; margin: 0; padding: 16px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface); }
+.economics-scenario legend { max-width: 100%; padding: 0 6px; font-weight: 600; overflow-wrap: anywhere; }
+.economics-fields { display: grid; gap: 14px; }
+.economics-field { display: grid; gap: 5px; min-width: 0; }
+.economics-field label { font-weight: 600; }
+.economics-field input { width: 100%; min-height: 40px; padding: 7px 9px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface); color: var(--color-ink); }
+.economics-field--invalid input { border-color: var(--color-danger); }
+.economics-field__help, .economics-provenance { color: var(--color-muted); font-size: 12px; overflow-wrap: anywhere; }
+.economics-provenance { color: var(--color-warning); }
+.economics-error { color: var(--color-danger); font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
+@media (max-width: 900px) { .economics-results, .economics-scenarios { grid-template-columns: 1fr; } }

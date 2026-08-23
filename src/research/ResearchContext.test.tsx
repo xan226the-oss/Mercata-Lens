@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import fs from "node:fs";
 import path from "node:path";
 import { ResearchProvider, useResearch } from "./ResearchContext";
+import type { EconomicScenario } from "../domain/types";
 
 const demoDir = path.resolve(__dirname, "../../public/demo");
 const productsCsv = fs.readFileSync(path.join(demoDir, "products.csv"), "utf8");
@@ -29,6 +30,22 @@ function Probe() {
       <span data-testid="source-kind">{research.sourceKind ?? "none"}</span>
       <span data-testid="research-status">{research.status}</span>
       <span data-testid="apply-result" />
+      <span data-testid="economic-scenarios">{JSON.stringify(research.economicScenarios)}</span>
+      <button onClick={() => {
+        const scenario = research.economicScenarios[1];
+        if (!scenario) return;
+        const next: EconomicScenario = {
+          ...scenario,
+          inputs: { ...scenario.inputs, salePriceCents: 7777 },
+          provenance: { ...scenario.provenance },
+        };
+        document.querySelector("[data-testid=apply-result]")!.textContent = String(research.replaceEconomicScenario(next));
+      }}>Update base economics</button>
+      <button onClick={() => {
+        const scenario = research.economicScenarios[1];
+        if (!scenario) return;
+        document.querySelector("[data-testid=apply-result]")!.textContent = String(research.replaceEconomicScenario({ ...scenario, id: "unknown" as EconomicScenario["id"] }));
+      }}>Reject unknown economics</button>
       <button onClick={() => {
         const ok = research.applyReviewCorrection(reviewId, { add: ["noise"], remove: [], reason: "  Reviewed against source  " });
         document.querySelector("[data-testid=apply-result]")!.textContent = String(ok);
@@ -94,5 +111,33 @@ describe("ResearchContext current-session corrections", () => {
     await userEvent.click(screen.getByRole("button", { name: "Reload failing demo" }));
     expect(screen.getByTestId("correction-count")).toHaveTextContent("0");
     await waitFor(() => expect(screen.getByTestId("research-status")).toHaveTextContent("error"));
+  });
+
+  it("resets Demo scenarios, accepts known IDs with defensive copies, and rejects unknown IDs", async () => {
+    stubDemoFetch();
+    render(<ResearchProvider><Probe /></ResearchProvider>);
+    await waitFor(() => expect(screen.getByTestId("source-kind")).toHaveTextContent("demo"));
+    const initial = JSON.parse(screen.getByTestId("economic-scenarios").textContent ?? "[]") as EconomicScenario[];
+    expect(initial[1]?.inputs.salePriceCents).toBe(3999);
+    await userEvent.click(screen.getByRole("button", { name: "Update base economics" }));
+    expect(JSON.parse(screen.getByTestId("economic-scenarios").textContent ?? "[]")[1].inputs.salePriceCents).toBe(7777);
+    expect(screen.getByTestId("apply-result")).toHaveTextContent("true");
+    await userEvent.click(screen.getByRole("button", { name: "Reject unknown economics" }));
+    expect(screen.getByTestId("apply-result")).toHaveTextContent("false");
+    await userEvent.click(screen.getByRole("button", { name: "Reload failing demo" }));
+    await waitFor(() => expect(screen.getByTestId("economic-scenarios").textContent).toContain("3999"));
+  });
+
+  it("preserves economics after failed import and clears them after successful replacement", async () => {
+    stubDemoFetch();
+    render(<ResearchProvider><Probe /></ResearchProvider>);
+    await waitFor(() => expect(screen.getByTestId("source-kind")).toHaveTextContent("demo"));
+    await userEvent.click(screen.getByRole("button", { name: "Update base economics" }));
+    await userEvent.click(screen.getByRole("button", { name: "Import invalid CSV" }));
+    expect(screen.getByTestId("economic-scenarios")).toHaveTextContent("7777");
+    await userEvent.click(screen.getByRole("button", { name: "Import valid CSV" }));
+    await waitFor(() => expect(screen.getByTestId("source-kind")).toHaveTextContent("user_upload"));
+    const scenarios = JSON.parse(screen.getByTestId("economic-scenarios").textContent ?? "[]") as EconomicScenario[];
+    expect(scenarios.every((scenario) => Object.values(scenario.inputs).every((value) => value === null))).toBe(true);
   });
 });

@@ -22,7 +22,9 @@ import type {
   ParseIssue,
   QualityReport,
   ResearchDataset,
+  EconomicScenario,
 } from "../domain/types";
+import { createEconomicScenarios, cloneEconomicScenario } from "../data/economicScenarios";
 import { tryLoadDemoDataset } from "../data/demoLoader";
 import { importResearchCsv } from "../data/csvImport";
 import { assessQuality } from "../domain/quality";
@@ -56,6 +58,8 @@ export interface ResearchContextValue {
     correction: PainPointCorrection,
   ) => boolean;
   clearReviewCorrection: (reviewId: string) => void;
+  economicScenarios: EconomicScenario[];
+  replaceEconomicScenario: (scenario: EconomicScenario) => boolean;
 }
 
 const EMPTY_IMPORT_STATE: ImportOutcomeState = {
@@ -76,6 +80,13 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [importState, setImportState] = useState<ImportOutcomeState>(EMPTY_IMPORT_STATE);
   const [corrections, setCorrections] = useState<PainPointCorrections>({});
+  const [economicScenarios, setEconomicScenarios] = useState<EconomicScenario[]>(() => createEconomicScenarios("demo"));
+
+  const replaceEconomicScenario = useCallback((scenario: EconomicScenario): boolean => {
+    if (!["pessimistic", "base", "optimistic"].includes(scenario.id)) return false;
+    setEconomicScenarios((current) => current.map((item) => item.id === scenario.id ? cloneEconomicScenario(scenario) : item));
+    return true;
+  }, []);
 
   const applyReviewCorrection = useCallback(
     (reviewId: string, correction: PainPointCorrection): boolean => {
@@ -106,6 +117,7 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
   const loadDemo = useMemo(
     () => () => {
       setCorrections({});
+      setEconomicScenarios(createEconomicScenarios("demo"));
       setStatus("loading");
       setDataset(null);
       setQualityReport(null);
@@ -154,6 +166,7 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
       }
       const nextQuality = assessQuality(result.dataset);
       setCorrections({});
+      setEconomicScenarios(createEconomicScenarios("user_upload"));
       setDataset(result.dataset);
       setQualityReport(nextQuality);
       setImportState({
@@ -188,8 +201,10 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
       corrections,
       applyReviewCorrection,
       clearReviewCorrection,
+      economicScenarios,
+      replaceEconomicScenario,
     }),
-    [status, dataset, sourceKind, qualityReport, issues, error, importState, loadDemo, importCsv, corrections, applyReviewCorrection, clearReviewCorrection],
+    [status, dataset, sourceKind, qualityReport, issues, error, importState, loadDemo, importCsv, corrections, applyReviewCorrection, clearReviewCorrection, economicScenarios, replaceEconomicScenario],
   );
 
   return <ResearchContext.Provider value={value}>{children}</ResearchContext.Provider>;

@@ -39,7 +39,11 @@ Mercata Lens uses a local Light Slate research workspace. Home shows the active 
 
 Category Overview renders tested descriptive statistics for the active local sample: median and observed price range, sample-relative price bands, rating and displayed review-count bands, represented brand labels, attribute coverage, contributing product IDs, cut points, source boundaries, and limitations. The independent Demo calculation is recorded in [`docs/evidence/manual-category-check.md`](docs/evidence/manual-category-check.md).
 
-Customer pain points, economics, opportunity scoring, and final decision logic remain unimplemented. The current category statistics do not establish wider-market coverage, sales, demand, profitability, or purchase advice.
+Customer pain-point evidence is implemented as a deterministic, evidence-first review workbench. Task 5A uses the versioned phrase ruleset `1.0.0` with the stable labels `hard_to_clean`, `noise`, `leakage`, `pump_lifetime`, `filter_cost`, `capacity`, and `pet_acceptance`. Each automatic signal retains the configured phrase and exact source-text offsets. The workbench separates automatic matches from current-session manual additions/removals, requires a non-blank correction reason, and clears corrections after successful dataset replacement while preserving them after failed import.
+
+The 50-row handoff is recorded in [`docs/evidence/review-audit.csv`](docs/evidence/review-audit.csv). Only `review_id` and classifier-derived `system_labels` are populated; `human_labels`, `outcome`, `notes`, `auditor`, and `date` remain blank. The sampling and acceptance record is [`docs/evidence/manual-pain-point-check.md`](docs/evidence/manual-pain-point-check.md), and the unchanged ruleset baseline plus future change template is [`docs/evidence/review-rule-changelog.md`](docs/evidence/review-rule-changelog.md). The human audit is **Incomplete — awaiting user judgments**; the artifact does not claim classification accuracy, market prevalence, sales, demand, or a completed human-validation gate.
+
+Economics, opportunity scoring, and final decision logic remain unimplemented. The current category statistics and rule-matched review signals do not establish wider-market coverage, sales, demand, profitability, or purchase advice.
 
 ## Getting started
 

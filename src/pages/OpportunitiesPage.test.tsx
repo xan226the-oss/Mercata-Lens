@@ -179,6 +179,7 @@ describe("OpportunitiesPage economics workspace", () => {
     await waitFor(() => expect(screen.getByTestId("analysis-source-badge")).toHaveTextContent("User upload"));
     expect(screen.queryByText("Calculation unavailable until the invalid draft is corrected.")).not.toBeInTheDocument();
     expect(screen.getByTestId("economics-result-base")).toHaveTextContent("Missing fields:");
+    expect(within(screen.getByRole("group", { name: "Base scenario" })).getByLabelText("Sale price")).toHaveValue("");
     const newBase = within(screen.getByRole("group", { name: "Base scenario" }));
     fireEvent.change(newBase.getByLabelText("Sale price"), { target: { value: "oops" } });
     expect(screen.getByTestId("economics-result-base")).toHaveTextContent("Calculation unavailable until the invalid draft is corrected.");

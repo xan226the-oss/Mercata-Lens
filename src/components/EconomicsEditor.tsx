@@ -49,12 +49,21 @@ function parseDollarCents(value: string): number | null {
   return Number(signedCents);
 }
 
+function isNonZeroDecimal(value: string): boolean {
+  return /[1-9]/.test(value.replace(/^-/, "").replace(".", ""));
+}
+
+function parseRate(value: string): number | null {
+  if (!isDecimalDraft(value)) return null;
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return null;
+  const rate = parsed / 100;
+  if (rate === 0 && isNonZeroDecimal(value)) return null;
+  return rate;
+}
+
 function parseDraft(value: string, kind: "dollar" | "rate"): number | null {
-  if (kind === "rate") {
-    if (!isDecimalDraft(value)) return null;
-    const parsed = Number(value);
-    return Number.isFinite(parsed) ? parsed / 100 : null;
-  }
+  if (kind === "rate") return parseRate(value);
   return parseDollarCents(value);
 }
 
@@ -64,6 +73,11 @@ function draftError(value: string, kind: "dollar" | "rate"): string | null {
   if (!isDecimalDraft(trimmed)) return kind === "dollar" ? "Enter a finite dollar amount." : "Enter a finite percentage.";
   if (kind === "dollar" && trimmed.replace(/^-/, "").split(".")[1]?.length > 2) return "Use at most two decimal places for dollar amounts.";
   if (kind === "dollar" && parseDollarCents(trimmed) === null) return "Dollar amount is too large for safe cents.";
+  if (kind === "rate" && parseRate(trimmed) === null) {
+    const numeric = Number(trimmed);
+    if (!Number.isFinite(numeric)) return "Enter a finite percentage.";
+    if (numeric !== 0 && isNonZeroDecimal(trimmed)) return "Percentage is too small to represent safely.";
+  }
   const parsed = Number(trimmed);
   if (!Number.isFinite(parsed)) return kind === "rate" ? "Enter a finite percentage." : "Enter a finite dollar amount.";
   if (parsed < 0) return "Value cannot be negative; domain validation will mark this input invalid.";

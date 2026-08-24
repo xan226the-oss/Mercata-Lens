@@ -29,14 +29,14 @@ function renderWithProvider(children: ReactNode) {
 }
 
 describe("OpportunitiesPage economics workspace", () => {
-  it("shows three scenarios, Demo provenance, and estimated contribution without scoring", async () => {
+  it("shows three scenarios, Demo provenance, and estimated contribution without a commercial recommendation", async () => {
     stubDemoFetch();
     renderWithProvider(<OpportunitiesPage />);
     await waitFor(() => expect(screen.getAllByText("Base scenario").length).toBeGreaterThan(0));
     expect(screen.getAllByRole("group")).toHaveLength(3);
     expect(screen.getAllByText(/Demo assumption:/).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Total costs/).length).toBeGreaterThan(0);
-    expect(screen.queryByText(/score|recommended price|expected profit/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/recommended price|expected profit/i)).not.toBeInTheDocument();
   });
 
   it("renders an incomplete user-upload state instead of inventing a contribution", async () => {

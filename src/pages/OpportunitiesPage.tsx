@@ -1,9 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
 import { calculateContribution, type EconomicResult } from "../domain/economics";
 import { EconomicsEditor } from "../components/EconomicsEditor";
+import { OpportunityCard } from "../components/OpportunityCard";
+import { WeightEditor } from "../components/WeightEditor";
 import { PageHeader } from "../components/PageHeader";
 import { DataSourceBadge } from "../components/DataSourceBadge";
 import { useResearch } from "../research/ResearchContext";
+import { summarizePainPoints } from "../domain/painPoints";
+import {
+  rankOpportunities,
+  scoreOpportunity,
+  type RankingResult,
+} from "../domain/opportunities";
+import { createOpportunityHypotheses } from "../data/opportunityHypotheses";
 import type { EconomicScenario } from "../domain/types";
 
 const usd = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
@@ -44,13 +53,46 @@ function resultCopy(scenario: EconomicScenario, result: EconomicResult, hasInval
   return lines;
 }
 
+function rankingCopy(ranking: RankingResult, sourceKind: "demo" | "user_upload", weightsValid: boolean): string {
+  if (!weightsValid) return "Ranking unavailable: weights must total exactly 100.";
+  if (ranking.status === "winner") return `Domain ranking result: ${ranking.winnerId} has an exact lead of at least 3 points. This is not a recommendation or purchase conclusion.`;
+  if (ranking.status === "no_clear_winner") return "Domain ranking result: no clear winner under the current-session weights.";
+  return sourceKind === "user_upload"
+    ? "Ranking incomplete: current-session user input is required for all five dimensions."
+    : "Ranking incomplete: one or more evidence-linked hypothesis inputs are invalid.";
+}
+
 export function OpportunitiesPage() {
-  const { status, dataset, sourceKind, economicScenarios, economicScenariosResetKey, replaceEconomicScenario } = useResearch();
+  const {
+    status,
+    dataset,
+    sourceKind,
+    corrections,
+    economicScenarios,
+    economicScenariosResetKey,
+    replaceEconomicScenario,
+    opportunityWeights,
+    replaceOpportunityWeights,
+    resetOpportunityWeights,
+  } = useResearch();
   const [invalidDraftScenarioIds, setInvalidDraftScenarioIds] = useState<Set<string>>(() => new Set());
+  const [weightsValid, setWeightsValid] = useState(true);
+  const [selectedEvidenceId, setSelectedEvidenceId] = useState<string | null>(null);
+
   useEffect(() => {
     setInvalidDraftScenarioIds(new Set());
   }, [economicScenariosResetKey]);
+
   const results = useMemo(() => economicScenarios.map((scenario) => ({ scenario, result: calculateContribution(scenario.inputs) })), [economicScenarios]);
+  const summaries = useMemo(() => dataset ? summarizePainPoints(dataset, corrections) : [], [dataset, corrections]);
+  const hypotheses = useMemo(
+    () => dataset && sourceKind ? createOpportunityHypotheses(dataset, summaries, economicScenarios) : [],
+    [dataset, sourceKind, summaries, economicScenarios],
+  );
+  const ranking = useMemo(
+    () => hypotheses.length === 3 ? rankOpportunities(hypotheses, opportunityWeights) : { status: "incomplete", winnerId: null, scores: [], issues: [] } as RankingResult,
+    [hypotheses, opportunityWeights],
+  );
 
   const markDraftValidity = (scenarioId: string, hasInvalidDraft: boolean) => {
     setInvalidDraftScenarioIds((current) => {
@@ -64,11 +106,7 @@ export function OpportunitiesPage() {
   if (!dataset || !sourceKind || status !== "ready") {
     return (
       <section className="page opportunities-page" data-testid="economics-no-data">
-        <PageHeader
-          eyebrow="Transparent scenario worksheet"
-          title="Opportunity comparison"
-          description="Unit economics is available only while a validated research dataset is active."
-        />
+        <PageHeader eyebrow="Evidence-linked comparison" title="Opportunity comparison" description="Opportunity hypotheses are available only while a validated research dataset is active." />
         <p>{status === "error" ? "The active research data could not be loaded. No Demo contribution is shown." : "No active research data is available yet. No Demo contribution is shown."}</p>
       </section>
     );
@@ -77,20 +115,54 @@ export function OpportunitiesPage() {
   return (
     <div className="page opportunities-page">
       <PageHeader
-        eyebrow="Transparent scenario worksheet"
+        eyebrow="Evidence-linked comparison"
         title="Opportunity comparison"
-        description="Compare explicit current-session economics scenarios before later opportunity ranking is added. No ranking is calculated here."
+        description="Compare bounded hypotheses, explicit weights, evidence links, and named economics scenarios. Review counts remain review counts; no market conclusion is generated."
         meta={<DataSourceBadge sourceKind={sourceKind} />}
       />
-      <section className="economics-results" aria-label="Estimated contribution results">
-        {results.map(({ scenario, result }) => (
-          <article key={scenario.id} className="economics-result" data-testid={`economics-result-${scenario.id}`}>
-            <h2>{scenario.label}</h2>
-            {resultCopy(scenario, result, invalidDraftScenarioIds.has(scenario.id)).slice(1).map((line) => <p key={line}>{line}</p>)}
-          </article>
-        ))}
+
+      <section className="opportunity-comparison" aria-labelledby="opportunity-comparison-title">
+        <div className="opportunity-comparison__intro">
+          <div>
+            <h2 id="opportunity-comparison-title">Three bounded hypotheses</h2>
+            <p>{rankingCopy(ranking, sourceKind, weightsValid)}</p>
+          </div>
+          <span className="opportunity-ranking-status" data-testid="opportunity-ranking-status">{ranking.status}</span>
+        </div>
+        <WeightEditor
+          weights={opportunityWeights}
+          onReplaceWeights={(weights) => {
+            const accepted = replaceOpportunityWeights(weights);
+            setWeightsValid(accepted);
+            return accepted;
+          }}
+          onReset={() => {
+            resetOpportunityWeights();
+            setWeightsValid(true);
+          }}
+          onValidityChange={setWeightsValid}
+        />
+        <div className="opportunity-grid">
+          {hypotheses.map((opportunity) => {
+            const score = ranking.scores.find((item) => item.opportunityId === opportunity.id) ?? scoreOpportunity(opportunity, opportunityWeights);
+            return <OpportunityCard key={opportunity.id} opportunity={opportunity} score={weightsValid ? score : { opportunityId: opportunity.id, status: "incomplete", total: null, contributions: [], issues: [] }} sourceKind={sourceKind} onEvidenceClick={setSelectedEvidenceId} />;
+          })}
+        </div>
+        <p className="opportunity-evidence-focus" aria-live="polite" data-testid="selected-evidence">{selectedEvidenceId ? `Evidence reference selected: ${selectedEvidenceId}. Inspect the linked source record before making any interpretation.` : "Select an evidence reference to keep the source boundary visible."}</p>
       </section>
-      <EconomicsEditor resetKey={economicScenariosResetKey} scenarios={economicScenarios} onReplaceScenario={replaceEconomicScenario} onDraftValidityChange={markDraftValidity} />
+
+      <section className="economics-workspace" aria-labelledby="economics-workspace-title">
+        <h2 id="economics-workspace-title">Named economics scenarios</h2>
+        <section className="economics-results" aria-label="Estimated contribution results">
+          {results.map(({ scenario, result }) => (
+            <article key={scenario.id} className="economics-result" data-testid={`economics-result-${scenario.id}`}>
+              <h3>{scenario.label}</h3>
+              {resultCopy(scenario, result, invalidDraftScenarioIds.has(scenario.id)).slice(1).map((line) => <p key={line}>{line}</p>)}
+            </article>
+          ))}
+        </section>
+        <EconomicsEditor resetKey={economicScenariosResetKey} scenarios={economicScenarios} onReplaceScenario={replaceEconomicScenario} onDraftValidityChange={markDraftValidity} />
+      </section>
     </div>
   );
 }

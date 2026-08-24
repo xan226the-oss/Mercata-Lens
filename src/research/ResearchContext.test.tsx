@@ -152,4 +152,25 @@ describe("ResearchContext current-session corrections", () => {
     const scenarios = JSON.parse(screen.getByTestId("economic-scenarios").textContent ?? "[]") as EconomicScenario[];
     expect(scenarios.every((scenario) => Object.values(scenario.inputs).every((value) => value === null))).toBe(true);
   });
+
+  it("preserves weights after failed import and resets them after successful replacement", async () => {
+    stubDemoFetch();
+    const user = userEvent.setup();
+    function WeightProbe() {
+      const research = useResearch();
+      return <div>
+        <span data-testid="weights">{JSON.stringify(research.opportunityWeights)}</span>
+        <button onClick={() => research.replaceOpportunityWeights({ demand: 40, supply_gap: 20, economics: 15, differentiation: 15, risk: 10 })}>Set valid weights</button>
+        <button onClick={() => research.importCsv("bad", "bad")}>Import invalid CSV</button>
+        <button onClick={() => research.importCsv(productsCsv, reviewsCsv)}>Import valid CSV</button>
+      </div>;
+    }
+    render(<ResearchProvider><WeightProbe /></ResearchProvider>);
+    await waitFor(() => expect(screen.getByTestId("weights")).toHaveTextContent('"demand":30'));
+    await user.click(screen.getByRole("button", { name: "Set valid weights" }));
+    await user.click(screen.getByRole("button", { name: "Import invalid CSV" }));
+    expect(screen.getByTestId("weights")).toHaveTextContent('"demand":40');
+    await user.click(screen.getByRole("button", { name: "Import valid CSV" }));
+    expect(screen.getByTestId("weights")).toHaveTextContent('"demand":30');
+  });
 });

@@ -1695,3 +1695,50 @@ input {
 .economics-provenance { color: var(--color-warning); }
 .economics-error { color: var(--color-danger); font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
 @media (max-width: 900px) { .economics-results, .economics-scenarios { grid-template-columns: 1fr; } }
+
+
+/* Task 7B evidence-linked opportunity comparison: scoped additions only. */
+.opportunities-page .opportunity-comparison,
+.opportunities-page .economics-workspace { display: grid; gap: 18px; margin-top: 24px; }
+.opportunity-comparison__intro,
+.weight-editor__header,
+.opportunity-card__header { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+.opportunity-comparison__intro h2,
+.opportunity-card h2,
+.opportunity-card h3,
+.economics-workspace h2 { margin: 0; font-family: var(--font-display); }
+.opportunity-comparison__intro p { margin: 6px 0 0; color: var(--color-muted); max-width: 760px; }
+.opportunity-ranking-status { padding: 6px 9px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface-subtle); font-size: 12px; font-weight: 700; white-space: nowrap; }
+.weight-editor { display: grid; gap: 14px; padding: 16px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface-subtle); }
+.weight-editor__header h2 { margin: 0; font-family: var(--font-display); }
+.weight-editor__header p { margin: 5px 0 0; color: var(--color-muted); }
+.weight-editor__header button { min-height: 38px; padding: 7px 10px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface); color: var(--color-ink); cursor: pointer; }
+.weight-editor__fields { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.weight-field { display: grid; gap: 6px; min-width: 0; font-size: 13px; font-weight: 600; }
+.weight-field input { width: 100%; min-height: 38px; box-sizing: border-box; padding: 7px 9px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface); color: var(--color-ink); }
+.weight-field input[aria-invalid="true"] { border-color: var(--color-danger); }
+.weight-field__error, .weight-editor__error { color: var(--color-danger); font-size: 12px; overflow-wrap: anywhere; }
+.weight-editor__total { margin: 0; color: var(--color-muted); font-weight: 700; }
+.weight-editor__total--invalid { color: var(--color-danger); }
+.opportunity-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.opportunity-card { display: grid; gap: 14px; min-width: 0; padding: 18px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface); box-shadow: var(--shadow-subtle); }
+.opportunity-card__eyebrow { margin: 0 0 5px; color: var(--color-muted); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.opportunity-card__score, .opportunity-card__incomplete { max-width: 180px; color: var(--color-primary); text-align: right; overflow-wrap: anywhere; }
+.opportunity-card__incomplete { color: var(--color-warning); font-size: 13px; }
+.opportunity-card__source, .opportunity-card__dimension-heading + p, .opportunity-card__evidence p { margin: 0; color: var(--color-muted); font-size: 13px; overflow-wrap: anywhere; }
+.opportunity-card__context { display: grid; gap: 8px; margin: 0; }
+.opportunity-card__context div { display: grid; gap: 3px; }
+.opportunity-card__context dt { color: var(--color-muted); font-size: 12px; font-weight: 700; }
+.opportunity-card__context dd { margin: 0; overflow-wrap: anywhere; }
+.opportunity-card__dimensions, .opportunity-card__evidence ul { display: grid; gap: 10px; margin: 10px 0 0; padding: 0; list-style: none; }
+.opportunity-card__dimensions li { display: grid; gap: 5px; padding-top: 10px; border-top: 1px solid var(--color-border); }
+.opportunity-card__dimension-heading { display: flex; justify-content: space-between; gap: 8px; }
+.opportunity-card__economics { display: grid; gap: 6px; }
+.opportunity-card__economics ul { display: grid; gap: 4px; margin: 0; padding-left: 18px; color: var(--color-muted); font-size: 13px; }
+.opportunity-card__evidence { display: grid; gap: 12px; }
+.opportunity-card__evidence > div { display: grid; gap: 5px; }
+.opportunity-card__evidence-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.opportunity-card button { padding: 3px 6px; border: 1px solid var(--color-border); border-radius: 4px; background: var(--color-surface-subtle); color: var(--color-primary); cursor: pointer; overflow-wrap: anywhere; }
+.opportunity-evidence-focus { margin: 0; padding: 10px; border-left: 3px solid var(--color-primary); background: var(--color-surface-subtle); color: var(--color-muted); overflow-wrap: anywhere; }
+@media (max-width: 1100px) { .weight-editor__fields, .opportunity-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 680px) { .opportunity-comparison__intro, .weight-editor__header, .opportunity-card__header { flex-direction: column; } .weight-editor__fields, .opportunity-grid { grid-template-columns: 1fr; } .opportunity-card__score, .opportunity-card__incomplete { max-width: none; text-align: left; } }

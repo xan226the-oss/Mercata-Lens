@@ -28,6 +28,11 @@ import { createEconomicScenarios, cloneEconomicScenario } from "../data/economic
 import { tryLoadDemoDataset } from "../data/demoLoader";
 import { importResearchCsv } from "../data/csvImport";
 import { assessQuality } from "../domain/quality";
+import {
+  DEFAULT_OPPORTUNITY_WEIGHTS,
+  validateWeights,
+  type OpportunityWeights,
+} from "../domain/opportunities";
 
 export type ResearchStatus = "idle" | "loading" | "ready" | "error";
 
@@ -61,6 +66,9 @@ export interface ResearchContextValue {
   economicScenarios: EconomicScenario[];
   economicScenariosResetKey: number;
   replaceEconomicScenario: (scenario: EconomicScenario) => boolean;
+  opportunityWeights: OpportunityWeights;
+  replaceOpportunityWeights: (weights: OpportunityWeights) => boolean;
+  resetOpportunityWeights: () => void;
 }
 
 const EMPTY_IMPORT_STATE: ImportOutcomeState = {
@@ -83,6 +91,18 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
   const [corrections, setCorrections] = useState<PainPointCorrections>({});
   const [economicScenarios, setEconomicScenarios] = useState<EconomicScenario[]>(() => createEconomicScenarios("demo"));
   const [economicScenariosResetKey, setEconomicScenariosResetKey] = useState(0);
+  const [opportunityWeights, setOpportunityWeights] = useState<OpportunityWeights>(() => ({ ...DEFAULT_OPPORTUNITY_WEIGHTS }));
+
+  const replaceOpportunityWeights = useCallback((weights: OpportunityWeights): boolean => {
+    const validation = validateWeights(weights);
+    if (!validation.valid) return false;
+    setOpportunityWeights({ ...weights });
+    return true;
+  }, []);
+
+  const resetOpportunityWeights = useCallback(() => {
+    setOpportunityWeights({ ...DEFAULT_OPPORTUNITY_WEIGHTS });
+  }, []);
 
   const replaceEconomicScenario = useCallback((scenario: EconomicScenario): boolean => {
     if (!["pessimistic", "base", "optimistic"].includes(scenario.id)) return false;
@@ -120,6 +140,7 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
     () => () => {
       setCorrections({});
       setEconomicScenarios(createEconomicScenarios("demo"));
+      setOpportunityWeights({ ...DEFAULT_OPPORTUNITY_WEIGHTS });
       setEconomicScenariosResetKey((current) => current + 1);
       setStatus("loading");
       setDataset(null);
@@ -170,6 +191,7 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
       const nextQuality = assessQuality(result.dataset);
       setCorrections({});
       setEconomicScenarios(createEconomicScenarios("user_upload"));
+      setOpportunityWeights({ ...DEFAULT_OPPORTUNITY_WEIGHTS });
       setEconomicScenariosResetKey((current) => current + 1);
       setDataset(result.dataset);
       setQualityReport(nextQuality);
@@ -208,8 +230,11 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
       economicScenarios,
       economicScenariosResetKey,
       replaceEconomicScenario,
+      opportunityWeights: { ...opportunityWeights },
+      replaceOpportunityWeights,
+      resetOpportunityWeights,
     }),
-    [status, dataset, sourceKind, qualityReport, issues, error, importState, loadDemo, importCsv, corrections, applyReviewCorrection, clearReviewCorrection, economicScenarios, economicScenariosResetKey, replaceEconomicScenario],
+    [status, dataset, sourceKind, qualityReport, issues, error, importState, loadDemo, importCsv, corrections, applyReviewCorrection, clearReviewCorrection, economicScenarios, economicScenariosResetKey, replaceEconomicScenario, opportunityWeights, replaceOpportunityWeights, resetOpportunityWeights],
   );
 
   return <ResearchContext.Provider value={value}>{children}</ResearchContext.Provider>;

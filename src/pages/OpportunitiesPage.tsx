@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { calculateContribution, type EconomicResult } from "../domain/economics";
 import { EconomicsEditor } from "../components/EconomicsEditor";
 import { PageHeader } from "../components/PageHeader";
@@ -30,9 +30,11 @@ function referralFeeText(inputs: EconomicScenario["inputs"]): string {
   return `Rounded referral fee: ${costText(Math.round(inputs.salePriceCents * inputs.referralFeeRate))}.`;
 }
 
-function resultCopy(scenario: EconomicScenario, result: EconomicResult): string[] {
+function resultCopy(scenario: EconomicScenario, result: EconomicResult, hasInvalidDraft: boolean): string[] {
   const lines = [`${scenario.label}`, `Contribution formula: ${FORMULA}.`];
-  if (result.status === "complete") {
+  if (hasInvalidDraft) {
+    lines.push("Calculation unavailable until the invalid draft is corrected.");
+  } else if (result.status === "complete") {
     lines.push(`Total costs: ${costText(result.totalCostCents)}.`, referralFeeText(scenario.inputs), `Estimated per-unit contribution: ${costText(result.contributionCents)}.`);
   } else if (result.status === "incomplete") {
     lines.push(`Known costs so far: ${costText(result.partialKnownCostsCents)}.`, `Missing fields: ${result.missingFields.map((field) => FIELD_LABELS[field]).join(", ")}.`, referralFeeText(scenario.inputs));
@@ -44,7 +46,17 @@ function resultCopy(scenario: EconomicScenario, result: EconomicResult): string[
 
 export function OpportunitiesPage() {
   const { status, dataset, sourceKind, economicScenarios, economicScenariosResetKey, replaceEconomicScenario } = useResearch();
+  const [invalidDraftScenarioIds, setInvalidDraftScenarioIds] = useState<Set<string>>(() => new Set());
   const results = useMemo(() => economicScenarios.map((scenario) => ({ scenario, result: calculateContribution(scenario.inputs) })), [economicScenarios]);
+
+  const markDraftValidity = (scenarioId: string, hasInvalidDraft: boolean) => {
+    setInvalidDraftScenarioIds((current) => {
+      const next = new Set(current);
+      if (hasInvalidDraft) next.add(scenarioId);
+      else next.delete(scenarioId);
+      return next;
+    });
+  };
 
   if (!dataset || !sourceKind || status !== "ready") {
     return (
@@ -71,11 +83,11 @@ export function OpportunitiesPage() {
         {results.map(({ scenario, result }) => (
           <article key={scenario.id} className="economics-result" data-testid={`economics-result-${scenario.id}`}>
             <h2>{scenario.label}</h2>
-            {resultCopy(scenario, result).slice(1).map((line) => <p key={line}>{line}</p>)}
+            {resultCopy(scenario, result, invalidDraftScenarioIds.has(scenario.id)).slice(1).map((line) => <p key={line}>{line}</p>)}
           </article>
         ))}
       </section>
-      <EconomicsEditor resetKey={economicScenariosResetKey} scenarios={economicScenarios} onReplaceScenario={replaceEconomicScenario} />
+      <EconomicsEditor resetKey={economicScenariosResetKey} scenarios={economicScenarios} onReplaceScenario={replaceEconomicScenario} onDraftValidityChange={markDraftValidity} />
     </div>
   );
 }

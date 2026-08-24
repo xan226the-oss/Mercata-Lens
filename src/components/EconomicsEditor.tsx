@@ -1,5 +1,5 @@
 import type { ChangeEvent, ReactElement } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { EconomicInputKey } from "../domain/economics";
 import type { DataProvenance, EconomicScenario } from "../domain/types";
 
@@ -18,10 +18,10 @@ interface EconomicsEditorProps {
   scenarios: EconomicScenario[];
   resetKey?: number;
   onReplaceScenario: (scenario: EconomicScenario) => boolean;
+  onDraftValidityChange?: (scenarioId: string, hasInvalidDraft: boolean) => void;
 }
 
 type Drafts = Record<string, string>;
-
 type DraftErrors = Record<string, string | null>;
 
 function displayValue(value: number | null, kind: "dollar" | "rate"): string {
@@ -33,20 +33,37 @@ function isDecimalDraft(value: string): boolean {
   return /^-?(?:\d+\.?\d*|\.\d+)$/.test(value.trim());
 }
 
+function parseDollarCents(value: string): number | null {
+  const trimmed = value.trim();
+  if (!isDecimalDraft(trimmed)) return null;
+  const negative = trimmed.startsWith("-");
+  const unsigned = negative ? trimmed.slice(1) : trimmed;
+  const [integerPart = "", fractionPart = ""] = unsigned.split(".");
+  if (fractionPart.length > 2) return null;
+  const centsText = `${integerPart || "0"}${fractionPart.padEnd(2, "0")}`;
+  const cents = BigInt(centsText || "0");
+  const signedCents = negative ? -cents : cents;
+  const max = BigInt(Number.MAX_SAFE_INTEGER);
+  const min = -max;
+  if (signedCents < min || signedCents > max) return null;
+  return Number(signedCents);
+}
+
 function parseDraft(value: string, kind: "dollar" | "rate"): number | null {
-  if (value.trim() === "" || !isDecimalDraft(value)) return null;
+  if (value.trim() === "") return null;
+  if (kind === "dollar") return parseDollarCents(value);
+  if (!isDecimalDraft(value)) return null;
   const parsed = Number(value);
-  if (!Number.isFinite(parsed)) return null;
-  if (kind === "rate") return parsed / 100;
-  const cents = parsed * 100;
-  return Number.isSafeInteger(cents) ? cents : null;
+  return Number.isFinite(parsed) ? parsed / 100 : null;
 }
 
 function draftError(value: string, kind: "dollar" | "rate"): string | null {
-  if (value.trim() === "") return null;
-  if (!isDecimalDraft(value)) return kind === "dollar" ? "Enter a finite dollar amount." : "Enter a finite percentage.";
-  const parsed = Number(value);
-  if (kind === "dollar" && !Number.isSafeInteger(parsed * 100)) return "Dollar amount is too large or precise for safe cents.";
+  const trimmed = value.trim();
+  if (trimmed === "") return null;
+  if (!isDecimalDraft(trimmed)) return kind === "dollar" ? "Enter a finite dollar amount." : "Enter a finite percentage.";
+  if (kind === "dollar" && trimmed.replace(/^-/, "").split(".")[1]?.length > 2) return "Use at most two decimal places for dollar amounts.";
+  if (kind === "dollar" && parseDollarCents(trimmed) === null) return "Dollar amount is too large for safe cents.";
+  const parsed = Number(trimmed);
   if (parsed < 0) return "Value cannot be negative; domain validation will mark this input invalid.";
   if (kind === "rate" && parsed > 100) return "Referral fee rate exceeds 100%; domain validation will mark this input invalid.";
   return null;
@@ -62,35 +79,40 @@ function userProvenance(): DataProvenance {
   };
 }
 
-export function EconomicsEditor({ scenarios, resetKey = 0, onReplaceScenario }: EconomicsEditorProps): ReactElement {
+export function EconomicsEditor({ scenarios, resetKey = 0, onReplaceScenario, onDraftValidityChange }: EconomicsEditorProps): ReactElement {
   const [drafts, setDrafts] = useState<Drafts>({});
   const [draftErrors, setDraftErrors] = useState<DraftErrors>({});
-  const previousScenarios = useRef<EconomicScenario[]>(scenarios);
-  const previousResetKey = useRef(resetKey);
+  const [invalidDraftKeys, setInvalidDraftKeys] = useState<Record<string, boolean>>({});
+  const [previousResetKey, setPreviousResetKey] = useState(resetKey);
 
   useEffect(() => {
-    if (previousResetKey.current !== resetKey) {
+    if (previousResetKey !== resetKey) {
       setDrafts({});
       setDraftErrors({});
-      previousResetKey.current = resetKey;
+      setInvalidDraftKeys({});
+      setPreviousResetKey(resetKey);
+      scenarios.forEach((scenario) => onDraftValidityChange?.(scenario.id, false));
     }
-    previousScenarios.current = scenarios;
-  }, [resetKey, scenarios]);
+  }, [onDraftValidityChange, previousResetKey, resetKey, scenarios]);
 
   function handleChange(scenario: EconomicScenario, field: EconomicInputKey, kind: "dollar" | "rate", event: ChangeEvent<HTMLInputElement>) {
     const draftKey = `${scenario.id}:${field}`;
     const value = event.target.value;
     const error = draftError(value, kind);
     const parsed = parseDraft(value, kind);
+    const isEmpty = value.trim() === "";
+    const hasInvalidDraft = !isEmpty && parsed === null;
     setDrafts((current) => ({ ...current, [draftKey]: value }));
     setDraftErrors((current) => ({ ...current, [draftKey]: error }));
-    const isEmpty = value.trim() === "";
-    if (!isEmpty && parsed === null) return;
-    const nextProvenance = isEmpty ? null : userProvenance();
+    const nextInvalidDraftKeys = { ...invalidDraftKeys, [draftKey]: hasInvalidDraft };
+    setInvalidDraftKeys(nextInvalidDraftKeys);
+    const scenarioHasInvalidDraft = Object.entries(nextInvalidDraftKeys).some(([key, invalid]) => key.startsWith(`${scenario.id}:`) && invalid);
+    onDraftValidityChange?.(scenario.id, scenarioHasInvalidDraft);
+    if (hasInvalidDraft) return;
     onReplaceScenario({
       ...scenario,
       inputs: { ...scenario.inputs, [field]: parsed },
-      provenance: { ...scenario.provenance, [field]: nextProvenance },
+      provenance: { ...scenario.provenance, [field]: isEmpty ? null : userProvenance() },
     });
   }
 
@@ -119,16 +141,7 @@ export function EconomicsEditor({ scenarios, resetKey = 0, onReplaceScenario }: 
                 return (
                   <div className={`economics-field${error ? " economics-field--invalid" : ""}`} key={key}>
                     <label htmlFor={inputId}>{label}</label>
-                    <input
-                      id={inputId}
-                      name={inputId}
-                      type="text"
-                      inputMode="decimal"
-                      value={value}
-                      aria-describedby={describedBy}
-                      aria-invalid={error ? "true" : "false"}
-                      onChange={(event) => handleChange(scenario, key, kind, event)}
-                    />
+                    <input id={inputId} name={inputId} type="text" inputMode="decimal" value={value} aria-describedby={describedBy} aria-invalid={error ? "true" : "false"} onChange={(event) => handleChange(scenario, key, kind, event)} />
                     <span className="economics-field__help" id={helpId}>{kind === "dollar" ? "USD amount; stored as cents." : "Percentage; stored as a decimal rate."}</span>
                     {provenance ? <span className="economics-provenance" id={provenanceId}>{provenance.note}</span> : <span className="economics-provenance" id={provenanceId}>Missing input: enter a current-session assumption.</span>}
                     {error ? <span className="economics-error" id={errorId} role="alert">{error}</span> : null}

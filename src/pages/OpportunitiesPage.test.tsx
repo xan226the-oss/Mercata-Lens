@@ -125,10 +125,16 @@ describe("OpportunitiesPage economics workspace", () => {
     expect(salePrice).toHaveValue("oops");
     const baseState = JSON.parse(screen.getByTestId("context-state").textContent ?? "[]").find((scenario: { id: string }) => scenario.id === "base");
     expect(baseState.inputs.salePriceCents).toBe(3999);
-    expect(screen.getByTestId("economics-result-base")).toHaveTextContent("Estimated per-unit contribution: $7.00.");
+    expect(screen.getByTestId("economics-result-base")).toHaveTextContent("Calculation unavailable until the invalid draft is corrected.");
+    expect(screen.getByTestId("economics-result-base")).not.toHaveTextContent("Estimated per-unit contribution:");
+    expect(screen.getByTestId("economics-result-pessimistic")).toHaveTextContent("Estimated per-unit contribution:");
+    expect(screen.getByTestId("economics-result-optimistic")).toHaveTextContent("Estimated per-unit contribution:");
     await user.clear(salePrice);
     expect(screen.getByTestId("context-state")).toHaveTextContent('"salePriceCents":null');
     expect(screen.getByTestId("economics-result-base")).toHaveTextContent("Missing fields: Sale price");
+    await user.clear(salePrice);
+    await user.type(salePrice, "12.34");
+    expect(screen.getByTestId("economics-result-base")).toHaveTextContent("Estimated per-unit contribution:");
     await user.clear(salePrice);
     await user.type(salePrice, "-2");
     expect(screen.getByTestId("context-state")).toHaveTextContent('"salePriceCents":-200');
@@ -143,6 +149,7 @@ describe("OpportunitiesPage economics workspace", () => {
     expect(huge).toHaveValue("1e309");
     const baseEconomicState = JSON.parse(screen.getByTestId("context-state").textContent ?? "[]").find((scenario: { id: string }) => scenario.id === "base");
     expect(baseEconomicState.inputs.otherCostCents).toBe(49);
+    expect(screen.getByTestId("economics-result-base")).toHaveTextContent("Calculation unavailable until the invalid draft is corrected.");
     expect(base.getByText(/finite dollar amount|safe cents/i)).toBeVisible();
   });
 

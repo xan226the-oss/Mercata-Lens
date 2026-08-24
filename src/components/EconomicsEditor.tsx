@@ -1,7 +1,7 @@
 import type { ChangeEvent, ReactElement } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { EconomicInputKey } from "../domain/economics";
-import type { EconomicScenario } from "../domain/types";
+import type { DataProvenance, EconomicScenario } from "../domain/types";
 
 const FIELD_DEFINITIONS: ReadonlyArray<{ key: EconomicInputKey; label: string; kind: "dollar" | "rate" }> = [
   { key: "salePriceCents", label: "Sale price", kind: "dollar" },
@@ -16,8 +16,13 @@ const FIELD_DEFINITIONS: ReadonlyArray<{ key: EconomicInputKey; label: string; k
 
 interface EconomicsEditorProps {
   scenarios: EconomicScenario[];
+  resetKey?: number;
   onReplaceScenario: (scenario: EconomicScenario) => boolean;
 }
+
+type Drafts = Record<string, string>;
+
+type DraftErrors = Record<string, string | null>;
 
 function displayValue(value: number | null, kind: "dollar" | "rate"): string {
   if (value === null) return "";
@@ -27,7 +32,7 @@ function displayValue(value: number | null, kind: "dollar" | "rate"): string {
 function parseDraft(value: string, kind: "dollar" | "rate"): number | null {
   if (value.trim() === "") return null;
   const parsed = Number(value);
-  if (!Number.isFinite(parsed)) return parsed;
+  if (!Number.isFinite(parsed) || parsed < 0 || (kind === "rate" && parsed > 100)) return null;
   return kind === "dollar" ? Math.round(parsed * 100) : parsed / 100;
 }
 
@@ -40,27 +45,48 @@ function draftError(value: string, kind: "dollar" | "rate"): string | null {
   return null;
 }
 
-export function EconomicsEditor({ scenarios, onReplaceScenario }: EconomicsEditorProps): ReactElement {
-  const [drafts, setDrafts] = useState<Record<string, string>>({});
+function userProvenance(): DataProvenance {
+  return {
+    sourceKind: "user_upload",
+    evidenceKind: "assumption",
+    sourceUrl: null,
+    observedAt: null,
+    note: "Current-session user-supplied assumption.",
+  };
+}
+
+export function EconomicsEditor({ scenarios, resetKey = 0, onReplaceScenario }: EconomicsEditorProps): ReactElement {
+  const [drafts, setDrafts] = useState<Drafts>({});
+  const [draftErrors, setDraftErrors] = useState<DraftErrors>({});
+  const previousScenarios = useRef<EconomicScenario[]>(scenarios);
+  const previousResetKey = useRef(resetKey);
 
   useEffect(() => {
-    setDrafts({});
-  }, [scenarios]);
+    if (previousResetKey.current !== resetKey) {
+      setDrafts({});
+      setDraftErrors({});
+      previousResetKey.current = resetKey;
+    }
+    previousScenarios.current = scenarios;
+  }, [resetKey, scenarios]);
 
   function handleChange(scenario: EconomicScenario, field: EconomicInputKey, kind: "dollar" | "rate", event: ChangeEvent<HTMLInputElement>) {
     const draftKey = `${scenario.id}:${field}`;
     const value = event.target.value;
+    const error = draftError(value, kind);
+    const parsed = parseDraft(value, kind);
     setDrafts((current) => ({ ...current, [draftKey]: value }));
-    const next = {
+    setDraftErrors((current) => ({ ...current, [draftKey]: error }));
+    const nextProvenance = value.trim() === "" ? null : error === null ? userProvenance() : scenario.provenance[field];
+    onReplaceScenario({
       ...scenario,
-      inputs: { ...scenario.inputs, [field]: parseDraft(value, kind) },
-      provenance: { ...scenario.provenance, [field]: scenario.provenance[field] ?? null },
-    };
-    onReplaceScenario(next);
+      inputs: { ...scenario.inputs, [field]: parsed },
+      provenance: { ...scenario.provenance, [field]: nextProvenance },
+    });
   }
 
   return (
-    <section className="economics-workspace" aria-labelledby="economics-title">
+    <section className="economics-workspace" aria-labelledby="economics-title" data-replacement-key={resetKey}>
       <div className="economics-heading">
         <span className="section-kicker">Current-session input</span>
         <h2 id="economics-title">Unit economics</h2>
@@ -73,25 +99,29 @@ export function EconomicsEditor({ scenarios, onReplaceScenario }: EconomicsEdito
             <div className="economics-fields">
               {FIELD_DEFINITIONS.map(({ key, label, kind }) => {
                 const inputId = `economics-${scenario.id}-${key}`;
+                const helpId = `${inputId}-help`;
+                const provenanceId = `${inputId}-provenance`;
                 const errorId = `${inputId}-error`;
                 const draftKey = `${scenario.id}:${key}`;
                 const value = drafts[draftKey] ?? displayValue(scenario.inputs[key], kind);
-                const error = draftError(value, kind);
+                const error = draftErrors[draftKey] ?? draftError(value, kind);
                 const provenance = scenario.provenance[key];
+                const describedBy = [helpId, provenanceId, error ? errorId : null].filter(Boolean).join(" ");
                 return (
                   <div className={`economics-field${error ? " economics-field--invalid" : ""}`} key={key}>
                     <label htmlFor={inputId}>{label}</label>
                     <input
                       id={inputId}
                       name={inputId}
+                      type="text"
                       inputMode="decimal"
                       value={value}
-                      aria-describedby={error ? errorId : `${inputId}-help`}
+                      aria-describedby={describedBy}
                       aria-invalid={error ? "true" : "false"}
                       onChange={(event) => handleChange(scenario, key, kind, event)}
                     />
-                    <span className="economics-field__help" id={`${inputId}-help`}>{kind === "dollar" ? "USD amount; stored as cents." : "Percentage; stored as a decimal rate."}</span>
-                    {provenance ? <span className="economics-provenance">{provenance.note}</span> : <span className="economics-provenance">Missing input: enter a current-session assumption.</span>}
+                    <span className="economics-field__help" id={helpId}>{kind === "dollar" ? "USD amount; stored as cents." : "Percentage; stored as a decimal rate."}</span>
+                    {provenance ? <span className="economics-provenance" id={provenanceId}>{provenance.note}</span> : <span className="economics-provenance" id={provenanceId}>Missing input: enter a current-session assumption.</span>}
                     {error ? <span className="economics-error" id={errorId} role="alert">{error}</span> : null}
                   </div>
                 );

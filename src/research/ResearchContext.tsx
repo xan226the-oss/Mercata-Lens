@@ -59,6 +59,7 @@ export interface ResearchContextValue {
   ) => boolean;
   clearReviewCorrection: (reviewId: string) => void;
   economicScenarios: EconomicScenario[];
+  economicScenariosResetKey: number;
   replaceEconomicScenario: (scenario: EconomicScenario) => boolean;
 }
 
@@ -81,6 +82,7 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
   const [importState, setImportState] = useState<ImportOutcomeState>(EMPTY_IMPORT_STATE);
   const [corrections, setCorrections] = useState<PainPointCorrections>({});
   const [economicScenarios, setEconomicScenarios] = useState<EconomicScenario[]>(() => createEconomicScenarios("demo"));
+  const [economicScenariosResetKey, setEconomicScenariosResetKey] = useState(0);
 
   const replaceEconomicScenario = useCallback((scenario: EconomicScenario): boolean => {
     if (!["pessimistic", "base", "optimistic"].includes(scenario.id)) return false;
@@ -118,6 +120,7 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
     () => () => {
       setCorrections({});
       setEconomicScenarios(createEconomicScenarios("demo"));
+      setEconomicScenariosResetKey((current) => current + 1);
       setStatus("loading");
       setDataset(null);
       setQualityReport(null);
@@ -167,6 +170,7 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
       const nextQuality = assessQuality(result.dataset);
       setCorrections({});
       setEconomicScenarios(createEconomicScenarios("user_upload"));
+      setEconomicScenariosResetKey((current) => current + 1);
       setDataset(result.dataset);
       setQualityReport(nextQuality);
       setImportState({
@@ -202,9 +206,10 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
       applyReviewCorrection,
       clearReviewCorrection,
       economicScenarios,
+      economicScenariosResetKey,
       replaceEconomicScenario,
     }),
-    [status, dataset, sourceKind, qualityReport, issues, error, importState, loadDemo, importCsv, corrections, applyReviewCorrection, clearReviewCorrection, economicScenarios, replaceEconomicScenario],
+    [status, dataset, sourceKind, qualityReport, issues, error, importState, loadDemo, importCsv, corrections, applyReviewCorrection, clearReviewCorrection, economicScenarios, economicScenariosResetKey, replaceEconomicScenario],
   );
 
   return <ResearchContext.Provider value={value}>{children}</ResearchContext.Provider>;

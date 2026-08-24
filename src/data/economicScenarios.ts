@@ -87,6 +87,11 @@ export function cloneEconomicScenario(scenario: EconomicScenario): EconomicScena
   return {
     ...scenario,
     inputs: { ...scenario.inputs },
-    provenance: { ...scenario.provenance },
+    provenance: Object.fromEntries(
+      Object.entries(scenario.provenance).map(([key, value]) => [
+        key,
+        value ? { ...value } : null,
+      ]),
+    ) as EconomicScenario["provenance"],
   };
 }

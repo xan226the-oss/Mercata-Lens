@@ -10,6 +10,7 @@ import type { EconomicScenario } from "../domain/types";
 const demoDir = path.resolve(__dirname, "../../public/demo");
 const productsCsv = fs.readFileSync(path.join(demoDir, "products.csv"), "utf8");
 const reviewsCsv = fs.readFileSync(path.join(demoDir, "reviews.csv"), "utf8");
+let externalEconomicScenario: EconomicScenario | null = null;
 
 function stubDemoFetch() {
   vi.stubGlobal("fetch", vi.fn((input: RequestInfo | URL) => {
@@ -34,13 +35,22 @@ function Probe() {
       <button onClick={() => {
         const scenario = research.economicScenarios[1];
         if (!scenario) return;
-        const next: EconomicScenario = {
+        externalEconomicScenario = {
           ...scenario,
-          inputs: { ...scenario.inputs, salePriceCents: 7777 },
-          provenance: { ...scenario.provenance },
+          inputs: { ...scenario.inputs, salePriceCents: 8888 },
+          provenance: {
+            ...scenario.provenance,
+            salePriceCents: scenario.provenance.salePriceCents ? { ...scenario.provenance.salePriceCents, note: "External note" } : null,
+          },
         };
-        document.querySelector("[data-testid=apply-result]")!.textContent = String(research.replaceEconomicScenario(next));
-      }}>Update base economics</button>
+        document.querySelector("[data-testid=apply-result]")!.textContent = String(research.replaceEconomicScenario(externalEconomicScenario));
+      }}>Store external economics</button>
+      <button onClick={() => {
+        if (!externalEconomicScenario) return;
+        externalEconomicScenario.inputs.salePriceCents = 9999;
+        if (externalEconomicScenario.provenance.salePriceCents) externalEconomicScenario.provenance.salePriceCents.note = "Mutated external note";
+        document.querySelector("[data-testid=apply-result]")!.textContent = JSON.stringify(research.economicScenarios[1]);
+      }}>Mutate external economics</button>
       <button onClick={() => {
         const scenario = research.economicScenarios[1];
         if (!scenario) return;
@@ -119,9 +129,11 @@ describe("ResearchContext current-session corrections", () => {
     await waitFor(() => expect(screen.getByTestId("source-kind")).toHaveTextContent("demo"));
     const initial = JSON.parse(screen.getByTestId("economic-scenarios").textContent ?? "[]") as EconomicScenario[];
     expect(initial[1]?.inputs.salePriceCents).toBe(3999);
-    await userEvent.click(screen.getByRole("button", { name: "Update base economics" }));
-    expect(JSON.parse(screen.getByTestId("economic-scenarios").textContent ?? "[]")[1].inputs.salePriceCents).toBe(7777);
-    expect(screen.getByTestId("apply-result")).toHaveTextContent("true");
+    await userEvent.click(screen.getByRole("button", { name: "Store external economics" }));
+    expect(JSON.parse(screen.getByTestId("economic-scenarios").textContent ?? "[]")[1].inputs.salePriceCents).toBe(8888);
+    await userEvent.click(screen.getByRole("button", { name: "Mutate external economics" }));
+    expect(screen.getByTestId("apply-result")).toHaveTextContent('"salePriceCents":8888');
+    expect(screen.getByTestId("apply-result")).toHaveTextContent("External note");
     await userEvent.click(screen.getByRole("button", { name: "Reject unknown economics" }));
     expect(screen.getByTestId("apply-result")).toHaveTextContent("false");
     await userEvent.click(screen.getByRole("button", { name: "Reload failing demo" }));
@@ -132,9 +144,9 @@ describe("ResearchContext current-session corrections", () => {
     stubDemoFetch();
     render(<ResearchProvider><Probe /></ResearchProvider>);
     await waitFor(() => expect(screen.getByTestId("source-kind")).toHaveTextContent("demo"));
-    await userEvent.click(screen.getByRole("button", { name: "Update base economics" }));
+    await userEvent.click(screen.getByRole("button", { name: "Store external economics" }));
     await userEvent.click(screen.getByRole("button", { name: "Import invalid CSV" }));
-    expect(screen.getByTestId("economic-scenarios")).toHaveTextContent("7777");
+    expect(screen.getByTestId("economic-scenarios")).toHaveTextContent("8888");
     await userEvent.click(screen.getByRole("button", { name: "Import valid CSV" }));
     await waitFor(() => expect(screen.getByTestId("source-kind")).toHaveTextContent("user_upload"));
     const scenarios = JSON.parse(screen.getByTestId("economic-scenarios").textContent ?? "[]") as EconomicScenario[];

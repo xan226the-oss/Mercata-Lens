@@ -1726,6 +1726,10 @@ input {
 .opportunity-card__score, .opportunity-card__incomplete { max-width: 180px; color: var(--color-primary); text-align: right; overflow-wrap: anywhere; }
 .opportunity-card__incomplete { color: var(--color-warning); font-size: 13px; }
 .opportunity-card__source, .opportunity-card__dimension-heading + p, .opportunity-card__evidence p { margin: 0; color: var(--color-muted); font-size: 13px; overflow-wrap: anywhere; }
+.opportunity-evidence-detail { display: grid; gap: 4px; margin-top: 8px; }
+.opportunity-evidence-detail p { margin: 0; overflow-wrap: anywhere; }
+.opportunity-evidence-detail ul { margin: 6px 0 0; padding-left: 18px; }
+.opportunity-evidence-detail a { color: var(--color-primary); overflow-wrap: anywhere; }
 .opportunity-card__context { display: grid; gap: 8px; margin: 0; }
 .opportunity-card__context div { display: grid; gap: 3px; }
 .opportunity-card__context dt { color: var(--color-muted); font-size: 12px; font-weight: 700; }

@@ -37,9 +37,15 @@ function reviewEvidenceFor(
 ): string[] {
   const allowed = new Set(ids);
   const reviewOrder = new Map(dataset.reviews.map((review, index) => [review.reviewId, index]));
+  const seen = new Set<string>();
   return summaries
     .filter((summary) => allowed.has(summary.id))
     .flatMap((summary) => summary.evidence.map((item) => `review:${item.reviewId}`))
+    .filter((evidenceId) => {
+      if (seen.has(evidenceId)) return false;
+      seen.add(evidenceId);
+      return true;
+    })
     .sort((left, right) => (reviewOrder.get(left.slice("review:".length)) ?? Number.MAX_SAFE_INTEGER) - (reviewOrder.get(right.slice("review:".length)) ?? Number.MAX_SAFE_INTEGER));
 }
 
@@ -56,7 +62,9 @@ function supportEvidenceIds(
   dataset: ResearchDataset,
   summaries: readonly PainPointSummary[],
 ): string[] {
-  const evidence: string[] = reviewEvidenceFor(dataset, summaries, PAIN_POINT_PRIORITY[id]);
+  const evidence: string[] = [];
+  const reviewEvidence = firstReviewEvidence(dataset, summaries, PAIN_POINT_PRIORITY[id]);
+  if (reviewEvidence) evidence.push(reviewEvidence);
   evidence.push("economics:base", `assumption:${id}:demand`);
   return evidence;
 }

@@ -7,7 +7,6 @@ interface OpportunityCardProps {
   score: OpportunityScore;
   sourceKind: SourceKind;
   onEvidenceClick: (evidenceId: string) => void;
-  resolveEvidence: (evidenceId: string) => ReactElement;
 }
 
 const DIMENSION_LABELS = {
@@ -18,7 +17,7 @@ const DIMENSION_LABELS = {
   risk: "Risk",
 } as const;
 
-export function OpportunityCard({ opportunity, score, sourceKind, onEvidenceClick, resolveEvidence }: OpportunityCardProps): ReactElement {
+export function OpportunityCard({ opportunity, score, sourceKind, onEvidenceClick }: OpportunityCardProps): ReactElement {
   return (
     <article className="opportunity-card" data-testid={`opportunity-card-${opportunity.id}`}>
       <header className="opportunity-card__header">
@@ -44,7 +43,6 @@ export function OpportunityCard({ opportunity, score, sourceKind, onEvidenceClic
               {contribution && <p>Contribution: {contribution.contribution} at weight {contribution.weight}.</p>}
               <div className="opportunity-card__evidence-list">
                 {dimension.evidenceIds.length === 0 ? <span>No evidence linked yet.</span> : dimension.evidenceIds.map((evidenceId) => <button key={evidenceId} type="button" onClick={() => onEvidenceClick(evidenceId)}>{evidenceId}</button>)}
-                {dimension.evidenceIds.map((evidenceId) => <div key={`${evidenceId}-detail`} className="opportunity-card__evidence-detail">{resolveEvidence(evidenceId)}</div>)}
               </div>
             </li>;
           })}

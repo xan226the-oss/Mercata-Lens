@@ -18,11 +18,9 @@ const opportunity: Opportunity = {
   ],
   economics: [],
   supportEvidenceIds: ["review:r-clean"],
-  oppositionEvidenceIds: ["product:p1"],
+  oppositionEvidenceIds: ["assumption:easy_clean:risk"],
   unknowns: ["User research pending"],
 };
-
-const resolveEvidence = (id: string) => <span>{`Resolved ${id}`}</span>;
 
 const score: OpportunityScore = {
   opportunityId: "easy_clean",
@@ -42,18 +40,18 @@ const score: OpportunityScore = {
 
 describe("OpportunityCard", () => {
   it("renders hypothesis context, dimensions, contributions, evidence links, and unknowns", () => {
-    render(<OpportunityCard opportunity={opportunity} score={score} sourceKind="demo" onEvidenceClick={() => undefined} resolveEvidence={resolveEvidence} />);
+    render(<OpportunityCard opportunity={opportunity} score={score} sourceKind="demo" onEvidenceClick={() => undefined} />);
     expect(screen.getByRole("heading", { name: "Easy-clean design" })).toBeInTheDocument();
     expect(screen.getByText("US cat owners")).toBeInTheDocument();
     expect(screen.getAllByText(/Curated Demo assumption:/).length).toBeGreaterThan(0);
     expect(screen.getByText(/Weighted total: 65.75/)).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: "review:r-clean" })).toHaveLength(2);
-    expect(screen.getByText("product:p1")).toBeInTheDocument();
+    expect(screen.getAllByText("assumption:easy_clean:risk")).toHaveLength(2);
     expect(screen.getByText("User research pending")).toBeInTheDocument();
   });
 
   it("renders incomplete state without a fabricated score", () => {
-    render(<OpportunityCard opportunity={{ ...opportunity, dimensions: opportunity.dimensions.map((dimension) => ({ ...dimension, value: null, evidenceIds: [] })) }} score={{ opportunityId: "easy_clean", status: "incomplete", total: null, contributions: [], issues: [] }} sourceKind="user_upload" onEvidenceClick={() => undefined} resolveEvidence={resolveEvidence} />);
+    render(<OpportunityCard opportunity={{ ...opportunity, dimensions: opportunity.dimensions.map((dimension) => ({ ...dimension, value: null, evidenceIds: [] })) }} score={{ opportunityId: "easy_clean", status: "incomplete", total: null, contributions: [], issues: [] }} sourceKind="user_upload" onEvidenceClick={() => undefined} />);
     expect(screen.getByText("Incomplete — current-session user input required")).toBeInTheDocument();
     expect(screen.queryByText(/Score:/)).not.toBeInTheDocument();
     expect(screen.getByText("User upload evidence does not inherit Demo scores.")).toBeInTheDocument();

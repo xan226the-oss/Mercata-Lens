@@ -153,6 +153,49 @@ describe("ResearchContext current-session corrections", () => {
     expect(scenarios.every((scenario) => Object.values(scenario.inputs).every((value) => value === null))).toBe(true);
   });
 
+  it("preserves valid weights, rejects invalid weights, copies inputs, and advances reset boundaries", async () => {
+    stubDemoFetch();
+    const user = userEvent.setup();
+    function WeightProbe() {
+      const research = useResearch();
+      return <div>
+        <span data-testid="weights-contract">{JSON.stringify(research.opportunityWeights)}</span>
+        <span data-testid="weights-reset-key">{research.opportunityWeightsResetKey}</span>
+        <button onClick={() => {
+          const external = { demand: 40, supply_gap: 20, economics: 15, differentiation: 15, risk: 10 };
+          research.replaceOpportunityWeights(external);
+          external.demand = 99;
+        }}>Set valid weights</button>
+        <button onClick={() => {
+          research.opportunityWeights.demand = 77;
+        }}>Mutate exposed weights</button>
+        <button onClick={() => research.replaceOpportunityWeights({ demand: 40, supply_gap: 20, economics: 15, differentiation: 15, risk: 11 })}>Reject invalid weights</button>
+        <button onClick={() => research.importCsv("bad", "bad")}>Import invalid weights CSV</button>
+        <button onClick={() => research.importCsv(productsCsv, reviewsCsv)}>Import valid weights CSV</button>
+        <button onClick={() => research.loadDemo()}>Reset weights Demo</button>
+      </div>;
+    }
+    render(<ResearchProvider><WeightProbe /></ResearchProvider>);
+    await waitFor(() => expect(screen.getByTestId("weights-contract")).toHaveTextContent('"demand":30'));
+    const initialResetKey = Number(screen.getByTestId("weights-reset-key").textContent);
+    await user.click(screen.getByRole("button", { name: "Set valid weights" }));
+    expect(screen.getByTestId("weights-contract")).toHaveTextContent('"demand":40');
+    await user.click(screen.getByRole("button", { name: "Mutate exposed weights" }));
+    expect(screen.getByTestId("weights-contract")).toHaveTextContent('"demand":40');
+    await user.click(screen.getByRole("button", { name: "Reject invalid weights" }));
+    expect(screen.getByTestId("weights-contract")).toHaveTextContent('"demand":40');
+    await user.click(screen.getByRole("button", { name: "Import invalid weights CSV" }));
+    expect(screen.getByTestId("weights-contract")).toHaveTextContent('"demand":40');
+    expect(Number(screen.getByTestId("weights-reset-key").textContent)).toBe(initialResetKey);
+    await user.click(screen.getByRole("button", { name: "Import valid weights CSV" }));
+    await waitFor(() => expect(screen.getByTestId("weights-contract")).toHaveTextContent('"demand":30'));
+    const afterImportResetKey = Number(screen.getByTestId("weights-reset-key").textContent);
+    expect(afterImportResetKey).toBeGreaterThan(initialResetKey);
+    await user.click(screen.getByRole("button", { name: "Set valid weights" }));
+    await user.click(screen.getByRole("button", { name: "Reset weights Demo" }));
+    expect(screen.getByTestId("weights-contract")).toHaveTextContent('"demand":30');
+    expect(Number(screen.getByTestId("weights-reset-key").textContent)).toBeGreaterThan(afterImportResetKey);
+  });
   it("preserves weights after failed import and resets them after successful replacement", async () => {
     stubDemoFetch();
     const user = userEvent.setup();
@@ -171,6 +214,6 @@ describe("ResearchContext current-session corrections", () => {
     await user.click(screen.getByRole("button", { name: "Import invalid CSV" }));
     expect(screen.getByTestId("weights")).toHaveTextContent('"demand":40');
     await user.click(screen.getByRole("button", { name: "Import valid CSV" }));
-    expect(screen.getByTestId("weights")).toHaveTextContent('"demand":30');
+    await waitFor(() => expect(screen.getByTestId("weights")).toHaveTextContent('"demand":30'));
   });
 });

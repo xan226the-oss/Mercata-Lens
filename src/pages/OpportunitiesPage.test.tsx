@@ -63,6 +63,28 @@ describe("OpportunitiesPage economics workspace", () => {
     expect(screen.getByText("Weighted total: 65.75")).toBeInTheDocument();
   });
 
+  it("resolves review, economics, assumption, and opposition evidence in the selected region", async () => {
+    stubDemoFetch();
+    const user = userEvent.setup();
+    renderWithProvider(<OpportunitiesPage />);
+    await waitFor(() => expect(screen.getByTestId("opportunity-ranking-status")).toHaveTextContent("winner"));
+
+    await user.click(screen.getAllByRole("button", { name: "review:r001" })[0]);
+    expect(screen.getByTestId("selected-evidence")).toHaveTextContent("Review ID: r001");
+    expect(screen.getByTestId("selected-evidence")).toHaveTextContent("Source:");
+    expect(screen.getByTestId("selected-evidence").querySelector("a")).toHaveAttribute("href", expect.stringContaining("example.com/demo/review/r001"));
+
+    await user.click(screen.getAllByRole("button", { name: "economics:base" })[0]);
+    expect(screen.getByTestId("selected-evidence")).toHaveTextContent("Scenario ID: base");
+    expect(screen.getByTestId("selected-evidence")).toHaveTextContent("Demo assumption:");
+
+    await user.click(screen.getAllByRole("button", { name: "assumption:easy_clean:demand" })[0]);
+    expect(screen.getByTestId("selected-evidence")).toHaveTextContent("Easy-clean design");
+    expect(screen.getByTestId("selected-evidence")).toHaveTextContent("evidence kind: assumption");
+
+    await user.click(screen.getAllByRole("button", { name: "assumption:easy_clean:risk" })[0]);
+    expect(screen.getByTestId("selected-evidence")).toHaveTextContent("— risk;");
+  });
   it("shows three scenarios, Demo provenance, and estimated contribution without a commercial recommendation", async () => {
     stubDemoFetch();
     renderWithProvider(<OpportunitiesPage />);
@@ -72,6 +94,7 @@ describe("OpportunitiesPage economics workspace", () => {
     expect(screen.getAllByText(/Total costs/).length).toBeGreaterThan(0);
     expect(screen.queryByText(/recommended price|expected profit/i)).not.toBeInTheDocument();
   });
+
 
   it("renders an incomplete user-upload state instead of inventing a contribution", async () => {
     stubDemoFetch();

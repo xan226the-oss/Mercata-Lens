@@ -53,19 +53,58 @@ function resultCopy(scenario: EconomicScenario, result: EconomicResult, hasInval
   return lines;
 }
 
-function evidenceDetail(evidenceId: string, dataset: NonNullable<ReturnType<typeof useResearch>["dataset"]>, economics: readonly EconomicScenario[], hypotheses: ReturnType<typeof createOpportunityHypotheses>): ReactElement {
+function evidenceDetail(
+  evidenceId: string,
+  dataset: NonNullable<ReturnType<typeof useResearch>["dataset"]>,
+  economics: readonly EconomicScenario[],
+  hypotheses: ReturnType<typeof createOpportunityHypotheses>,
+): ReactElement {
   const [kind, value] = evidenceId.split(":", 2);
   if (kind === "review") {
     const review = dataset.reviews.find((item) => item.reviewId === value);
-    return <span>{review ? `Review ${review.reviewId}; product ${review.productId}; rating ${review.rating}; ${review.reviewText}; date ${review.reviewDate ?? "not provided"}; verified purchase ${review.verifiedPurchase === null ? "not provided" : review.verifiedPurchase ? "yes" : "no"}.` : "Review evidence unavailable in the active dataset."}</span>;
+    if (!review) return <span>Review evidence unavailable in the active dataset.</span>;
+    return (
+      <div className="opportunity-evidence-detail">
+        <p><strong>Review ID:</strong> {review.reviewId}</p>
+        <p><strong>Product ID:</strong> {review.productId}</p>
+        <p><strong>Rating:</strong> {review.rating}</p>
+        <p><strong>Review text:</strong> {review.reviewText}</p>
+        <p><strong>Date:</strong> {review.reviewDate ?? "Not provided"}</p>
+        <p><strong>Verified purchase:</strong> {review.verifiedPurchase === null ? "Not provided" : review.verifiedPurchase ? "Yes" : "No"}</p>
+        <p><strong>Source:</strong> <a href={review.sourceUrl} target="_blank" rel="noreferrer">{review.sourceUrl}</a></p>
+      </div>
+    );
   }
   if (kind === "product") {
     const product = dataset.products.find((item) => item.productId === value);
-    return <span>{product ? `Product ${product.productId}; ${product.title}; ${product.brand ?? "brand not provided"}; $${product.priceUsd.toFixed(2)}; rating ${product.rating}; opposition rationale: explicitly linked product evidence.` : "Product evidence unavailable in the active dataset."}</span>;
+    if (!product) return <span>Product evidence unavailable in the active dataset.</span>;
+    return (
+      <div className="opportunity-evidence-detail">
+        <p><strong>Product ID:</strong> {product.productId}</p>
+        <p><strong>Title:</strong> {product.title}</p>
+        <p><strong>Brand:</strong> {product.brand ?? "Not provided"}</p>
+        <p><strong>Price:</strong> ${product.priceUsd.toFixed(2)}</p>
+        <p><strong>Rating:</strong> {product.rating}</p>
+        <p><strong>Why referenced:</strong> This product record is explicitly linked by the current hypothesis; it is not treated as an opposition record unless that link is present.</p>
+        <p><strong>Source:</strong> <a href={product.sourceUrl} target="_blank" rel="noreferrer">{product.sourceUrl}</a></p>
+      </div>
+    );
   }
   if (kind === "economics") {
     const scenario = economics.find((item) => item.id === value);
-    return <span>{scenario ? `Named economic scenario: ${scenario.label}; inputs and provenance are shown in the economics worksheet.` : "Economic scenario evidence unavailable."}</span>;
+    if (!scenario) return <span>Economic scenario evidence unavailable.</span>;
+    return (
+      <div className="opportunity-evidence-detail">
+        <p><strong>Scenario ID:</strong> {scenario.id}</p>
+        <p><strong>Name:</strong> {scenario.label}</p>
+        <ul>
+          {Object.entries(scenario.inputs).map(([field, input]) => {
+            const provenance = scenario.provenance[field as keyof EconomicScenario["inputs"]];
+            return <li key={field}><strong>{FIELD_LABELS[field as keyof EconomicScenario["inputs"]]}:</strong> {input === null ? "Not provided" : String(input)}; provenance: {provenance ? `${provenance.sourceKind}/${provenance.evidenceKind} — ${provenance.note}` : "Not provided"}</li>;
+          })}
+        </ul>
+      </div>
+    );
   }
   if (kind === "assumption") {
     const [, opportunityId, dimension] = evidenceId.split(":");
@@ -172,10 +211,10 @@ export function OpportunitiesPage() {
         <div className="opportunity-grid">
           {hypotheses.map((opportunity) => {
             const score = ranking.scores.find((item) => item.opportunityId === opportunity.id) ?? scoreOpportunity(opportunity, opportunityWeights);
-            return <OpportunityCard key={opportunity.id} opportunity={opportunity} score={weightsValid ? score : { opportunityId: opportunity.id, status: "incomplete", total: null, contributions: [], issues: [] }} sourceKind={sourceKind} onEvidenceClick={setSelectedEvidenceId} resolveEvidence={renderEvidence} />;
+            return <OpportunityCard key={opportunity.id} opportunity={opportunity} score={weightsValid ? score : { opportunityId: opportunity.id, status: "incomplete", total: null, contributions: [], issues: [] }} sourceKind={sourceKind} onEvidenceClick={setSelectedEvidenceId} />;
           })}
         </div>
-        <p className="opportunity-evidence-focus" aria-live="polite" data-testid="selected-evidence">{selectedEvidenceId ? <><strong>{selectedEvidenceId}</strong> {renderEvidence(selectedEvidenceId)}</> : "Select an evidence reference to keep the source boundary visible."}</p>
+        <div className="opportunity-evidence-focus" aria-live="polite" data-testid="selected-evidence">{selectedEvidenceId ? <><strong>{selectedEvidenceId}</strong> {renderEvidence(selectedEvidenceId)}</> : "Select an evidence reference to keep the source boundary visible."}</div>
       </section>
 
       <section className="economics-workspace" aria-labelledby="economics-workspace-title">

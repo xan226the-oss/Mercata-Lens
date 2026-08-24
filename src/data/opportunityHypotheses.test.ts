@@ -65,7 +65,7 @@ describe("createOpportunityHypotheses", () => {
       expect(hypothesis.dimensions.every(({ value, evidenceKind, reasoning, evidenceIds }) => typeof value === "number" && evidenceKind === "assumption" && reasoning.startsWith("Curated Demo assumption:") && evidenceIds.some((id) => id === `assumption:${hypothesis.id}:demand` || id === `assumption:${hypothesis.id}:supply_gap` || id === `assumption:${hypothesis.id}:economics` || id === `assumption:${hypothesis.id}:differentiation` || id === `assumption:${hypothesis.id}:risk`))).toBe(true);
       expect(hypothesis.economics.map(({ id }) => id)).toEqual(["pessimistic", "base", "optimistic"]);
     }
-    expect(hypotheses[1].supportEvidenceIds).toEqual(["review:r-noise", "review:r-pump", "economics:base", "assumption:quiet_durable:demand"]);
+    expect(hypotheses[1].supportEvidenceIds).toEqual(["review:r-noise", "economics:base", "assumption:quiet_durable:demand"]);
     expect(hypotheses[0].oppositionEvidenceIds).toEqual(["assumption:easy_clean:risk"]);
     expect({ activeDataset, summaries, economics }).toEqual(before);
   });
@@ -77,6 +77,25 @@ describe("createOpportunityHypotheses", () => {
     expect(createOpportunityHypotheses(noiseFirst, summarizePainPoints(noiseFirst), createEconomicScenarios("demo"))[1].supportEvidenceIds[0]).toBe("review:r-noise-first");
   });
 
+  it("selects one stable review per support contract and preserves no-match absence", () => {
+    const manyMatches = dataset([
+      review("r-clean-first", "Hard to clean around the pump."),
+      review("r-clean-second", "Hard to clean after use."),
+      review("r-noise", "The fountain is noisy at night."),
+      review("r-pump", "The pump died after two months."),
+      review("r-filter-first", "Replacement filters are pricey."),
+      review("r-filter-second", "Filters are expensive to replace."),
+    ]);
+    const hypotheses = createOpportunityHypotheses(manyMatches, summarizePainPoints(manyMatches), createEconomicScenarios("demo"));
+    expect(hypotheses[0].supportEvidenceIds).toEqual(["review:r-clean-first", "economics:base", "assumption:easy_clean:demand"]);
+    expect(hypotheses[1].supportEvidenceIds).toEqual(["review:r-noise", "economics:base", "assumption:quiet_durable:demand"]);
+    expect(hypotheses[2].supportEvidenceIds).toEqual(["review:r-filter-first", "economics:base", "assumption:low_consumables:demand"]);
+    expect(hypotheses.every(({ supportEvidenceIds }) => new Set(supportEvidenceIds).size === supportEvidenceIds.length)).toBe(true);
+
+    const noMatch = dataset([review("r-neutral", "Looks fine and works well.")]);
+    const noMatchHypotheses = createOpportunityHypotheses(noMatch, summarizePainPoints(noMatch), createEconomicScenarios("demo"));
+    expect(noMatchHypotheses.every(({ supportEvidenceIds }) => supportEvidenceIds.every((id) => !id.startsWith("review:")))).toBe(true);
+  });
   it("creates all-null incomplete hypotheses for user uploads without inheriting Demo scores", () => {
     const activeDataset = { ...dataset([]), sourceKind: "user_upload" as const };
     const hypotheses = createOpportunityHypotheses(activeDataset, [], createEconomicScenarios("user_upload"));

@@ -82,6 +82,39 @@ describe("EconomicsEditor", () => {
     expect(onReplaceScenario).toHaveBeenCalledTimes(callsBefore);
   });
 
+  it("rejects finite percentage underflow drafts with accessible errors and preserves the scenario", () => {
+    const onReplaceScenario = vi.fn();
+    const scenarios = createEconomicScenarios("demo");
+    const original = JSON.parse(JSON.stringify(scenarios[1]));
+    render(<EconomicsEditor scenarios={scenarios} onReplaceScenario={onReplaceScenario} />);
+    const rate = screen.getAllByLabelText("Referral fee rate")[1];
+    const underflows = [
+      `0.${"0".repeat(323)}1`,
+      `0.${"0".repeat(323)}5`,
+      `-0.${"0".repeat(323)}1`,
+    ];
+    for (const raw of underflows) {
+      fireEvent.change(rate, { target: { value: raw } });
+      expect(rate).toHaveValue(raw);
+      expect(rate).toHaveAttribute("aria-invalid", "true");
+      expect(screen.getByText("Percentage is too small to represent safely.")).toBeVisible();
+      const error = screen.getByText("Percentage is too small to represent safely.");
+      expect(rate.getAttribute("aria-describedby")).toContain(error.id);
+      expect(onReplaceScenario).not.toHaveBeenCalled();
+      expect(scenarios[1]).toEqual(original);
+    }
+  });
+  it("accepts explicit zero percentage values, including the documented -0 contract", () => {
+    const onReplaceScenario = vi.fn();
+    const scenarios = createEconomicScenarios("demo");
+    render(<EconomicsEditor scenarios={scenarios} onReplaceScenario={onReplaceScenario} />);
+    const rate = screen.getAllByLabelText("Referral fee rate")[1];
+    for (const raw of ["0", "0.0", "0.000", "-0"]) {
+      fireEvent.change(rate, { target: { value: raw } });
+      expect(Object.is(onReplaceScenario.mock.calls.at(-1)?.[0].inputs.referralFeeRate, -0) || onReplaceScenario.mock.calls.at(-1)?.[0].inputs.referralFeeRate === 0).toBe(true);
+    }
+    expect(onReplaceScenario).toHaveBeenCalledTimes(4);
+  });
   it("submits domain-invalid numeric drafts but blocks precision and unsafe drafts", async () => {
     const onReplaceScenario = vi.fn();
     const user = userEvent.setup();
@@ -104,4 +137,6 @@ describe("EconomicsEditor", () => {
     expect(screen.getByText(/finite dollar amount|safe cents/i)).toBeVisible();
     expect(onReplaceScenario).toHaveBeenCalledTimes(callsAfterEmpty);
   });
+
+
 });

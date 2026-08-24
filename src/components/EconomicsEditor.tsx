@@ -76,7 +76,7 @@ function draftError(value: string, kind: "dollar" | "rate"): string | null {
   if (kind === "rate" && parseRate(trimmed) === null) {
     const numeric = Number(trimmed);
     if (!Number.isFinite(numeric)) return "Enter a finite percentage.";
-    if (numeric !== 0 && isNonZeroDecimal(trimmed)) return "Percentage is too small to represent safely.";
+    if (isNonZeroDecimal(trimmed)) return "Percentage is too small to represent safely.";
   }
   const parsed = Number(trimmed);
   if (!Number.isFinite(parsed)) return kind === "rate" ? "Enter a finite percentage." : "Enter a finite dollar amount.";

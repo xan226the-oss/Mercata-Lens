@@ -1,17 +1,19 @@
 import { describe, expect, it, vi } from "vitest";
 import "@testing-library/jest-dom/vitest";
-import type { ReactNode } from "react";
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { render, screen, waitFor, within, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import fs from "node:fs";
 import path from "node:path";
 import { MemoryRouter } from "react-router-dom";
+import type { ReactNode } from "react";
 import { ResearchProvider, useResearch } from "../research/ResearchContext";
 import { OpportunitiesPage } from "./OpportunitiesPage";
 
 const demoDir = path.resolve(__dirname, "../../public/demo");
 const productsCsv = fs.readFileSync(path.join(demoDir, "products.csv"), "utf8");
 const reviewsCsv = fs.readFileSync(path.join(demoDir, "reviews.csv"), "utf8");
+const distinctProductsCsv = productsCsv.replace("p01,ClearFlow Pet Fountain 2.5L,ClearFlow,29.99,4.2,156,Cat Water Fountain", "p901,Distinct Fountain,Distinct Brand,12.34,4.1,7,Cat Water Fountain");
+const distinctReviewsCsv = reviewsCsv.replaceAll("p01", "p901");
 
 function stubDemoFetch() {
   vi.stubGlobal("fetch", vi.fn((input: RequestInfo | URL) => {
@@ -22,9 +24,6 @@ function stubDemoFetch() {
   }) as unknown as typeof fetch);
 }
 
-const distinctProductsCsv = productsCsv.replace("p01,ClearFlow Pet Fountain 2.5L,ClearFlow,29.99,4.2,156,Cat Water Fountain", "p901,Distinct Fountain,Distinct Brand,12.34,4.1,7,Cat Water Fountain");
-const distinctReviewsCsv = reviewsCsv.replaceAll("p01", "p901");
-
 function renderWithProvider(children: ReactNode) {
   return render(<ResearchProvider><MemoryRouter>{children}</MemoryRouter></ResearchProvider>);
 }
@@ -32,12 +31,11 @@ function renderWithProvider(children: ReactNode) {
 describe("OpportunitiesPage economics workspace", () => {
   it("shows three scenarios, Demo provenance, and estimated contribution without scoring", async () => {
     stubDemoFetch();
-    render(<ResearchProvider><MemoryRouter><OpportunitiesPage /></MemoryRouter></ResearchProvider>);
+    renderWithProvider(<OpportunitiesPage />);
     await waitFor(() => expect(screen.getAllByText("Base scenario").length).toBeGreaterThan(0));
-
     expect(screen.getAllByRole("group")).toHaveLength(3);
     expect(screen.getAllByText(/Demo assumption:/).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Total costs|Known costs so far/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Total costs/).length).toBeGreaterThan(0);
     expect(screen.queryByText(/score|recommended price|expected profit/i)).not.toBeInTheDocument();
   });
 
@@ -47,11 +45,11 @@ describe("OpportunitiesPage economics workspace", () => {
       const { importCsv } = useResearch();
       return <button onClick={() => importCsv(productsCsv, reviewsCsv)}>Upload</button>;
     }
-    render(<ResearchProvider><MemoryRouter><Probe /><OpportunitiesPage /></MemoryRouter></ResearchProvider>);
+    renderWithProvider(<><Probe /><OpportunitiesPage /></>);
     await waitFor(() => expect(screen.getAllByText("Base scenario").length).toBeGreaterThan(0));
     await userEvent.click(screen.getByRole("button", { name: "Upload" }));
     await waitFor(() => expect(screen.getAllByText(/Missing input/).length).toBeGreaterThan(0));
-    expect(screen.getAllByText(/Total costs|Known costs so far/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Known costs so far/).length).toBeGreaterThan(0);
   });
 
   it("proves real controlled continuous input, conversion, invalid drafts, provenance, and reset lifecycle", async () => {
@@ -78,7 +76,7 @@ describe("OpportunitiesPage economics workspace", () => {
     await user.clear(salePrice);
     await user.type(salePrice, "-2");
     expect(salePrice).toHaveValue("-2");
-    expect(base.getByText("Value cannot be negative.")).toBeVisible();
+    expect(base.getByText(/domain validation will mark/i)).toBeVisible();
     await user.clear(salePrice);
     expect(salePrice).toHaveValue("");
     expect(screen.getByTestId("context-state")).toHaveTextContent('"salePriceCents":null');
@@ -90,8 +88,8 @@ describe("OpportunitiesPage economics workspace", () => {
     await user.clear(rate);
     await user.type(rate, "120");
     expect(rate).toHaveValue("120");
-    expect(base.getByText("Referral fee rate must be between 0% and 100%.")).toBeVisible();
-    expect(screen.getByTestId("context-state")).not.toHaveTextContent('"referralFeeRate":1.2');
+    expect(base.getByText(/domain validation will mark/i)).toBeVisible();
+    expect(screen.getByTestId("context-state")).toHaveTextContent('"referralFeeRate":1.2');
   });
 
   it("renders formula, known costs, rounded referral fee, and scenario-linked results", async () => {
@@ -106,10 +104,46 @@ describe("OpportunitiesPage economics workspace", () => {
   });
 
   it("renders no-data fallback without Demo contribution when isolated from a dataset", () => {
-    render(<ResearchProvider><MemoryRouter><OpportunitiesPage /></MemoryRouter></ResearchProvider>);
+    renderWithProvider(<OpportunitiesPage />);
     expect(screen.getByTestId("economics-no-data")).toBeVisible();
     expect(screen.queryByText("Demo assumption:")).not.toBeInTheDocument();
     expect(screen.queryByText(/Estimated per-unit contribution:/)).not.toBeInTheDocument();
+  });
+
+  it("distinguishes malformed old-value preservation from empty clearing and domain-invalid results", async () => {
+    stubDemoFetch();
+    const user = userEvent.setup();
+    function Harness() {
+      const research = useResearch();
+      return <div data-testid="context-state">{JSON.stringify(research.economicScenarios)}</div>;
+    }
+    renderWithProvider(<><Harness /><OpportunitiesPage /></>);
+    await waitFor(() => expect(screen.getAllByText("Base scenario").length).toBeGreaterThan(0));
+    const base = within(screen.getByRole("group", { name: "Base scenario" }));
+    const salePrice = base.getByLabelText("Sale price");
+    fireEvent.change(salePrice, { target: { value: "oops" } });
+    expect(salePrice).toHaveValue("oops");
+    const baseState = JSON.parse(screen.getByTestId("context-state").textContent ?? "[]").find((scenario: { id: string }) => scenario.id === "base");
+    expect(baseState.inputs.salePriceCents).toBe(3999);
+    expect(screen.getByTestId("economics-result-base")).toHaveTextContent("Estimated per-unit contribution: $7.00.");
+    await user.clear(salePrice);
+    expect(screen.getByTestId("context-state")).toHaveTextContent('"salePriceCents":null');
+    expect(screen.getByTestId("economics-result-base")).toHaveTextContent("Missing fields: Sale price");
+    await user.clear(salePrice);
+    await user.type(salePrice, "-2");
+    expect(screen.getByTestId("context-state")).toHaveTextContent('"salePriceCents":-200');
+    expect(screen.getByTestId("economics-result-base")).toHaveTextContent("Invalid input");
+    const rate = base.getByLabelText("Referral fee rate");
+    await user.clear(rate);
+    await user.type(rate, "120");
+    expect(screen.getByTestId("context-state")).toHaveTextContent('"referralFeeRate":1.2');
+    expect(screen.getByTestId("economics-result-base")).toHaveTextContent("Invalid input");
+    const huge = base.getByLabelText("Other cost");
+    fireEvent.change(huge, { target: { value: "1e309" } });
+    expect(huge).toHaveValue("1e309");
+    const baseEconomicState = JSON.parse(screen.getByTestId("context-state").textContent ?? "[]").find((scenario: { id: string }) => scenario.id === "base");
+    expect(baseEconomicState.inputs.otherCostCents).toBe(49);
+    expect(base.getByText(/finite dollar amount|safe cents/i)).toBeVisible();
   });
 
   it("preserves draft and provenance after failed import, then resets on distinct success and Demo reload", async () => {

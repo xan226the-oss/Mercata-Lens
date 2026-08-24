@@ -29,19 +29,26 @@ function displayValue(value: number | null, kind: "dollar" | "rate"): string {
   return kind === "dollar" ? (value / 100).toFixed(2) : String(value * 100);
 }
 
+function isDecimalDraft(value: string): boolean {
+  return /^-?(?:\d+\.?\d*|\.\d+)$/.test(value.trim());
+}
+
 function parseDraft(value: string, kind: "dollar" | "rate"): number | null {
-  if (value.trim() === "") return null;
+  if (value.trim() === "" || !isDecimalDraft(value)) return null;
   const parsed = Number(value);
-  if (!Number.isFinite(parsed) || parsed < 0 || (kind === "rate" && parsed > 100)) return null;
-  return kind === "dollar" ? Math.round(parsed * 100) : parsed / 100;
+  if (!Number.isFinite(parsed)) return null;
+  if (kind === "rate") return parsed / 100;
+  const cents = parsed * 100;
+  return Number.isSafeInteger(cents) ? cents : null;
 }
 
 function draftError(value: string, kind: "dollar" | "rate"): string | null {
   if (value.trim() === "") return null;
+  if (!isDecimalDraft(value)) return kind === "dollar" ? "Enter a finite dollar amount." : "Enter a finite percentage.";
   const parsed = Number(value);
-  if (!Number.isFinite(parsed)) return kind === "dollar" ? "Enter a non-negative dollar amount." : "Enter a finite percentage.";
-  if (parsed < 0) return "Value cannot be negative.";
-  if (kind === "rate" && parsed > 100) return "Referral fee rate must be between 0% and 100%.";
+  if (kind === "dollar" && !Number.isSafeInteger(parsed * 100)) return "Dollar amount is too large or precise for safe cents.";
+  if (parsed < 0) return "Value cannot be negative; domain validation will mark this input invalid.";
+  if (kind === "rate" && parsed > 100) return "Referral fee rate exceeds 100%; domain validation will mark this input invalid.";
   return null;
 }
 
@@ -77,7 +84,9 @@ export function EconomicsEditor({ scenarios, resetKey = 0, onReplaceScenario }: 
     const parsed = parseDraft(value, kind);
     setDrafts((current) => ({ ...current, [draftKey]: value }));
     setDraftErrors((current) => ({ ...current, [draftKey]: error }));
-    const nextProvenance = value.trim() === "" ? null : error === null ? userProvenance() : scenario.provenance[field];
+    const isEmpty = value.trim() === "";
+    if (!isEmpty && parsed === null) return;
+    const nextProvenance = isEmpty ? null : userProvenance();
     onReplaceScenario({
       ...scenario,
       inputs: { ...scenario.inputs, [field]: parsed },

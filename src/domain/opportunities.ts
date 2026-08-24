@@ -1,3 +1,5 @@
+import type { EconomicScenario, EvidenceKind } from "./types";
+
 export const OPPORTUNITY_IDS = ["easy_clean", "quiet_durable", "low_consumables"] as const;
 export type OpportunityId = (typeof OPPORTUNITY_IDS)[number];
 
@@ -10,92 +12,114 @@ export const OPPORTUNITY_DIMENSIONS = [
 ] as const;
 export type OpportunityDimension = (typeof OPPORTUNITY_DIMENSIONS)[number];
 
-export const OPPORTUNITY_DISPLAY_NAMES: Record<OpportunityId, string> = {
+export const OPPORTUNITY_NAMES: Readonly<Record<OpportunityId, string>> = Object.freeze({
   easy_clean: "Easy-clean design",
   quiet_durable: "Quiet and durable design",
   low_consumables: "Low consumables cost design",
-};
+});
 
-export type OpportunityWeights = Record<OpportunityDimension, number>;
+export type OpportunityWeights = Readonly<Record<OpportunityDimension, number>>;
 
 export interface DimensionScore {
-  dimension: OpportunityDimension;
-  value: number | null;
-  evidenceIds: string[];
-  reasoning: string;
-  evidenceKind: string;
+  readonly dimension: OpportunityDimension;
+  readonly value: number | null;
+  readonly evidenceIds: readonly string[];
+  readonly reasoning: string;
+  readonly evidenceKind: EvidenceKind;
 }
 
 export interface Opportunity {
-  id: OpportunityId;
-  displayName: string;
-  dimensions: DimensionScore[];
+  readonly id: OpportunityId;
+  readonly name: string;
+  readonly targetUser: string;
+  readonly scenario: string;
+  readonly dimensions: readonly DimensionScore[];
+  readonly economics: EconomicScenario | null;
+  readonly supportEvidenceIds: readonly string[];
+  readonly oppositionEvidenceIds: readonly string[];
+  readonly unknowns: readonly string[];
 }
 
 export interface WeightIssue {
-  kind: "weights";
-  code: "missing_key" | "extra_key" | "not_finite" | "negative" | "total";
-  key?: string;
-  message: string;
+  readonly kind: "weights";
+  readonly code: "missing_key" | "extra_key" | "not_finite" | "negative" | "total";
+  readonly key?: string;
+  readonly message: string;
 }
 
 export interface DimensionIssue {
-  kind: "dimension";
-  dimension?: string;
-  code: "missing" | "duplicate" | "extra" | "invalid_value" | "missing_evidence";
-  message: string;
+  readonly kind: "dimension";
+  readonly dimension?: string;
+  readonly code:
+    | "missing"
+    | "duplicate"
+    | "extra"
+    | "invalid_value"
+    | "missing_evidence"
+    | "invalid_evidence"
+    | "invalid_reasoning"
+    | "invalid_evidence_kind";
+  readonly message: string;
 }
 
-export type OpportunityIssue = WeightIssue | DimensionIssue;
+export interface CandidateIssue {
+  readonly kind: "candidate";
+  readonly code: "invalid_id" | "duplicate_id" | "missing_id" | "extra_candidate";
+  readonly candidateIndex?: number;
+  readonly id?: unknown;
+  readonly message: string;
+}
+
+export type OpportunityIssue = WeightIssue | DimensionIssue | CandidateIssue;
 
 export type WeightValidation =
-  | { valid: true; issues: [] }
-  | { valid: false; issues: WeightIssue[] };
+  | { readonly valid: true; readonly issues: readonly [] }
+  | { readonly valid: false; readonly issues: readonly WeightIssue[] };
 
 export interface OpportunityContribution {
-  dimension: OpportunityDimension;
-  value: number;
-  weight: number;
-  contribution: number;
-  evidenceIds: string[];
-  reasoning: string;
-  evidenceKind: string;
+  readonly dimension: OpportunityDimension;
+  readonly value: number;
+  readonly weight: number;
+  readonly contribution: number;
+  readonly evidenceIds: readonly string[];
+  readonly reasoning: string;
+  readonly evidenceKind: EvidenceKind;
 }
 
 export type OpportunityScore =
   | {
-      opportunityId: OpportunityId;
-      status: "complete";
-      total: number;
-      contributions: OpportunityContribution[];
-      issues: [];
+      readonly opportunityId: OpportunityId;
+      readonly status: "complete";
+      readonly total: number;
+      readonly contributions: readonly OpportunityContribution[];
+      readonly issues: readonly [];
     }
   | {
-      opportunityId: OpportunityId;
-      status: "incomplete";
-      total: null;
-      contributions: OpportunityContribution[];
-      issues: OpportunityIssue[];
+      readonly opportunityId: OpportunityId | null;
+      readonly status: "incomplete";
+      readonly total: null;
+      readonly contributions: readonly OpportunityContribution[];
+      readonly issues: readonly OpportunityIssue[];
     };
 
 export type RankingResult =
   | {
-      status: "winner";
-      winnerId: OpportunityId;
-      scores: OpportunityScore[];
-      issues: [];
+      readonly status: "winner";
+      readonly winnerId: OpportunityId;
+      readonly scores: readonly OpportunityScore[];
+      readonly issues: readonly [];
     }
   | {
-      status: "no_clear_winner";
-      winnerId: null;
-      scores: OpportunityScore[];
-      issues: [];
+      readonly status: "no_clear_winner";
+      readonly winnerId: null;
+      readonly scores: readonly OpportunityScore[];
+      readonly issues: readonly [];
     }
   | {
-      status: "incomplete";
-      winnerId: null;
-      scores: OpportunityScore[];
-      issues: OpportunityIssue[];
+      readonly status: "incomplete";
+      readonly winnerId: null;
+      readonly scores: readonly OpportunityScore[];
+      readonly issues: readonly OpportunityIssue[];
     };
 
 export const DEFAULT_OPPORTUNITY_WEIGHTS: OpportunityWeights = Object.freeze({
@@ -150,6 +174,11 @@ export function validateWeights(input: unknown): WeightValidation {
 const isOpportunityDimension = (value: unknown): value is OpportunityDimension =>
   typeof value === "string" && (OPPORTUNITY_DIMENSIONS as readonly string[]).includes(value);
 
+const isEvidenceKind = (value: unknown): value is EvidenceKind =>
+  value === "observed" || value === "assumption" || value === "derived";
+
+const isNonEmptyString = (value: unknown): value is string => typeof value === "string" && value.trim().length > 0;
+
 const validateDimensions = (input: unknown): DimensionIssue[] => {
   if (!Array.isArray(input)) {
     return [{ kind: "dimension", code: "missing", message: "Dimensions must be an array." }];
@@ -157,7 +186,8 @@ const validateDimensions = (input: unknown): DimensionIssue[] => {
   const issues: DimensionIssue[] = [];
   const seen = new Set<string>();
   for (const item of input) {
-    const dimension = item && typeof item === "object" && "dimension" in item ? String((item as { dimension?: unknown }).dimension) : "unknown";
+    const record = item && typeof item === "object" ? item as Record<string, unknown> : null;
+    const dimension = record && "dimension" in record ? String(record.dimension) : "unknown";
     if (!isOpportunityDimension(dimension)) {
       issues.push({ kind: "dimension", code: "extra", dimension, message: `Unexpected dimension ${dimension}.` });
       continue;
@@ -166,15 +196,26 @@ const validateDimensions = (input: unknown): DimensionIssue[] => {
       issues.push({ kind: "dimension", code: "duplicate", dimension, message: `Duplicate dimension ${dimension}.` });
     }
     seen.add(dimension);
-    const value = item && typeof item === "object" ? (item as { value?: unknown }).value : undefined;
-    const evidenceIds = item && typeof item === "object" ? (item as { evidenceIds?: unknown }).evidenceIds : undefined;
+
+    const value = record?.value;
     if (value === null) {
       issues.push({ kind: "dimension", code: "missing", dimension, message: `Dimension ${dimension} is missing.` });
-    } else if (typeof value !== "number" || !Number.isFinite(value) || value < 0 || value > 100) {
-      issues.push({ kind: "dimension", code: "invalid_value", dimension, message: `Dimension ${dimension} must be null or a finite value from 0 to 100.` });
+      continue;
     }
-    if (value !== null && Array.isArray(evidenceIds) && evidenceIds.length === 0) {
-      issues.push({ kind: "dimension", code: "missing_evidence", dimension, message: `Dimension ${dimension} needs evidence IDs when it has a value.` });
+    if (typeof value !== "number" || !Number.isFinite(value) || value < 0 || value > 100) {
+      issues.push({ kind: "dimension", code: "invalid_value", dimension, message: `Dimension ${dimension} must be null or a finite value from 0 to 100.` });
+      continue;
+    }
+
+    const evidenceIds = record?.evidenceIds;
+    if (!Array.isArray(evidenceIds) || evidenceIds.length === 0 || evidenceIds.some((id) => !isNonEmptyString(id))) {
+      issues.push({ kind: "dimension", code: "invalid_evidence", dimension, message: `Dimension ${dimension} needs non-empty string evidence IDs.` });
+    }
+    if (!isNonEmptyString(record?.reasoning)) {
+      issues.push({ kind: "dimension", code: "invalid_reasoning", dimension, message: `Dimension ${dimension} needs non-empty reasoning.` });
+    }
+    if (!isEvidenceKind(record?.evidenceKind)) {
+      issues.push({ kind: "dimension", code: "invalid_evidence_kind", dimension, message: `Dimension ${dimension} needs a valid evidence kind.` });
     }
   }
   for (const dimension of OPPORTUNITY_DIMENSIONS) {
@@ -185,18 +226,26 @@ const validateDimensions = (input: unknown): DimensionIssue[] => {
   return issues;
 };
 
+const candidateId = (opportunity: unknown): unknown =>
+  opportunity && typeof opportunity === "object" ? (opportunity as { id?: unknown }).id : undefined;
+
+const validOpportunityId = (id: unknown): id is OpportunityId =>
+  (OPPORTUNITY_IDS as readonly unknown[]).includes(id);
+
 export function scoreOpportunity(opportunity: Opportunity, weights: unknown): OpportunityScore {
-  const opportunityId = opportunity?.id;
-  const safeId = (OPPORTUNITY_IDS as readonly unknown[]).includes(opportunityId) ? opportunityId as OpportunityId : "easy_clean";
+  const rawId = candidateId(opportunity);
+  const opportunityId = validOpportunityId(rawId) ? rawId : null;
+  const candidateIssues: CandidateIssue[] = validOpportunityId(rawId)
+    ? []
+    : [{ kind: "candidate", code: "invalid_id", id: rawId, message: "Opportunity ID must be one of the fixed opportunity IDs." }];
   const weightResult = validateWeights(weights);
   const dimensionIssues = validateDimensions(opportunity && typeof opportunity === "object" ? opportunity.dimensions : undefined);
   const issues: OpportunityIssue[] = [
+    ...candidateIssues,
     ...(weightResult.valid ? [] : weightResult.issues),
     ...dimensionIssues,
   ];
-  const validWeights = weightResult.valid ? (weights as OpportunityWeights) : null;
   const dimensionMap = new Map<OpportunityDimension, DimensionScore>();
-
   if (Array.isArray(opportunity?.dimensions)) {
     for (const dimension of opportunity.dimensions) {
       if (isOpportunityDimension(dimension?.dimension) && !dimensionMap.has(dimension.dimension)) {
@@ -204,27 +253,81 @@ export function scoreOpportunity(opportunity: Opportunity, weights: unknown): Op
       }
     }
   }
+
   const contributions: OpportunityContribution[] = [];
-  for (const dimension of OPPORTUNITY_DIMENSIONS) {
-    const entry = dimensionMap.get(dimension);
-    if (!entry || typeof entry.value !== "number" || !Number.isFinite(entry.value) || entry.value < 0 || entry.value > 100) continue;
-    const weight = validWeights ? validWeights[dimension] : 0;
-    contributions.push({ dimension, value: entry.value, weight, contribution: entry.value * weight / 100, evidenceIds: [...entry.evidenceIds], reasoning: entry.reasoning, evidenceKind: entry.evidenceKind });
+  const validWeights = weightResult.valid ? (weights as OpportunityWeights) : null;
+  if (validWeights) {
+    for (const dimension of OPPORTUNITY_DIMENSIONS) {
+      const entry = dimensionMap.get(dimension);
+      if (!entry || typeof entry.value !== "number" || !Number.isFinite(entry.value) || entry.value < 0 || entry.value > 100) continue;
+      if (!Array.isArray(entry.evidenceIds) || entry.evidenceIds.length === 0 || entry.evidenceIds.some((id) => !isNonEmptyString(id))) continue;
+      if (!isNonEmptyString(entry.reasoning) || !isEvidenceKind(entry.evidenceKind)) continue;
+      contributions.push({
+        dimension,
+        value: entry.value,
+        weight: validWeights[dimension],
+        contribution: entry.value * validWeights[dimension] / 100,
+        evidenceIds: [...entry.evidenceIds],
+        reasoning: entry.reasoning,
+        evidenceKind: entry.evidenceKind,
+      });
+    }
   }
   if (issues.length > 0 || contributions.length !== OPPORTUNITY_DIMENSIONS.length) {
-    return { opportunityId: safeId, status: "incomplete", total: null, contributions, issues };
+    return { opportunityId, status: "incomplete", total: null, contributions: [], issues };
   }
-  return { opportunityId: safeId, status: "complete", total: contributions.reduce((sum, item) => sum + item.contribution, 0), contributions, issues: [] };
+  return {
+    opportunityId: opportunityId as OpportunityId,
+    status: "complete",
+    total: contributions.reduce((sum, item) => sum + item.contribution, 0),
+    contributions,
+    issues: [],
+  };
 }
 
-export function rankOpportunities(opportunities: Opportunity[], weights: unknown): RankingResult {
-  const ids = opportunities.map((item) => item?.id);
-  const exactIds = ids.length === OPPORTUNITY_IDS.length && new Set(ids).size === OPPORTUNITY_IDS.length && OPPORTUNITY_IDS.every((id) => ids.includes(id));
-  const scores = exactIds ? OPPORTUNITY_IDS.map((id) => scoreOpportunity(opportunities.find((item) => item.id === id) as Opportunity, weights)) : opportunities.map((item) => scoreOpportunity(item, weights));
-  const issues: OpportunityIssue[] = exactIds ? scores.flatMap((score) => score.issues) : [{ kind: "dimension", code: "extra", message: "Ranking requires exactly one candidate for each fixed opportunity ID." }];
-  if (issues.length > 0 || scores.some((score) => score.status !== "complete")) return { status: "incomplete", winnerId: null, scores, issues };
-  const ordered = [...scores].sort((a, b) => (b.status === "complete" ? b.total : -Infinity) - (a.status === "complete" ? a.total : -Infinity));
-  const lead = (ordered[0] as Extract<OpportunityScore, { status: "complete" }>).total - (ordered[1] as Extract<OpportunityScore, { status: "complete" }>).total;
+const candidateSetIssues = (opportunities: readonly unknown[]): CandidateIssue[] => {
+  const issues: CandidateIssue[] = [];
+  const ids = opportunities.map(candidateId);
+  ids.forEach((id, index) => {
+    if (!validOpportunityId(id)) {
+      issues.push({ kind: "candidate", code: "invalid_id", candidateIndex: index, id, message: "Candidate ID must be one of the fixed opportunity IDs." });
+    }
+  });
+  for (const id of OPPORTUNITY_IDS) {
+    const matches = ids.filter((candidate) => candidate === id).length;
+    if (matches === 0) issues.push({ kind: "candidate", code: "missing_id", id, message: `Missing candidate ${id}.` });
+    if (matches > 1) issues.push({ kind: "candidate", code: "duplicate_id", id, message: `Duplicate candidate ${id}.` });
+  }
+  if (ids.length > OPPORTUNITY_IDS.length) {
+    for (let index = OPPORTUNITY_IDS.length; index < ids.length; index += 1) {
+      issues.push({ kind: "candidate", code: "extra_candidate", candidateIndex: index, id: ids[index], message: "Ranking accepts exactly the three fixed candidates." });
+    }
+  }
+  return issues;
+};
+
+export function rankOpportunities(opportunities: readonly Opportunity[], weights: unknown): RankingResult {
+  const setIssues = candidateSetIssues(opportunities);
+  const issues: OpportunityIssue[] = [...setIssues];
+  if (issues.length > 0) {
+    return {
+      status: "incomplete",
+      winnerId: null,
+      scores: [],
+      issues,
+    };
+  }
+  const scores = OPPORTUNITY_IDS.map((id) => {
+    const candidate = opportunities.find((item) => candidateId(item) === id);
+    return candidate ? scoreOpportunity(candidate, weights) : { opportunityId: id, status: "incomplete", total: null, contributions: [], issues: [{ kind: "candidate", code: "missing_id", id, message: `Missing candidate ${id}.` }] } as OpportunityScore;
+  });
+  const scoreIssues: OpportunityIssue[] = scores.flatMap((score) => score.issues);
+  if (scoreIssues.length > 0 || scores.some((score) => score.status !== "complete")) {
+    return { status: "incomplete", winnerId: null, scores, issues: scoreIssues };
+  }
+  const completeScores = scores as Array<Extract<OpportunityScore, { status: "complete" }>>;
+  const ordered = [...completeScores].sort((a, b) => b.total - a.total);
+  const lead = ordered[0].total - ordered[1].total;
   if (lead >= 3) return { status: "winner", winnerId: ordered[0].opportunityId, scores, issues: [] };
   return { status: "no_clear_winner", winnerId: null, scores, issues: [] };
 }

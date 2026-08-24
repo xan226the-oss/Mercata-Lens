@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type ReactElement } from "react";
 import {
   OPPORTUNITY_DIMENSIONS,
+  DEFAULT_OPPORTUNITY_WEIGHTS,
   type OpportunityDimension,
   type OpportunityWeights,
 } from "../domain/opportunities";
@@ -17,6 +18,7 @@ interface WeightEditorProps {
   weights: OpportunityWeights;
   onReplaceWeights: (weights: OpportunityWeights) => boolean;
   onReset: () => void;
+  resetKey?: number;
   onValidityChange?: (valid: boolean) => void;
 }
 
@@ -26,15 +28,16 @@ function parseDraft(raw: string): number | null {
   return Number.isFinite(value) && value >= 0 ? value : null;
 }
 
-export function WeightEditor({ weights, onReplaceWeights, onReset, onValidityChange }: WeightEditorProps): ReactElement {
+export function WeightEditor({ weights, onReplaceWeights, onReset, resetKey, onValidityChange }: WeightEditorProps): ReactElement {
   const [drafts, setDrafts] = useState<Record<OpportunityDimension, string>>(() =>
     Object.fromEntries(OPPORTUNITY_DIMENSIONS.map((dimension) => [dimension, String(weights[dimension])])) as Record<OpportunityDimension, string>,
   );
   const [errors, setErrors] = useState<Partial<Record<OpportunityDimension | "total", string>>>({});
 
   useEffect(() => {
-    setDrafts((current) => Object.fromEntries(OPPORTUNITY_DIMENSIONS.map((dimension) => [dimension, current[dimension] ?? String(weights[dimension])])) as Record<OpportunityDimension, string>);
-  }, [weights]);
+    setDrafts(Object.fromEntries(OPPORTUNITY_DIMENSIONS.map((dimension) => [dimension, String(weights[dimension])])) as Record<OpportunityDimension, string>);
+    setErrors({});
+  }, [resetKey]);
 
   const parsed = useMemo(() => Object.fromEntries(OPPORTUNITY_DIMENSIONS.map((dimension) => [dimension, parseDraft(drafts[dimension])])) as Record<OpportunityDimension, number | null>, [drafts]);
   const total = OPPORTUNITY_DIMENSIONS.reduce((sum, dimension) => sum + (parsed[dimension] ?? 0), 0);
@@ -62,7 +65,7 @@ export function WeightEditor({ weights, onReplaceWeights, onReset, onValidityCha
 
   function reset() {
     onReset();
-    setDrafts(Object.fromEntries(OPPORTUNITY_DIMENSIONS.map((dimension) => [dimension, String(weights[dimension])])) as Record<OpportunityDimension, string>);
+    setDrafts(Object.fromEntries(OPPORTUNITY_DIMENSIONS.map((dimension) => [dimension, String(DEFAULT_OPPORTUNITY_WEIGHTS[dimension])])) as Record<OpportunityDimension, string>);
     setErrors({});
   }
 
@@ -83,11 +86,10 @@ export function WeightEditor({ weights, onReplaceWeights, onReset, onValidityCha
             <input
               id={`weight-${dimension}`}
               type="text"
-              role="spinbutton"
-              step="any"
+              inputMode="decimal"
               value={drafts[dimension]}
-              aria-invalid={errors[dimension] ? "true" : undefined}
-              aria-describedby={errors[dimension] ? errorId : undefined}
+              aria-invalid={errors[dimension] || errors.total ? "true" : undefined}
+              aria-describedby={[errors[dimension] ? errorId : null, errors.total ? "weight-error-total" : null].filter(Boolean).join(" ") || undefined}
               onChange={(event) => update(dimension, event.target.value)}
             />
             {errors[dimension] && <span id={errorId} className="weight-field__error">{errors[dimension]}</span>}
@@ -97,7 +99,7 @@ export function WeightEditor({ weights, onReplaceWeights, onReset, onValidityCha
       <p className={`weight-editor__total${totalValid ? "" : " weight-editor__total--invalid"}`} data-testid="weight-total" aria-live="polite">
         Draft total: {Number.isInteger(total) ? total : total.toFixed(2)}
       </p>
-      {errors.total && <p className="weight-editor__error" id="weight-error-total">{errors.total}</p>}
+      {errors.total && <p className="weight-editor__error" id="weight-error-total" role="alert" aria-live="assertive">{errors.total}</p>}
     </section>
   );
 }

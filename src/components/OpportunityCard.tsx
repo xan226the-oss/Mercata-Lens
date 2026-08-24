@@ -7,6 +7,7 @@ interface OpportunityCardProps {
   score: OpportunityScore;
   sourceKind: SourceKind;
   onEvidenceClick: (evidenceId: string) => void;
+  resolveEvidence: (evidenceId: string) => ReactElement;
 }
 
 const DIMENSION_LABELS = {
@@ -17,7 +18,7 @@ const DIMENSION_LABELS = {
   risk: "Risk",
 } as const;
 
-export function OpportunityCard({ opportunity, score, sourceKind, onEvidenceClick }: OpportunityCardProps): ReactElement {
+export function OpportunityCard({ opportunity, score, sourceKind, onEvidenceClick, resolveEvidence }: OpportunityCardProps): ReactElement {
   return (
     <article className="opportunity-card" data-testid={`opportunity-card-${opportunity.id}`}>
       <header className="opportunity-card__header">
@@ -43,6 +44,7 @@ export function OpportunityCard({ opportunity, score, sourceKind, onEvidenceClic
               {contribution && <p>Contribution: {contribution.contribution} at weight {contribution.weight}.</p>}
               <div className="opportunity-card__evidence-list">
                 {dimension.evidenceIds.length === 0 ? <span>No evidence linked yet.</span> : dimension.evidenceIds.map((evidenceId) => <button key={evidenceId} type="button" onClick={() => onEvidenceClick(evidenceId)}>{evidenceId}</button>)}
+                {dimension.evidenceIds.map((evidenceId) => <div key={`${evidenceId}-detail`} className="opportunity-card__evidence-detail">{resolveEvidence(evidenceId)}</div>)}
               </div>
             </li>;
           })}
@@ -55,8 +57,8 @@ export function OpportunityCard({ opportunity, score, sourceKind, onEvidenceClic
         </ul>
       </section>
       <section className="opportunity-card__evidence" aria-label={`${opportunity.name} evidence summary`}>
-        <div><h3>Support evidence</h3><p>{opportunity.supportEvidenceIds.length > 0 ? opportunity.supportEvidenceIds.map((id) => <button key={id} type="button" onClick={() => onEvidenceClick(id)}>{id}</button>) : "None linked yet."}</p></div>
-        <div><h3>Opposition evidence</h3><p>{opportunity.oppositionEvidenceIds.length > 0 ? opportunity.oppositionEvidenceIds.map((id) => <span key={id}>{id}</span>) : "None linked yet."}</p></div>
+        <div><h3>Support evidence</h3><div className="opportunity-card__evidence-list">{opportunity.supportEvidenceIds.length > 0 ? opportunity.supportEvidenceIds.map((id) => <button key={id} type="button" onClick={() => onEvidenceClick(id)}>{id}</button>) : "None linked yet."}</div></div>
+        <div><h3>Opposition evidence</h3><div className="opportunity-card__evidence-list">{opportunity.oppositionEvidenceIds.length > 0 ? opportunity.oppositionEvidenceIds.map((id) => <button key={id} type="button" onClick={() => onEvidenceClick(id)}>{id}</button>) : "None linked yet."}</div></div>
         <div><h3>Unknowns</h3><ul>{opportunity.unknowns.map((unknown) => <li key={unknown}>{unknown}</li>)}</ul></div>
       </section>
     </article>

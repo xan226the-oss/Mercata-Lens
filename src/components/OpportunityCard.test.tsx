@@ -22,6 +22,8 @@ const opportunity: Opportunity = {
   unknowns: ["User research pending"],
 };
 
+const resolveEvidence = (id: string) => <span>{`Resolved ${id}`}</span>;
+
 const score: OpportunityScore = {
   opportunityId: "easy_clean",
   status: "complete",
@@ -40,7 +42,7 @@ const score: OpportunityScore = {
 
 describe("OpportunityCard", () => {
   it("renders hypothesis context, dimensions, contributions, evidence links, and unknowns", () => {
-    render(<OpportunityCard opportunity={opportunity} score={score} sourceKind="demo" onEvidenceClick={() => undefined} />);
+    render(<OpportunityCard opportunity={opportunity} score={score} sourceKind="demo" onEvidenceClick={() => undefined} resolveEvidence={resolveEvidence} />);
     expect(screen.getByRole("heading", { name: "Easy-clean design" })).toBeInTheDocument();
     expect(screen.getByText("US cat owners")).toBeInTheDocument();
     expect(screen.getAllByText(/Curated Demo assumption:/).length).toBeGreaterThan(0);
@@ -51,7 +53,7 @@ describe("OpportunityCard", () => {
   });
 
   it("renders incomplete state without a fabricated score", () => {
-    render(<OpportunityCard opportunity={{ ...opportunity, dimensions: opportunity.dimensions.map((dimension) => ({ ...dimension, value: null, evidenceIds: [] })) }} score={{ opportunityId: "easy_clean", status: "incomplete", total: null, contributions: [], issues: [] }} sourceKind="user_upload" onEvidenceClick={() => undefined} />);
+    render(<OpportunityCard opportunity={{ ...opportunity, dimensions: opportunity.dimensions.map((dimension) => ({ ...dimension, value: null, evidenceIds: [] })) }} score={{ opportunityId: "easy_clean", status: "incomplete", total: null, contributions: [], issues: [] }} sourceKind="user_upload" onEvidenceClick={() => undefined} resolveEvidence={resolveEvidence} />);
     expect(screen.getByText("Incomplete — current-session user input required")).toBeInTheDocument();
     expect(screen.queryByText(/Score:/)).not.toBeInTheDocument();
     expect(screen.getByText("User upload evidence does not inherit Demo scores.")).toBeInTheDocument();

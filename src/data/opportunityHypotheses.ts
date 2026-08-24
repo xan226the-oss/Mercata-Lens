@@ -1,5 +1,5 @@
 import type { EconomicScenario, ResearchDataset } from "../domain/types";
-import type { Opportunity, OpportunityDimension } from "../domain/opportunities";
+import type { Opportunity } from "../domain/opportunities";
 import { OPPORTUNITY_DIMENSIONS, OPPORTUNITY_IDS, OPPORTUNITY_NAMES } from "../domain/opportunities";
 import type { PainPointSummary } from "../domain/painPoints";
 import type { PainPointId } from "../domain/painPointRules";
@@ -30,43 +30,39 @@ function cloneScenario(scenario: EconomicScenario): EconomicScenario {
   };
 }
 
-function evidenceIdForDimension(id: OpportunityId, dimension: OpportunityDimension): string {
-  if (dimension === "economics") return "economics:base";
-  return `assumption:${id}:${dimension}`;
-}
-
 function reviewEvidenceFor(
+  dataset: ResearchDataset,
   summaries: readonly PainPointSummary[],
   ids: readonly PainPointId[],
 ): string[] {
-  const evidence: string[] = [];
-  for (const id of ids) {
-    const summary = summaries.find((item) => item.id === id);
-    const first = summary?.evidence[0];
-    if (first) evidence.push(`review:${first.reviewId}`);
-  }
-  return evidence;
+  const allowed = new Set(ids);
+  const reviewOrder = new Map(dataset.reviews.map((review, index) => [review.reviewId, index]));
+  return summaries
+    .filter((summary) => allowed.has(summary.id))
+    .flatMap((summary) => summary.evidence.map((item) => `review:${item.reviewId}`))
+    .sort((left, right) => (reviewOrder.get(left.slice("review:".length)) ?? Number.MAX_SAFE_INTEGER) - (reviewOrder.get(right.slice("review:".length)) ?? Number.MAX_SAFE_INTEGER));
 }
 
 function firstReviewEvidence(
+  dataset: ResearchDataset,
   summaries: readonly PainPointSummary[],
   ids: readonly PainPointId[],
 ): string | null {
-  return reviewEvidenceFor(summaries, ids)[0] ?? null;
+  return reviewEvidenceFor(dataset, summaries, ids)[0] ?? null;
 }
 
 function supportEvidenceIds(
   id: OpportunityId,
+  dataset: ResearchDataset,
   summaries: readonly PainPointSummary[],
 ): string[] {
-  const evidence: string[] = reviewEvidenceFor(summaries, PAIN_POINT_PRIORITY[id]);
+  const evidence: string[] = reviewEvidenceFor(dataset, summaries, PAIN_POINT_PRIORITY[id]);
   evidence.push("economics:base", `assumption:${id}:demand`);
   return evidence;
 }
 
-function oppositionEvidenceIds(id: OpportunityId, dataset: ResearchDataset): string[] {
-  const product = dataset.products[0];
-  return product ? [`product:${product.productId}`, `assumption:${id}:risk`] : [`assumption:${id}:risk`];
+function oppositionEvidenceIds(id: OpportunityId): string[] {
+  return [`assumption:${id}:risk`];
 }
 
 function demoOpportunity(
@@ -77,10 +73,10 @@ function demoOpportunity(
 ): Opportunity {
   const values = OPPORTUNITY_HYPOTHESIS_VALUES[id];
   const dimensions = OPPORTUNITY_DIMENSIONS.map((dimension, index) => {
-    const reviewEvidence = firstReviewEvidence(summaries, PAIN_POINT_PRIORITY[id]);
-    const evidenceIds = dimension === "economics" && reviewEvidence
-      ? ["economics:base", reviewEvidence]
-      : [evidenceIdForDimension(id, dimension)];
+    const reviewEvidence = firstReviewEvidence(dataset, summaries, PAIN_POINT_PRIORITY[id]);
+    const evidenceIds = dimension === "economics"
+      ? ["economics:base", `assumption:${id}:economics`, ...(reviewEvidence ? [reviewEvidence] : [])]
+      : [`assumption:${id}:${dimension}`];
     return {
       dimension,
       value: values[index],
@@ -96,8 +92,8 @@ function demoOpportunity(
     scenario: `A household compares the ${OPPORTUNITY_NAMES[id].toLowerCase()} hypothesis using explicit evidence links and visible assumptions.`,
     dimensions,
     economics: economics.map(cloneScenario),
-    supportEvidenceIds: supportEvidenceIds(id, summaries),
-    oppositionEvidenceIds: oppositionEvidenceIds(id, dataset),
+    supportEvidenceIds: supportEvidenceIds(id, dataset, summaries),
+    oppositionEvidenceIds: oppositionEvidenceIds(id),
     unknowns: [
       "The Demo values are curated assumptions awaiting user challenge.",
       "Current-session user input is required before treating this hypothesis as complete for uploaded data.",

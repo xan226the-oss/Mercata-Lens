@@ -9,7 +9,7 @@ const weights = { demand: 30, supply_gap: 25, economics: 20, differentiation: 15
 describe("WeightEditor", () => {
   it("renders five labeled numeric controls and the current total", () => {
     render(<WeightEditor weights={weights} onReplaceWeights={() => true} onReset={() => undefined} />);
-    expect(screen.getAllByRole("spinbutton")).toHaveLength(5);
+    expect(screen.getAllByRole("textbox")).toHaveLength(5);
     expect(screen.getByLabelText("Demand weight")).toHaveValue("30");
     expect(screen.getByTestId("weight-total")).toHaveTextContent("100");
   });
@@ -29,6 +29,23 @@ describe("WeightEditor", () => {
     expect(screen.getByLabelText("Demand weight")).toHaveValue("30");
   });
 
+  it("restores defaults after a custom valid weight replacement", async () => {
+    const user = userEvent.setup();
+    const onReplaceWeights = vi.fn(() => true);
+    const onReset = vi.fn();
+    render(<WeightEditor weights={weights} onReplaceWeights={onReplaceWeights} onReset={onReset} />);
+    const demand = screen.getByLabelText("Demand weight");
+    await user.clear(demand);
+    await user.type(demand, "40");
+    const supply = screen.getByLabelText("Supply gap weight");
+    await user.clear(supply);
+    await user.type(supply, "15");
+    expect(onReplaceWeights).toHaveBeenLastCalledWith({ demand: 40, supply_gap: 15, economics: 20, differentiation: 15, risk: 10 });
+    await user.click(screen.getByRole("button", { name: "Restore defaults" }));
+    expect(onReset).toHaveBeenCalled();
+    expect(screen.getByLabelText("Demand weight")).toHaveValue("30");
+    expect(screen.getByLabelText("Supply gap weight")).toHaveValue("25");
+  });
   it("supports keyboard editing and valid fractional totals", async () => {
     const user = userEvent.setup();
     const onReplaceWeights = vi.fn(() => true);

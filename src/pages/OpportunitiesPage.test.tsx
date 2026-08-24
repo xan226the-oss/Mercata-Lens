@@ -29,6 +29,40 @@ function renderWithProvider(children: ReactNode) {
 }
 
 describe("OpportunitiesPage economics workspace", () => {
+  it("shows three cards, exact default weighted totals, and Demo evidence provenance", async () => {
+    stubDemoFetch();
+    renderWithProvider(<OpportunitiesPage />);
+    await waitFor(() => expect(screen.getByTestId("opportunity-ranking-status")).toHaveTextContent("winner"));
+    expect(screen.getAllByTestId(/opportunity-card-/)).toHaveLength(3);
+    expect(screen.getByText("Weighted total: 65.75")).toBeInTheDocument();
+    expect(screen.getByText("Weighted total: 62.5")).toBeInTheDocument();
+    expect(screen.getByText("Weighted total: 62.25")).toBeInTheDocument();
+    expect(screen.getByTestId("analysis-source-badge")).toHaveTextContent("Synthetic demo");
+  });
+
+  it("keeps invalid drafts unavailable, restores valid custom edits, and resets defaults", async () => {
+    stubDemoFetch();
+    const user = userEvent.setup();
+    renderWithProvider(<OpportunitiesPage />);
+    await waitFor(() => expect(screen.getByTestId("opportunity-ranking-status")).toHaveTextContent("winner"));
+    const demand = screen.getByLabelText("Demand weight");
+    await user.clear(demand);
+    await user.type(demand, "oops");
+    expect(screen.getByTestId("opportunity-ranking-status")).toHaveTextContent("incomplete");
+    expect(screen.queryByText(/Weighted total:/)).not.toBeInTheDocument();
+    await user.clear(demand);
+    await user.type(demand, "20");
+    const supply = screen.getByLabelText("Supply gap weight");
+    await user.clear(supply);
+    await user.type(supply, "35");
+    expect(screen.getByTestId("opportunity-ranking-status")).toHaveTextContent("no_clear_winner");
+    await user.click(screen.getByRole("button", { name: "Restore defaults" }));
+    expect(screen.getByLabelText("Demand weight")).toHaveValue("30");
+    expect(screen.getByTestId("weight-total")).toHaveTextContent("100");
+    expect(screen.getByTestId("opportunity-ranking-status")).toHaveTextContent("winner");
+    expect(screen.getByText("Weighted total: 65.75")).toBeInTheDocument();
+  });
+
   it("shows three scenarios, Demo provenance, and estimated contribution without a commercial recommendation", async () => {
     stubDemoFetch();
     renderWithProvider(<OpportunitiesPage />);

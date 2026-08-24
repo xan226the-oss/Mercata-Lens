@@ -85,6 +85,56 @@ describe("OpportunitiesPage economics workspace", () => {
     await user.click(screen.getAllByRole("button", { name: "assumption:easy_clean:risk" })[0]);
     expect(screen.getByTestId("selected-evidence")).toHaveTextContent("— risk;");
   });
+  it("tracks weight draft, Context, ranking, evidence selection, failed import, successful upload, and Demo reload", async () => {
+    stubDemoFetch();
+    const user = userEvent.setup();
+    function Harness() {
+      const research = useResearch();
+      return <>
+        <span data-testid="opportunity-context-weights">{JSON.stringify(research.opportunityWeights)}</span>
+        <button onClick={() => research.importCsv("bad", "bad")}>Import bad weights data</button>
+        <button onClick={() => research.importCsv(distinctProductsCsv, distinctReviewsCsv)}>Import distinct weights data</button>
+        <button onClick={() => research.loadDemo()}>Reload weights Demo</button>
+      </>;
+    }
+    renderWithProvider(<><Harness /><OpportunitiesPage /></>);
+    await waitFor(() => expect(screen.getByTestId("opportunity-ranking-status")).toHaveTextContent("winner"));
+
+    const demand = screen.getByLabelText("Demand weight");
+    const supply = screen.getByLabelText("Supply gap weight");
+    await user.clear(demand);
+    await user.type(demand, "20");
+    await user.clear(supply);
+    await user.type(supply, "35");
+    expect(screen.getByTestId("opportunity-context-weights")).toHaveTextContent('"demand":20');
+    expect(screen.getByTestId("opportunity-ranking-status")).toHaveTextContent("no_clear_winner");
+
+    await user.click(screen.getAllByRole("button", { name: "review:r001" })[0]);
+    expect(screen.getByTestId("selected-evidence")).toHaveTextContent("Review ID: r001");
+    await user.clear(demand);
+    await user.type(demand, "oops");
+    expect(screen.getByTestId("opportunity-ranking-status")).toHaveTextContent("incomplete");
+    expect(screen.getByTestId("opportunity-context-weights")).toHaveTextContent('"demand":20');
+    await user.click(screen.getByRole("button", { name: "Import bad weights data" }));
+    expect(screen.getByDisplayValue("oops")).toHaveValue("oops");
+    expect(screen.getByTestId("opportunity-context-weights")).toHaveTextContent('"demand":20');
+    expect(screen.getByTestId("opportunity-ranking-status")).toHaveTextContent("incomplete");
+
+    await user.click(screen.getByRole("button", { name: "Import distinct weights data" }));
+    await waitFor(() => expect(screen.getByTestId("analysis-source-badge")).toHaveTextContent("User upload"));
+    expect(screen.getByLabelText("Demand weight")).toHaveValue("30");
+    expect(screen.getByTestId("opportunity-context-weights")).toHaveTextContent('"demand":30');
+    expect(screen.getByTestId("opportunity-ranking-status")).toHaveTextContent("incomplete");
+    expect(screen.getByTestId("selected-evidence")).toHaveTextContent("Select an evidence reference");
+    expect(screen.queryByText(/Weighted total:/)).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Reload weights Demo" }));
+    await waitFor(() => expect(screen.getByTestId("analysis-source-badge")).toHaveTextContent("Synthetic demo"));
+    expect(screen.getByLabelText("Demand weight")).toHaveValue("30");
+    expect(screen.getByTestId("opportunity-context-weights")).toHaveTextContent('"demand":30');
+    expect(screen.getByTestId("opportunity-ranking-status")).toHaveTextContent("winner");
+    expect(screen.getByText("Weighted total: 65.75")).toBeInTheDocument();
+  });
   it("shows three scenarios, Demo provenance, and estimated contribution without a commercial recommendation", async () => {
     stubDemoFetch();
     renderWithProvider(<OpportunitiesPage />);
@@ -94,6 +144,7 @@ describe("OpportunitiesPage economics workspace", () => {
     expect(screen.getAllByText(/Total costs/).length).toBeGreaterThan(0);
     expect(screen.queryByText(/recommended price|expected profit/i)).not.toBeInTheDocument();
   });
+
 
 
   it("renders an incomplete user-upload state instead of inventing a contribution", async () => {

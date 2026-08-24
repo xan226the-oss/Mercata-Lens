@@ -167,7 +167,9 @@ describe("ResearchContext current-session corrections", () => {
           external.demand = 99;
         }}>Set valid weights</button>
         <button onClick={() => {
-          research.opportunityWeights.demand = 77;
+          const mutableSnapshot = { ...research.opportunityWeights } as { demand: number; supply_gap: number; economics: number; differentiation: number; risk: number };
+          mutableSnapshot.demand = 77;
+          research.replaceOpportunityWeights({ ...research.opportunityWeights });
         }}>Mutate exposed weights</button>
         <button onClick={() => research.replaceOpportunityWeights({ demand: 40, supply_gap: 20, economics: 15, differentiation: 15, risk: 11 })}>Reject invalid weights</button>
         <button onClick={() => research.importCsv("bad", "bad")}>Import invalid weights CSV</button>

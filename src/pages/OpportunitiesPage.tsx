@@ -75,21 +75,6 @@ function evidenceDetail(
       </div>
     );
   }
-  if (kind === "product") {
-    const product = dataset.products.find((item) => item.productId === value);
-    if (!product) return <span>Product evidence unavailable in the active dataset.</span>;
-    return (
-      <div className="opportunity-evidence-detail">
-        <p><strong>Product ID:</strong> {product.productId}</p>
-        <p><strong>Title:</strong> {product.title}</p>
-        <p><strong>Brand:</strong> {product.brand ?? "Not provided"}</p>
-        <p><strong>Price:</strong> ${product.priceUsd.toFixed(2)}</p>
-        <p><strong>Rating:</strong> {product.rating}</p>
-        <p><strong>Why referenced:</strong> This product record is explicitly linked by the current hypothesis; it is not treated as an opposition record unless that link is present.</p>
-        <p><strong>Source:</strong> <a href={product.sourceUrl} target="_blank" rel="noreferrer">{product.sourceUrl}</a></p>
-      </div>
-    );
-  }
   if (kind === "economics") {
     const scenario = economics.find((item) => item.id === value);
     if (!scenario) return <span>Economic scenario evidence unavailable.</span>;

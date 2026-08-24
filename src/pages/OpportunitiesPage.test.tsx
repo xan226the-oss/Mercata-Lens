@@ -153,33 +153,39 @@ describe("OpportunitiesPage economics workspace", () => {
     expect(base.getByText(/finite dollar amount|safe cents/i)).toBeVisible();
   });
 
-  it("preserves draft and provenance after failed import, then resets on distinct success and Demo reload", async () => {
+  it("clears invalid draft blocking on successful replacement and Demo reload while failed import preserves it", async () => {
     stubDemoFetch();
     const user = userEvent.setup();
+    let loadDemo: (() => void) | undefined;
     function Harness() {
       const research = useResearch();
+      loadDemo = research.loadDemo;
       return <>
         <button onClick={() => research.importCsv("bad", "bad")}>Import invalid CSV</button>
         <button onClick={() => research.importCsv(distinctProductsCsv, distinctReviewsCsv)}>Import distinct CSV</button>
-        <button onClick={research.loadDemo}>Reload Demo</button>
+        <button onClick={() => void loadDemo?.()}>Reload Demo directly</button>
       </>;
     }
     renderWithProvider(<><Harness /><OpportunitiesPage /></>);
     await waitFor(() => expect(screen.getAllByText("Base scenario").length).toBeGreaterThan(0));
     const base = within(screen.getByRole("group", { name: "Base scenario" }));
     const salePrice = base.getByLabelText("Sale price");
-    await user.clear(salePrice);
-    await user.type(salePrice, "12.34");
+    fireEvent.change(salePrice, { target: { value: "oops" } });
+    expect(screen.getByTestId("economics-result-base")).toHaveTextContent("Calculation unavailable until the invalid draft is corrected.");
     await user.click(screen.getByRole("button", { name: "Import invalid CSV" }));
-    expect(salePrice).toHaveValue("12.34");
-    expect(base.getByText(/current-session user-supplied assumption/i)).toBeVisible();
+    expect(salePrice).toHaveValue("oops");
+    expect(screen.getByTestId("economics-result-base")).toHaveTextContent("Calculation unavailable until the invalid draft is corrected.");
     await user.click(screen.getByRole("button", { name: "Import distinct CSV" }));
     await waitFor(() => expect(screen.getByTestId("analysis-source-badge")).toHaveTextContent("User upload"));
-    expect(within(screen.getByRole("group", { name: "Base scenario" })).getByLabelText("Sale price")).toHaveValue("");
-    expect(screen.getAllByText(/Missing input/).length).toBeGreaterThan(0);
-    await user.click(screen.getByRole("button", { name: "Reload Demo" }));
+    expect(screen.queryByText("Calculation unavailable until the invalid draft is corrected.")).not.toBeInTheDocument();
+    expect(screen.getByTestId("economics-result-base")).toHaveTextContent("Missing fields:");
+    const newBase = within(screen.getByRole("group", { name: "Base scenario" }));
+    fireEvent.change(newBase.getByLabelText("Sale price"), { target: { value: "oops" } });
+    expect(screen.getByTestId("economics-result-base")).toHaveTextContent("Calculation unavailable until the invalid draft is corrected.");
+    await user.click(screen.getByRole("button", { name: "Reload Demo directly" }));
     await waitFor(() => expect(screen.getByTestId("analysis-source-badge")).toHaveTextContent("Synthetic demo"));
-    expect(screen.getByRole("group", { name: "Base scenario" }).querySelector("input")!).toHaveValue("39.99");
-    expect(screen.getAllByText(/Demo assumption:/).length).toBeGreaterThan(0);
+    expect(screen.queryByText("Calculation unavailable until the invalid draft is corrected.")).not.toBeInTheDocument();
+    expect(within(screen.getByRole("group", { name: "Base scenario" })).getByLabelText("Sale price")).toHaveValue("39.99");
+    expect(screen.getByTestId("economics-result-base")).toHaveTextContent("Estimated per-unit contribution:");
   });
 });

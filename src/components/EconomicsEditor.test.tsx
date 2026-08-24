@@ -54,6 +54,34 @@ describe("EconomicsEditor", () => {
     }
   });
 
+  it("covers exact safe integer dollar boundaries", async () => {
+    const onReplaceScenario = vi.fn();
+    render(<EconomicsEditor scenarios={createEconomicScenarios("demo")} onReplaceScenario={onReplaceScenario} />);
+    const salePrice = screen.getAllByLabelText("Sale price")[1];
+    fireEvent.change(salePrice, { target: { value: "90071992547409.91" } });
+    expect(onReplaceScenario.mock.calls.at(-1)?.[0].inputs.salePriceCents).toBe(Number.MAX_SAFE_INTEGER);
+    const callsAfterMax = onReplaceScenario.mock.calls.length;
+    fireEvent.change(salePrice, { target: { value: "90071992547409.92" } });
+    expect(onReplaceScenario).toHaveBeenCalledTimes(callsAfterMax);
+    fireEvent.change(salePrice, { target: { value: "-90071992547409.91" } });
+    expect(onReplaceScenario.mock.calls.at(-1)?.[0].inputs.salePriceCents).toBe(-Number.MAX_SAFE_INTEGER);
+    const callsAfterNegativeMax = onReplaceScenario.mock.calls.length;
+    fireEvent.change(salePrice, { target: { value: "-90071992547409.92" } });
+    expect(onReplaceScenario).toHaveBeenCalledTimes(callsAfterNegativeMax);
+  });
+
+  it("keeps an oversized pure numeric rate draft and reports finite percentage error", async () => {
+    const onReplaceScenario = vi.fn();
+    render(<EconomicsEditor scenarios={createEconomicScenarios("demo")} onReplaceScenario={onReplaceScenario} />);
+    const rate = screen.getAllByLabelText("Referral fee rate")[1];
+    const callsBefore = onReplaceScenario.mock.calls.length;
+    const oversizedRate = "9".repeat(400);
+    fireEvent.change(rate, { target: { value: oversizedRate } });
+    expect(rate).toHaveValue(oversizedRate);
+    expect(screen.getByText("Enter a finite percentage.")).toBeVisible();
+    expect(onReplaceScenario).toHaveBeenCalledTimes(callsBefore);
+  });
+
   it("submits domain-invalid numeric drafts but blocks precision and unsafe drafts", async () => {
     const onReplaceScenario = vi.fn();
     const user = userEvent.setup();

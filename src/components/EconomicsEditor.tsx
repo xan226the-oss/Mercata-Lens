@@ -50,11 +50,12 @@ function parseDollarCents(value: string): number | null {
 }
 
 function parseDraft(value: string, kind: "dollar" | "rate"): number | null {
-  if (value.trim() === "") return null;
-  if (kind === "dollar") return parseDollarCents(value);
-  if (!isDecimalDraft(value)) return null;
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed / 100 : null;
+  if (kind === "rate") {
+    if (!isDecimalDraft(value)) return null;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed / 100 : null;
+  }
+  return parseDollarCents(value);
 }
 
 function draftError(value: string, kind: "dollar" | "rate"): string | null {
@@ -64,6 +65,7 @@ function draftError(value: string, kind: "dollar" | "rate"): string | null {
   if (kind === "dollar" && trimmed.replace(/^-/, "").split(".")[1]?.length > 2) return "Use at most two decimal places for dollar amounts.";
   if (kind === "dollar" && parseDollarCents(trimmed) === null) return "Dollar amount is too large for safe cents.";
   const parsed = Number(trimmed);
+  if (!Number.isFinite(parsed)) return kind === "rate" ? "Enter a finite percentage." : "Enter a finite dollar amount.";
   if (parsed < 0) return "Value cannot be negative; domain validation will mark this input invalid.";
   if (kind === "rate" && parsed > 100) return "Referral fee rate exceeds 100%; domain validation will mark this input invalid.";
   return null;
@@ -101,7 +103,7 @@ export function EconomicsEditor({ scenarios, resetKey = 0, onReplaceScenario, on
     const error = draftError(value, kind);
     const parsed = parseDraft(value, kind);
     const isEmpty = value.trim() === "";
-    const hasInvalidDraft = !isEmpty && parsed === null;
+    const hasInvalidDraft = !isEmpty && (parsed === null || error !== null && kind === "dollar" && error.includes("two decimal"));
     setDrafts((current) => ({ ...current, [draftKey]: value }));
     setDraftErrors((current) => ({ ...current, [draftKey]: error }));
     const nextInvalidDraftKeys = { ...invalidDraftKeys, [draftKey]: hasInvalidDraft };

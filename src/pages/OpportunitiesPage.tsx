@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { calculateContribution, type EconomicResult } from "../domain/economics";
 import { EconomicsEditor } from "../components/EconomicsEditor";
 import { PageHeader } from "../components/PageHeader";
@@ -47,6 +47,9 @@ function resultCopy(scenario: EconomicScenario, result: EconomicResult, hasInval
 export function OpportunitiesPage() {
   const { status, dataset, sourceKind, economicScenarios, economicScenariosResetKey, replaceEconomicScenario } = useResearch();
   const [invalidDraftScenarioIds, setInvalidDraftScenarioIds] = useState<Set<string>>(() => new Set());
+  useEffect(() => {
+    setInvalidDraftScenarioIds(new Set());
+  }, [economicScenariosResetKey]);
   const results = useMemo(() => economicScenarios.map((scenario) => ({ scenario, result: calculateContribution(scenario.inputs) })), [economicScenarios]);
 
   const markDraftValidity = (scenarioId: string, hasInvalidDraft: boolean) => {

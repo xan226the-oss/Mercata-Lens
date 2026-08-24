@@ -34,7 +34,7 @@ export interface Opportunity {
   readonly targetUser: string;
   readonly scenario: string;
   readonly dimensions: readonly DimensionScore[];
-  readonly economics: EconomicScenario | null;
+  readonly economics: readonly EconomicScenario[];
   readonly supportEvidenceIds: readonly string[];
   readonly oppositionEvidenceIds: readonly string[];
   readonly unknowns: readonly string[];

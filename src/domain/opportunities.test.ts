@@ -13,30 +13,80 @@ import {
   type OpportunityWeights,
 } from "./opportunities";
 
-const economics: EconomicScenario = {
-  id: "base",
-  label: "Base scenario",
-  inputs: {
-    salePriceCents: 3999,
-    sourcingCostCents: 1200,
-    inboundFreightCents: 300,
-    referralFeeRate: 0.15,
-    fulfillmentCostCents: 650,
-    advertisingCostCents: 400,
-    returnLossCents: 100,
-    otherCostCents: 49,
+const economics: EconomicScenario[] = [
+  {
+    id: "pessimistic",
+    label: "Pessimistic scenario",
+    inputs: {
+      salePriceCents: 3499,
+      sourcingCostCents: 1400,
+      inboundFreightCents: 350,
+      referralFeeRate: 0.15,
+      fulfillmentCostCents: 700,
+      advertisingCostCents: 500,
+      returnLossCents: 150,
+      otherCostCents: 49,
+    },
+    provenance: {
+      salePriceCents: null,
+      sourcingCostCents: null,
+      inboundFreightCents: null,
+      referralFeeRate: null,
+      fulfillmentCostCents: null,
+      advertisingCostCents: null,
+      returnLossCents: null,
+      otherCostCents: null,
+    },
   },
-  provenance: {
-    salePriceCents: null,
-    sourcingCostCents: null,
-    inboundFreightCents: null,
-    referralFeeRate: null,
-    fulfillmentCostCents: null,
-    advertisingCostCents: null,
-    returnLossCents: null,
-    otherCostCents: null,
+  {
+    id: "base",
+    label: "Base scenario",
+    inputs: {
+      salePriceCents: 3999,
+      sourcingCostCents: 1200,
+      inboundFreightCents: 300,
+      referralFeeRate: 0.15,
+      fulfillmentCostCents: 650,
+      advertisingCostCents: 400,
+      returnLossCents: 100,
+      otherCostCents: 49,
+    },
+    provenance: {
+      salePriceCents: null,
+      sourcingCostCents: null,
+      inboundFreightCents: null,
+      referralFeeRate: null,
+      fulfillmentCostCents: null,
+      advertisingCostCents: null,
+      returnLossCents: null,
+      otherCostCents: null,
+    },
   },
-};
+  {
+    id: "optimistic",
+    label: "Optimistic scenario",
+    inputs: {
+      salePriceCents: 4499,
+      sourcingCostCents: 1050,
+      inboundFreightCents: 250,
+      referralFeeRate: 0.15,
+      fulfillmentCostCents: 600,
+      advertisingCostCents: 300,
+      returnLossCents: 75,
+      otherCostCents: 49,
+    },
+    provenance: {
+      salePriceCents: null,
+      sourcingCostCents: null,
+      inboundFreightCents: null,
+      referralFeeRate: null,
+      fulfillmentCostCents: null,
+      advertisingCostCents: null,
+      returnLossCents: null,
+      otherCostCents: null,
+    },
+  },
+];
 
 const dimensions = (overrides: Partial<Record<DimensionScore["dimension"], Partial<DimensionScore>>> = {}): DimensionScore[] =>
   OPPORTUNITY_DIMENSIONS.map((dimension) => ({
@@ -99,7 +149,8 @@ describe("opportunity contract", () => {
       oppositionEvidenceIds: ["opposition-1"],
       unknowns: ["unknown-1"],
     });
-    expect(candidate.dimensions).toHaveLength(5);
+    expect(candidate.economics.map(({ id }) => id)).toEqual(["pessimistic", "base", "optimistic"]);
+    expect(candidate.economics).toHaveLength(3);
   });
 
   it.each([
@@ -151,6 +202,17 @@ describe("scoreOpportunity validation and scoring", () => {
       expect(result.contributions.map(({ contribution }) => contribution)).toEqual([24, 15, 8, 3, 1]);
       expect(result.contributions[0].evidenceIds).toEqual(["review-1"]);
     }
+  });
+
+  it("preserves economics arrays and nested scenarios during scoring and ranking", () => {
+    const input = completeScores([50, 50, 50]);
+    const before = structuredClone(input);
+    const score = scoreOpportunity(input[0], completeWeights());
+    const ranking = rankOpportunities(input, completeWeights());
+    expect(score.status).toBe("complete");
+    expect(ranking.status).toBe("no_clear_winner");
+    expect(input).toEqual(before);
+    expect(input[0].economics.map(({ id }) => id)).toEqual(["pessimistic", "base", "optimistic"]);
   });
 
   it("accepts zero but keeps null missing", () => {

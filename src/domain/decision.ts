@@ -86,7 +86,10 @@ function copyCandidateId(value: unknown, seen = new WeakMap<object, unknown>()):
       for (const key of Reflect.ownKeys(value)) {
         if (key === "length") continue;
         const descriptor = Object.getOwnPropertyDescriptor(value, key);
-        if (!descriptor || !("value" in descriptor)) return unsafeIdSnapshot();
+        if (!descriptor || !("value" in descriptor)) {
+          seen.delete(value);
+          return unsafeIdSnapshot();
+        }
         Object.defineProperty(copy, key, {
           ...descriptor,
           value: copyCandidateId(descriptor.value, seen),
@@ -96,13 +99,18 @@ function copyCandidateId(value: unknown, seen = new WeakMap<object, unknown>()):
     }
 
     const prototype = Object.getPrototypeOf(value);
-    if (prototype !== Object.prototype && prototype !== null) return unsafeIdSnapshot();
+    if (prototype !== Object.prototype && prototype !== null) {
+      return unsafeIdSnapshot();
+    }
 
     const copy = Object.create(prototype) as Record<PropertyKey, unknown>;
     seen.set(value, copy);
     for (const key of Reflect.ownKeys(value)) {
       const descriptor = Object.getOwnPropertyDescriptor(value, key);
-      if (!descriptor || !("value" in descriptor)) return unsafeIdSnapshot();
+      if (!descriptor || !("value" in descriptor)) {
+        seen.delete(value);
+        return unsafeIdSnapshot();
+      }
       Object.defineProperty(copy, key, {
         ...descriptor,
         value: copyCandidateId(descriptor.value, seen),
@@ -110,6 +118,7 @@ function copyCandidateId(value: unknown, seen = new WeakMap<object, unknown>()):
     }
     return copy;
   } catch {
+    seen.delete(value);
     return unsafeIdSnapshot();
   }
 }

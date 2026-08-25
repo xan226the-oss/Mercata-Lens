@@ -402,6 +402,44 @@ describe("buildDecisionReport truth table", () => {
     expect((second.ranking.issues[0] as unknown as { id: unknown }).id).toEqual((first.ranking.issues[0] as unknown as { id: unknown }).id);
   });
 
+  it("uses one stable fallback for repeated references to an unsafe id", () => {
+    const sharedUnsafe = { visible: { nested: "kept-out-of-fallback" } } as Record<string, unknown>;
+    let getterCalls = 0;
+    Object.defineProperty(sharedUnsafe, "accessor", {
+      enumerable: true,
+      configurable: true,
+      get: () => {
+        getterCalls += 1;
+        return { tags: ["getter-value"] };
+      },
+    });
+    const ranking: RankingResult = {
+      status: "incomplete",
+      winnerId: null,
+      scores: [],
+      issues: [{
+        kind: "candidate",
+        code: "invalid_id",
+        id: { first: sharedUnsafe, second: sharedUnsafe },
+        message: "Repeated unsafe candidate.",
+      }],
+    };
+
+    const report = buildDecisionReport(input({ ranking }));
+    const reportId = (report.ranking.issues[0] as unknown as { id: { first: unknown; second: unknown } }).id;
+    const second = buildDecisionReport(input({ ranking }));
+    const secondId = (second.ranking.issues[0] as unknown as { id: { first: unknown; second: unknown } }).id;
+
+    expect(getterCalls).toBe(0);
+    expect(reportId.first).toEqual({ kind: "unavailable", reason: "candidate_id_not_safely_snapshotable" });
+    expect(reportId.second).toEqual(reportId.first);
+    expect(secondId).toEqual(reportId);
+    (reportId.first as { kind: string }).kind = "mutated";
+    expect((sharedUnsafe.visible as { nested: string }).nested).toBe("kept-out-of-fallback");
+    expect(secondId.first).toEqual({ kind: "unavailable", reason: "candidate_id_not_safely_snapshotable" });
+  });
+
+
   it("uses a safe fallback for special objects instead of pseudo instances", () => {
     const regexpId = /candidate/gi;
     const typedArrayId = new Uint8Array([1, 2, 3]);

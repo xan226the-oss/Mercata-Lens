@@ -298,4 +298,39 @@ describe("buildDecisionReport truth table", () => {
     expect(report.ranking.status).toBe("no_clear_winner");
     expect(report.nextActions).toContainEqual(expect.objectContaining({ owner: "researcher", action: expect.stringContaining("tie") }));
   });
+  it("deeply copies unknown CandidateIssue ids at ranking and score levels", () => {
+    const rankingIssueId = { source: { tags: ["ranking", "candidate"] } };
+    const scoreIssueId = [{ source: { tags: ["score", "candidate"] } }];
+    const primitiveId = "primitive-candidate-id";
+    const ranking: RankingResult = {
+      status: "incomplete",
+      winnerId: null,
+      scores: [{
+        opportunityId: null,
+        status: "incomplete",
+        total: null,
+        contributions: [],
+        issues: [
+          { kind: "candidate", code: "invalid_id", id: scoreIssueId, message: "Invalid score candidate." },
+          { kind: "candidate", code: "invalid_id", id: primitiveId, message: "Primitive score candidate." },
+        ],
+      }],
+      issues: [{ kind: "candidate", code: "invalid_id", id: rankingIssueId, message: "Invalid ranking candidate." }],
+    };
+
+    const report = buildDecisionReport(input({ ranking }));
+    const second = buildDecisionReport(input({ ranking }));
+    const reportRankingId = (report.ranking.issues[0] as unknown as { id: { source: { tags: string[] } } }).id;
+    const reportScoreId = (report.ranking.scores[0].issues[0] as unknown as { id: Array<{ source: { tags: string[] } }> }).id;
+    const reportPrimitiveId = (report.ranking.scores[0].issues[1] as unknown as { id: unknown }).id;
+
+    reportRankingId.source.tags.push("report-mutation");
+    reportScoreId[0].source.tags.push("report-mutation");
+
+    expect(rankingIssueId.source.tags).toEqual(["ranking", "candidate"]);
+    expect(scoreIssueId[0].source.tags).toEqual(["score", "candidate"]);
+    expect((second.ranking.issues[0] as unknown as { id: { source: { tags: string[] } } }).id.source.tags).toEqual(["ranking", "candidate"]);
+    expect((second.ranking.scores[0].issues[0] as unknown as { id: Array<{ source: { tags: string[] } }> }).id[0].source.tags).toEqual(["score", "candidate"]);
+    expect(reportPrimitiveId).toBe(primitiveId);
+  });
 });

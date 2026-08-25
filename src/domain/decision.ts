@@ -63,6 +63,66 @@ function stableUnique(values: readonly string[]): string[] {
   return result;
 }
 
+function copyUnknown<T>(value: T, seen = new WeakMap<object, unknown>()): T {
+  if (value === null || typeof value !== "object") return value;
+  const existing = seen.get(value);
+  if (existing !== undefined) return existing as T;
+
+  if (Array.isArray(value)) {
+    const copy: unknown[] = [];
+    seen.set(value, copy);
+    for (const item of value) copy.push(copyUnknown(item, seen));
+    return copy as T;
+  }
+
+  if (value instanceof Date) {
+    const copy = new Date(value.getTime());
+    seen.set(value, copy);
+    return copy as T;
+  }
+
+  if (value instanceof Map) {
+    const copy = new Map<unknown, unknown>();
+    seen.set(value, copy);
+    for (const [key, item] of value) copy.set(copyUnknown(key, seen), copyUnknown(item, seen));
+    return copy as T;
+  }
+
+  if (value instanceof Set) {
+    const copy = new Set<unknown>();
+    seen.set(value, copy);
+    for (const item of value) copy.add(copyUnknown(item, seen));
+    return copy as T;
+  }
+
+  const copy = Object.create(Object.getPrototypeOf(value)) as Record<PropertyKey, unknown>;
+  seen.set(value, copy);
+  for (const key of Reflect.ownKeys(value)) {
+    const descriptor = Object.getOwnPropertyDescriptor(value, key);
+    if (descriptor && "value" in descriptor) {
+      Object.defineProperty(copy, key, { ...descriptor, value: copyUnknown(descriptor.value, seen) });
+    } else if (descriptor) {
+      Object.defineProperty(copy, key, descriptor);
+    }
+  }
+  return copy as T;
+}
+
+function copyIssue<T>(issue: T): T {
+  if (issue === null || typeof issue !== "object") return issue;
+  const source = issue as Record<PropertyKey, unknown>;
+  const copy = { ...source } as T & Record<PropertyKey, unknown>;
+  if ("id" in source) {
+    Object.defineProperty(copy, "id", { value: copyUnknown(source.id), writable: true, enumerable: true, configurable: true });
+  }
+  return copy;
+}
+
+function copyIssues<T>(issues: readonly T[]): T[] {
+  return issues.map((issue) => copyIssue(issue));
+}
+
+
 function copyActions(actions: readonly ValidationAction[]): ValidationAction[] {
   return actions.map((action) => ({
     owner: action.owner,
@@ -148,10 +208,10 @@ export function buildDecisionReport(input: DecisionInput): DecisionReport {
         ...contribution,
         evidenceIds: [...contribution.evidenceIds],
       })),
-      issues: score.issues.map((issue) => ({ ...issue })),
+      issues: copyIssues(score.issues),
       })),
-      issues: input.ranking.issues.map((issue) => ({ ...issue })),
-  } as RankingResult;
+      issues: copyIssues(input.ranking.issues),
+  } as unknown as RankingResult;
 
   let status: DecisionStatus = "continue_research";
   if (input.quality.blockingIssues.length > 0 || !input.painPointsAvailable || input.ranking.status === "incomplete" || allEconomicsIncomplete(input.economics)) {

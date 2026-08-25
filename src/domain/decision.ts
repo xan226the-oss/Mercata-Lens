@@ -63,65 +63,83 @@ function stableUnique(values: readonly string[]): string[] {
   return result;
 }
 
-function copyUnknown<T>(value: T, seen = new WeakMap<object, unknown>()): T {
-  if (value === null || typeof value !== "object") return value;
+const UNSAFE_ID_SNAPSHOT = {
+  kind: "unavailable",
+  reason: "candidate_id_not_safely_snapshotable",
+} as const;
+
+function unsafeIdSnapshot(): typeof UNSAFE_ID_SNAPSHOT {
+  return { ...UNSAFE_ID_SNAPSHOT };
+}
+
+function copyCandidateId(value: unknown, seen = new WeakMap<object, unknown>()): unknown {
+  if (value === null || (typeof value !== "object" && typeof value !== "function")) return value;
+  if (typeof value === "function") return unsafeIdSnapshot();
+
   const existing = seen.get(value);
-  if (existing !== undefined) return existing as T;
+  if (existing !== undefined) return existing;
 
-  if (Array.isArray(value)) {
-    const copy: unknown[] = [];
-    seen.set(value, copy);
-    for (const item of value) copy.push(copyUnknown(item, seen));
-    return copy as T;
-  }
-
-  if (value instanceof Date) {
-    const copy = new Date(value.getTime());
-    seen.set(value, copy);
-    return copy as T;
-  }
-
-  if (value instanceof Map) {
-    const copy = new Map<unknown, unknown>();
-    seen.set(value, copy);
-    for (const [key, item] of value) copy.set(copyUnknown(key, seen), copyUnknown(item, seen));
-    return copy as T;
-  }
-
-  if (value instanceof Set) {
-    const copy = new Set<unknown>();
-    seen.set(value, copy);
-    for (const item of value) copy.add(copyUnknown(item, seen));
-    return copy as T;
-  }
-
-  const copy = Object.create(Object.getPrototypeOf(value)) as Record<PropertyKey, unknown>;
-  seen.set(value, copy);
-  for (const key of Reflect.ownKeys(value)) {
-    const descriptor = Object.getOwnPropertyDescriptor(value, key);
-    if (descriptor && "value" in descriptor) {
-      Object.defineProperty(copy, key, { ...descriptor, value: copyUnknown(descriptor.value, seen) });
-    } else if (descriptor) {
-      Object.defineProperty(copy, key, descriptor);
+  try {
+    if (Array.isArray(value)) {
+      const copy: unknown[] = [];
+      seen.set(value, copy);
+      for (const key of Reflect.ownKeys(value)) {
+        if (key === "length") continue;
+        const descriptor = Object.getOwnPropertyDescriptor(value, key);
+        if (!descriptor || !("value" in descriptor)) return unsafeIdSnapshot();
+        Object.defineProperty(copy, key, {
+          ...descriptor,
+          value: copyCandidateId(descriptor.value, seen),
+        });
+      }
+      return copy;
     }
+
+    const prototype = Object.getPrototypeOf(value);
+    if (prototype !== Object.prototype && prototype !== null) return unsafeIdSnapshot();
+
+    const copy = Object.create(prototype) as Record<PropertyKey, unknown>;
+    seen.set(value, copy);
+    for (const key of Reflect.ownKeys(value)) {
+      const descriptor = Object.getOwnPropertyDescriptor(value, key);
+      if (!descriptor || !("value" in descriptor)) return unsafeIdSnapshot();
+      Object.defineProperty(copy, key, {
+        ...descriptor,
+        value: copyCandidateId(descriptor.value, seen),
+      });
+    }
+    return copy;
+  } catch {
+    return unsafeIdSnapshot();
   }
-  return copy as T;
 }
 
 function copyIssue<T>(issue: T): T {
   if (issue === null || typeof issue !== "object") return issue;
-  const source = issue as Record<PropertyKey, unknown>;
-  const copy = { ...source } as T & Record<PropertyKey, unknown>;
-  if ("id" in source) {
-    Object.defineProperty(copy, "id", { value: copyUnknown(source.id), writable: true, enumerable: true, configurable: true });
+  try {
+    const copy: Record<PropertyKey, unknown> = {};
+    for (const key of Reflect.ownKeys(issue)) {
+      const descriptor = Object.getOwnPropertyDescriptor(issue, key);
+      if (!descriptor) continue;
+      const value = key === "id"
+        ? ("value" in descriptor ? copyCandidateId(descriptor.value) : unsafeIdSnapshot())
+        : ("value" in descriptor ? descriptor.value : unsafeIdSnapshot());
+      Object.defineProperty(copy, key, { ...descriptor, value, writable: true });
+    }
+    return copy as T;
+  } catch {
+    return {
+      kind: "candidate",
+      code: "invalid_id",
+      id: unsafeIdSnapshot(),
+      message: "Candidate issue could not be safely snapshotted.",
+    } as T;
   }
-  return copy;
 }
 
 function copyIssues<T>(issues: readonly T[]): T[] {
   return issues.map((issue) => copyIssue(issue));
 }
-
 
 function copyActions(actions: readonly ValidationAction[]): ValidationAction[] {
   return actions.map((action) => ({

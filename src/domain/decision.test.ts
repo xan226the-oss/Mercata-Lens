@@ -333,4 +333,95 @@ describe("buildDecisionReport truth table", () => {
     expect((second.ranking.scores[0].issues[0] as unknown as { id: Array<{ source: { tags: string[] } }> }).id[0].source.tags).toEqual(["score", "candidate"]);
     expect(reportPrimitiveId).toBe(primitiveId);
   });
+
+  it("uses an independent snapshot for function CandidateIssue ids", () => {
+    const functionId = Object.assign(() => "candidate", { meta: { tags: ["source"] } });
+    const ranking: RankingResult = {
+      status: "incomplete",
+      winnerId: null,
+      scores: [],
+      issues: [{ kind: "candidate", code: "invalid_id", id: functionId, message: "Function candidate." }],
+    };
+
+    const report = buildDecisionReport(input({ ranking }));
+    const second = buildDecisionReport(input({ ranking }));
+    const reportId = (report.ranking.issues[0] as unknown as { id: unknown }).id;
+    const secondId = (second.ranking.issues[0] as unknown as { id: unknown }).id;
+
+    expect(reportId).toEqual({ kind: "unavailable", reason: "candidate_id_not_safely_snapshotable" });
+    expect(reportId).not.toBe(functionId);
+    expect(secondId).toEqual(reportId);
+    functionId.meta.tags.push("source-mutation");
+    expect(reportId).toEqual({ kind: "unavailable", reason: "candidate_id_not_safely_snapshotable" });
+  });
+
+  it("does not execute an accessor while snapshotting an id", () => {
+    const getterValue = { tags: ["getter-source"] };
+    let getterCalls = 0;
+    const issue = { kind: "candidate", code: "invalid_id", message: "Accessor candidate." } as Record<string, unknown>;
+    Object.defineProperty(issue, "id", {
+      enumerable: true,
+      configurable: true,
+      get: () => {
+        getterCalls += 1;
+        return getterValue;
+      },
+    });
+    const ranking = {
+      status: "incomplete",
+      winnerId: null,
+      scores: [],
+      issues: [issue],
+    } as unknown as RankingResult;
+
+    const report = buildDecisionReport(input({ ranking }));
+    const reportId = (report.ranking.issues[0] as unknown as { id: unknown }).id;
+    expect(getterCalls).toBe(0);
+    expect(reportId).toEqual({ kind: "unavailable", reason: "candidate_id_not_safely_snapshotable" });
+    getterValue.tags.push("source-mutation");
+    expect(reportId).toEqual({ kind: "unavailable", reason: "candidate_id_not_safely_snapshotable" });
+  });
+
+  it("converts throwing proxies into a stable safe fallback", () => {
+    const throwingProxy = new Proxy({}, {
+      getPrototypeOf: () => { throw new Error("getPrototypeOf"); },
+      ownKeys: () => { throw new Error("ownKeys"); },
+      get: () => { throw new Error("get"); },
+    });
+    const ranking = {
+      status: "incomplete",
+      winnerId: null,
+      scores: [],
+      issues: [{ kind: "candidate", code: "invalid_id", id: throwingProxy, message: "Proxy candidate." }],
+    } as unknown as RankingResult;
+
+    expect(() => buildDecisionReport(input({ ranking }))).not.toThrow();
+    const first = buildDecisionReport(input({ ranking }));
+    const second = buildDecisionReport(input({ ranking }));
+    expect((first.ranking.issues[0] as unknown as { id: unknown }).id).toEqual({ kind: "unavailable", reason: "candidate_id_not_safely_snapshotable" });
+    expect((second.ranking.issues[0] as unknown as { id: unknown }).id).toEqual((first.ranking.issues[0] as unknown as { id: unknown }).id);
+  });
+
+  it("uses a safe fallback for special objects instead of pseudo instances", () => {
+    const regexpId = /candidate/gi;
+    const typedArrayId = new Uint8Array([1, 2, 3]);
+    const ranking: RankingResult = {
+      status: "incomplete",
+      winnerId: null,
+      scores: [{
+        opportunityId: null,
+        status: "incomplete",
+        total: null,
+        contributions: [],
+        issues: [{ kind: "candidate", code: "invalid_id", id: typedArrayId, message: "Typed array candidate." }],
+      }],
+      issues: [{ kind: "candidate", code: "invalid_id", id: regexpId, message: "RegExp candidate." }],
+    };
+
+    const report = buildDecisionReport(input({ ranking }));
+    expect((report.ranking.issues[0] as unknown as { id: unknown }).id).toEqual({ kind: "unavailable", reason: "candidate_id_not_safely_snapshotable" });
+    expect((report.ranking.scores[0].issues[0] as unknown as { id: unknown }).id).toEqual({ kind: "unavailable", reason: "candidate_id_not_safely_snapshotable" });
+    expect((report.ranking.issues[0] as unknown as { id: unknown }).id).not.toBeInstanceOf(RegExp);
+    expect((report.ranking.scores[0].issues[0] as unknown as { id: unknown }).id).not.toBeInstanceOf(Uint8Array);
+  });
 });

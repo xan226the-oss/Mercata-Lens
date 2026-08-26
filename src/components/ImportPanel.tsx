@@ -5,7 +5,6 @@ interface ImportPanelProps {
 }
 
 const IMPORT_BUTTON_TEXT = "Import and replace current research";
-const IMPORT_NOTE = "A successful import replaces the current local research with the selected files.";
 
 function readFileAsText(file: File): Promise<string> {
   return new Promise((resolve, reject) => {

@@ -64,10 +64,10 @@ async function runDemoFlow(page: Page, width: number) {
   await page.getByLabel("Economics weight").fill("20");
   await page.getByLabel("Differentiation weight").fill("15");
   await page.getByLabel("Risk weight").fill("10");
-  await expect(page.getByTestId("opportunity-ranking-status")).not.toHaveText("incomplete");
+  await expect(page.getByTestId("opportunity-ranking-status")).toHaveText("winner");
   await page.getByRole("button", { name: "Restore defaults" }).click();
   await expect(page.getByLabel("Demand weight")).toHaveValue("30");
-  await expect(page.getByTestId("opportunity-ranking-status")).not.toHaveText("incomplete");
+  await expect(page.getByTestId("opportunity-ranking-status")).toHaveText("winner");
   await page.getByRole("button", { name: /review:/i }).first().click();
   await expect(page.getByTestId("selected-evidence")).toContainText("Review text:");
   await page.getByRole("button", { name: /economics:/i }).first().click();
@@ -112,8 +112,9 @@ async function runDemoFlow(page: Page, width: number) {
   const serialized = JSON.stringify(payload);
   expect(serialized).not.toMatch(/__react|key=|browserState|importState/);
   await page.emulateMedia({ media: "print" });
+  await expect(page.getByTestId("analysis-source-badge")).toContainText("Synthetic demo");
   await expect(page.getByTestId("decision-status")).toBeVisible();
-  await expect(page.getByTestId("decision-limitations")).toBeVisible();
+  await expect(page.getByTestId("decision-limitations")).toContainText("Review counts and pain-point evidence do not establish sales");
   await expect(page.getByRole("button", { name: "Download JSON" })).toBeHidden();
   await assertRuntimeClean(page, errors);
 }

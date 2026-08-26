@@ -33,7 +33,7 @@ function Probe() {
       <span data-testid="apply-result" />
       <span data-testid="economic-scenarios">{JSON.stringify(research.economicScenarios)}</span>
       <span data-testid="decision-conditions">{JSON.stringify(research.decisionConditions)}</span>
-      <button onClick={() => research.replaceDecisionConditions({ continueConditions: [" continue "], pauseConditions: ["pause"], stopConditions: ["stop"] })}>Set decision conditions</button>
+      <button onClick={() => research.replaceDecisionConditions({ continueConditions: [" continue ", "duplicate", "duplicate", " second "], pauseConditions: ["pause", "pause"], stopConditions: ["stop", "stop"] })}>Set decision conditions</button>
       <button onClick={() => research.replaceDecisionConditions({ continueConditions: [...research.decisionConditions.continueConditions, "external"], pauseConditions: [...research.decisionConditions.pauseConditions], stopConditions: [...research.decisionConditions.stopConditions] })}>Mutate decision snapshot</button>
       <button onClick={() => {
         const scenario = research.economicScenarios[1];
@@ -208,6 +208,14 @@ describe("ResearchContext current-session corrections", () => {
     await waitFor(() => expect(screen.getByTestId("source-kind")).toHaveTextContent("demo"));
     await user.click(screen.getByRole("button", { name: "Set decision conditions" }));
     expect(screen.getByTestId("decision-conditions")).toHaveTextContent("continue");
+    expect(screen.getByTestId("decision-conditions")).toHaveTextContent("duplicate");
+    expect(screen.getByTestId("decision-conditions")).toHaveTextContent("second");
+    expect(screen.getByTestId("decision-conditions")).toHaveTextContent("continue");
+    expect(screen.getByTestId("decision-conditions")).toHaveTextContent("duplicate");
+    expect(screen.getByTestId("decision-conditions")).toHaveTextContent("second");
+    expect((screen.getByTestId("decision-conditions").textContent?.match(/duplicate/g) ?? []).length).toBe(2);
+    const ordered = screen.getByTestId("decision-conditions").textContent ?? "";
+    expect(ordered.indexOf("continue")).toBeLessThan(ordered.indexOf("second"));
     await user.click(screen.getByRole("button", { name: "Mutate decision snapshot" }));
     expect(screen.getByTestId("decision-conditions")).toHaveTextContent("external");
     await user.click(screen.getByRole("button", { name: "Import invalid CSV" }));

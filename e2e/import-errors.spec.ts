@@ -39,7 +39,7 @@ test("invalid CSV reports exact diagnostics and preserves active Demo", async ({
   await expect(table).toContainText("Review references unknown product_id");
   await expect(page.getByTestId("active-data-quality")).toContainText("Demo data");
   await expect(page.getByRole("link", { name: /Category overview/i })).toBeEnabled();
-  expect(errors.consoleErrors.filter((message) => !message.includes("net::ERR_FAILED"))).toEqual([]);
+  expect(errors.consoleErrors).toEqual([]);
   expect(errors.pageErrors).toEqual([]);
   expect(errors.resourceFailures).toEqual([]);
 });
@@ -55,7 +55,7 @@ test("invalid CSV with no active data locks dependent routes", async ({ page }) 
   await expect(page.getByText(/Import failed/i)).toBeVisible();
   await expect(page.getByTestId("step-locked-/category")).toHaveAttribute("aria-disabled", "true");
   await expect(page.getByTestId("step-locked-/pain-points")).toHaveAttribute("aria-disabled", "true");
-  expect(errors.consoleErrors.filter((message) => !message.includes("net::ERR_FAILED"))).toEqual([]);
+  expect(errors.consoleErrors).toEqual([]);
   expect(errors.pageErrors).toEqual([]);
   expect(errors.resourceFailures).toEqual([]);
 });

@@ -24,10 +24,6 @@ const DIMENSION_LABELS: Record<string, string> = { demand: "demand", supply_gap:
 function lines(value: readonly string[]): string { return value.join("\n"); }
 function parseLines(value: string): string[] { return value.split("\n"); }
 
-function emptyConditions(): DecisionConditions {
-  return { continueConditions: [], pauseConditions: [], stopConditions: [] };
-}
-
 function evidenceDetail(evidenceId: string, dataset: NonNullable<ReturnType<typeof useResearch>["dataset"]>, scenarios: readonly EconomicScenario[], hypotheses: ReturnType<typeof createOpportunityHypotheses>): ReactElement {
   const [kind, value] = evidenceId.split(":", 2);
   if (kind === "review") {
@@ -104,7 +100,7 @@ export function DecisionPage(): ReactElement {
             return <div className="decision-condition-field" key={key}><label htmlFor={id}>{label}</label><textarea id={id} value={lines(savedConditions[key])} aria-describedby={`${id}-help`} onChange={(event) => updateConditions(key, event.target.value)} /><small id={`${id}-help`}>{help}</small></div>;
           })}
         </div>
-        <fieldset className="decision-trigger-fieldset"><legend>Explicitly triggered stop conditions</legend>{savedConditions.stopConditions.filter((condition) => condition.trim()).length === 0 ? <p>No stop conditions entered.</p> : savedConditions.stopConditions.filter((condition) => condition.trim()).map((condition) => <label key={condition}><input type="checkbox" checked={triggeredStopConditions.includes(condition)} onChange={(event) => setTriggeredStopConditions((current) => event.target.checked ? [...current, condition] : current.filter((item) => item !== condition))} />{condition}</label>)}</fieldset>
+        <fieldset className="decision-trigger-fieldset"><legend>Explicitly triggered stop conditions</legend>{savedConditions.stopConditions.length === 0 ? <p>No stop conditions entered.</p> : savedConditions.stopConditions.map((condition, index) => <label key={`${condition}-${index}`}><input type="checkbox" checked={triggeredStopConditions.includes(condition)} onChange={(event) => setTriggeredStopConditions((current) => event.target.checked ? [...current, condition] : current.filter((item) => item !== condition))} />{condition}</label>)}</fieldset>
       </section>
       <ValidationPlan report={report} onEvidenceClick={setSelectedEvidenceId} />
       <section className="decision-evidence-focus" aria-live="polite" data-testid="decision-selected-evidence">{selectedEvidenceId ? <><strong>{selectedEvidenceId}</strong>{evidenceDetail(selectedEvidenceId, dataset, economicScenarios, hypotheses)}</> : "Select an evidence reference to inspect its source or calculation explanation."}</section>

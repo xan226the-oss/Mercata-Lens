@@ -4,9 +4,10 @@
 
 ## Automated evidence
 
-- Task 8B focused tests cover Context condition normalization/lifecycle, defensive copies, DecisionStatus, ValidationPlan, DecisionPage, and export behavior: 5 files, 15 tests; the added export side-effect test brings the focused export coverage to 3 export tests.
-- Full Vitest suite passes with no skipped core tests: 35 files, 284 tests.
-- TypeScript compilation pass: `tsc --noEmit` completed successfully before the dependency-directory guard interrupted later pnpm commands.
+- Task 8B focused tests cover Context condition normalization/lifecycle, defensive copies, DecisionStatus, ValidationPlan, DecisionPage, and export behavior: 5 files, 21 tests; the export side-effect test is included in the 3 export tests.
+- Full Vitest suite passes with no skipped core tests: 35 files, 290 tests.
+- TypeScript compilation and the standard production build pass: `corepack pnpm build` completed successfully after the final discriminated-union copy fix.
+- Frozen dependency installation was re-run in the Codex fresh verification and passed. The temporary dependency backup at `/tmp/mercata-lens-node_modules-rebuild-20260826` remains preserved and is not part of the application output.
 - Export tests cover schema version, provenance, ruleset, corrections, economics scenarios, weights, conditions, report, limitations, deterministic serialization, deep defensive copies, and browser download side effects.
 - Playwright uses one project and executes 3 tests: one complete Demo test that iterates through 1440×900, 900×900, and 390×844 sequentially, plus two invalid-CSV tests.
 - Invalid CSV Playwright coverage includes exact file/row/field/reason diagnostics, active Demo preservation, and a separate no-active-data locked-route scenario.

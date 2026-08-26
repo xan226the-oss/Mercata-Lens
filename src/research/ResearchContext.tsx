@@ -127,14 +127,8 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
     pauseConditions: string[];
     stopConditions: string[];
   }) => {
-    const normalize = (values: readonly string[]) => {
-      const seen = new Set<string>();
-      return values.filter((value): value is string => typeof value === "string" && value.trim().length > 0).filter((value) => {
-        if (seen.has(value)) return false;
-        seen.add(value);
-        return true;
-      });
-    };
+    const normalize = (values: readonly string[]) => values
+      .filter((value): value is string => typeof value === "string" && value.trim().length > 0);
     setDecisionConditions({
       continueConditions: normalize(conditions.continueConditions),
       pauseConditions: normalize(conditions.pauseConditions),

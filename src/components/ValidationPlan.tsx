@@ -16,7 +16,7 @@ function EvidenceList({ title, ids, onEvidenceClick }: { title: string; ids: rea
 }
 
 function TextList({ title, values, testId }: { title: string; values: readonly string[]; testId?: string }): ReactElement {
-  return <section className="validation-plan__list" data-testid={testId}><h3>{title}</h3>{values.length === 0 ? <p>None recorded.</p> : <ul>{values.map((value) => <li key={value}>{value}</li>)}</ul>}</section>;
+  return <section className="validation-plan__list" data-testid={testId}><h3>{title}</h3>{values.length === 0 ? <p>None recorded.</p> : <ul>{values.map((value, index) => <li key={`${value}-${index}`}>{value}</li>)}</ul>}</section>;
 }
 
 export function ValidationPlan({ report, onEvidenceClick }: ValidationPlanProps): ReactElement {

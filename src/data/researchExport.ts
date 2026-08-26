@@ -1,6 +1,6 @@
 import type { EconomicScenario, ResearchDataset } from "../domain/types";
 import type { PainPointCorrections } from "../domain/painPoints";
-import type { OpportunityWeights } from "../domain/opportunities";
+import type { OpportunityWeights, RankingResult } from "../domain/opportunities";
 import type { DecisionConditions, DecisionReport } from "../domain/decision";
 
 export const RESEARCH_EXPORT_SCHEMA_VERSION = 1 as const;
@@ -43,19 +43,38 @@ function cloneScenario(scenario: EconomicScenario): EconomicScenario {
   return { ...scenario, inputs: { ...scenario.inputs }, provenance: Object.fromEntries(Object.entries(scenario.provenance).map(([key, value]) => [key, value ? { ...value } : null])) as EconomicScenario["provenance"] };
 }
 
+function cloneOpportunityScore(score: RankingResult["scores"][number]): RankingResult["scores"][number] {
+  if (score.status === "complete") {
+    return {
+      opportunityId: score.opportunityId,
+      status: "complete",
+      total: score.total,
+      contributions: score.contributions.map((contribution) => ({ ...contribution, evidenceIds: [...contribution.evidenceIds] })),
+      issues: [],
+    };
+  }
+  return {
+    opportunityId: score.opportunityId,
+    status: "incomplete",
+    total: null,
+    contributions: score.contributions.map((contribution) => ({ ...contribution, evidenceIds: [...contribution.evidenceIds] })),
+    issues: score.issues.map((issue) => ({ ...issue })),
+  };
+}
+
+function cloneRanking(ranking: RankingResult): RankingResult {
+  const scores = ranking.scores.map(cloneOpportunityScore);
+  if (ranking.status === "winner") return { status: "winner", winnerId: ranking.winnerId, scores, issues: [] };
+  if (ranking.status === "no_clear_winner") return { status: "no_clear_winner", winnerId: null, scores, issues: [] };
+  return { status: "incomplete", winnerId: null, scores, issues: ranking.issues.map((issue) => ({ ...issue })) };
+}
+
 function cloneReport(report: DecisionReport): DecisionReport {
   return {
     ...report,
-    ranking: {
-      ...report.ranking,
-      scores: report.ranking.scores.map((score) => ({
-        ...score,
-        contributions: score.contributions.map((contribution) => ({ ...contribution, evidenceIds: [...contribution.evidenceIds] })),
-        issues: score.issues.map((issue) => ({ ...issue })),
-      })),
-      issues: report.ranking.issues.map((issue) => ({ ...issue })),
-    },
+    ranking: cloneRanking(report.ranking),
     supportEvidenceIds: [...report.supportEvidenceIds],
+    oppositionEvidenceIds: [...report.oppositionEvidenceIds],
     assumptions: [...report.assumptions],
     missingData: [...report.missingData],
     nextActions: report.nextActions.map((action) => ({ ...action })),

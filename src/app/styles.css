@@ -1746,3 +1746,40 @@ input {
 .opportunity-evidence-focus { margin: 0; padding: 10px; border-left: 3px solid var(--color-primary); background: var(--color-surface-subtle); color: var(--color-muted); overflow-wrap: anywhere; }
 @media (max-width: 1100px) { .weight-editor__fields, .opportunity-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 680px) { .opportunity-comparison__intro, .weight-editor__header, .opportunity-card__header { flex-direction: column; } .weight-editor__fields, .opportunity-grid { grid-template-columns: 1fr; } .opportunity-card__score, .opportunity-card__incomplete { max-width: none; text-align: left; } }
+
+/* Task 8B decision flow: scoped additions only. */
+.decision-page { display: grid; gap: 18px; }
+.decision-page__meta { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+.decision-status, .decision-conditions, .validation-plan, .decision-evidence-focus, .decision-export { padding: 20px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface); }
+.decision-status { border-left: 4px solid var(--color-primary); }
+.decision-status--insufficient { border-left-color: var(--color-warning); }
+.decision-status--pause { border-left-color: var(--color-danger); }
+.decision-status h2, .decision-conditions h2, .validation-plan h2, .decision-export h2 { margin: 0 0 8px; font-family: var(--font-display); }
+.decision-status p, .decision-conditions p, .validation-plan p, .decision-export p { margin: 0; color: var(--color-muted); overflow-wrap: anywhere; }
+.decision-status__ranking { margin-top: 12px !important; }
+.decision-status__trigger { margin-top: 14px; padding: 12px; border: 1px solid #e6c1bc; background: #fdf0ef; color: var(--color-danger); }
+.decision-status__trigger ul, .validation-plan ul, .validation-plan ol { margin: 8px 0 0; padding-left: 20px; }
+.decision-conditions { display: grid; gap: 16px; }
+.decision-conditions__fields, .validation-plan__grid, .decision-conditions__summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.decision-condition-field { display: grid; gap: 6px; min-width: 0; }
+.decision-condition-field label { font-weight: 600; }
+.decision-condition-field textarea { width: 100%; min-height: 120px; padding: 9px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); resize: vertical; }
+.decision-condition-field small { color: var(--color-muted); overflow-wrap: anywhere; }
+.decision-trigger-fieldset { display: grid; gap: 8px; margin: 0; padding: 12px; border: 1px solid var(--color-border); }
+.decision-trigger-fieldset label { display: flex; gap: 8px; align-items: flex-start; overflow-wrap: anywhere; }
+.validation-plan { display: grid; gap: 18px; }
+.validation-plan__header { display: grid; gap: 4px; }
+.validation-plan__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.validation-plan__actions, .validation-plan__evidence, .validation-plan__list, .validation-plan__conditions > section { min-width: 0; padding: 14px; border: 1px solid var(--color-border); background: var(--color-surface-subtle); }
+.validation-plan h3 { margin: 0; font-size: 16px; }
+.validation-plan__actions li { display: grid; gap: 4px; margin-bottom: 10px; }
+.validation-plan__actions small { color: var(--color-muted); overflow-wrap: anywhere; }
+.validation-plan__evidence button { padding: 3px 6px; border: 1px solid var(--color-border); border-radius: 4px; background: var(--color-surface); color: var(--color-primary); cursor: pointer; overflow-wrap: anywhere; }
+.validation-plan__conditions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.decision-evidence-focus { display: grid; gap: 6px; border-left: 3px solid var(--color-primary); background: var(--color-surface-subtle); overflow-wrap: anywhere; }
+.decision-evidence-focus p { margin: 4px 0; color: var(--color-muted); }
+.decision-evidence-focus a { color: var(--color-primary); overflow-wrap: anywhere; }
+.decision-export { display: flex; justify-content: space-between; gap: 18px; align-items: center; background: var(--color-primary-soft); }
+.decision-export button { min-height: 40px; padding: 8px 14px; border: 1px solid var(--color-primary); border-radius: var(--radius-sm); background: var(--color-primary); color: #fff; cursor: pointer; font-weight: 600; }
+@media (max-width: 900px) { .decision-conditions__fields, .validation-plan__grid, .validation-plan__conditions { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .decision-conditions__fields, .validation-plan__grid, .validation-plan__conditions { grid-template-columns: 1fr; } .decision-export { align-items: flex-start; flex-direction: column; } .decision-status, .decision-conditions, .validation-plan, .decision-evidence-focus, .decision-export { padding: 16px; } }

@@ -70,6 +70,16 @@ export interface ResearchContextValue {
   opportunityWeightsResetKey: number;
   replaceOpportunityWeights: (weights: OpportunityWeights) => boolean;
   resetOpportunityWeights: () => void;
+  decisionConditions: {
+    continueConditions: string[];
+    pauseConditions: string[];
+    stopConditions: string[];
+  };
+  replaceDecisionConditions: (conditions: {
+    continueConditions: string[];
+    pauseConditions: string[];
+    stopConditions: string[];
+  }) => void;
 }
 
 const EMPTY_IMPORT_STATE: ImportOutcomeState = {
@@ -94,6 +104,11 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
   const [economicScenariosResetKey, setEconomicScenariosResetKey] = useState(0);
   const [opportunityWeights, setOpportunityWeights] = useState<OpportunityWeights>(() => ({ ...DEFAULT_OPPORTUNITY_WEIGHTS }));
   const [opportunityWeightsResetKey, setOpportunityWeightsResetKey] = useState(0);
+  const [decisionConditions, setDecisionConditions] = useState({
+    continueConditions: [] as string[],
+    pauseConditions: [] as string[],
+    stopConditions: [] as string[],
+  });
 
   const replaceOpportunityWeights = useCallback((weights: OpportunityWeights): boolean => {
     const validation = validateWeights(weights);
@@ -105,6 +120,18 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
   const resetOpportunityWeights = useCallback(() => {
     setOpportunityWeights({ ...DEFAULT_OPPORTUNITY_WEIGHTS });
     setOpportunityWeightsResetKey((current) => current + 1);
+  }, []);
+
+  const replaceDecisionConditions = useCallback((conditions: {
+    continueConditions: string[];
+    pauseConditions: string[];
+    stopConditions: string[];
+  }) => {
+    setDecisionConditions({
+      continueConditions: [...conditions.continueConditions],
+      pauseConditions: [...conditions.pauseConditions],
+      stopConditions: [...conditions.stopConditions],
+    });
   }, []);
 
   const replaceEconomicScenario = useCallback((scenario: EconomicScenario): boolean => {
@@ -142,6 +169,7 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
   const loadDemo = useMemo(
     () => () => {
       setCorrections({});
+      setDecisionConditions({ continueConditions: [], pauseConditions: [], stopConditions: [] });
       setEconomicScenarios(createEconomicScenarios("demo"));
       setOpportunityWeights({ ...DEFAULT_OPPORTUNITY_WEIGHTS });
       setOpportunityWeightsResetKey((current) => current + 1);
@@ -194,6 +222,7 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
       }
       const nextQuality = assessQuality(result.dataset);
       setCorrections({});
+      setDecisionConditions({ continueConditions: [], pauseConditions: [], stopConditions: [] });
       setEconomicScenarios(createEconomicScenarios("user_upload"));
       setOpportunityWeights({ ...DEFAULT_OPPORTUNITY_WEIGHTS });
       setOpportunityWeightsResetKey((current) => current + 1);
@@ -239,8 +268,14 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
       opportunityWeightsResetKey,
       replaceOpportunityWeights,
       resetOpportunityWeights,
+      decisionConditions: {
+        continueConditions: [...decisionConditions.continueConditions],
+        pauseConditions: [...decisionConditions.pauseConditions],
+        stopConditions: [...decisionConditions.stopConditions],
+      },
+      replaceDecisionConditions,
     }),
-    [status, dataset, sourceKind, qualityReport, issues, error, importState, loadDemo, importCsv, corrections, applyReviewCorrection, clearReviewCorrection, economicScenarios, economicScenariosResetKey, replaceEconomicScenario, opportunityWeights, opportunityWeightsResetKey, replaceOpportunityWeights, resetOpportunityWeights],
+    [status, dataset, sourceKind, qualityReport, issues, error, importState, loadDemo, importCsv, corrections, applyReviewCorrection, clearReviewCorrection, economicScenarios, economicScenariosResetKey, replaceEconomicScenario, opportunityWeights, opportunityWeightsResetKey, replaceOpportunityWeights, resetOpportunityWeights, decisionConditions, replaceDecisionConditions],
   );
 
   return <ResearchContext.Provider value={value}>{children}</ResearchContext.Provider>;

@@ -1,0 +1,2 @@
+﻿review_id,product_id,rating,review_text,review_date,verified_purchase,source_url
+bad-review,missing-product,2,"Unknown product reference",2026-06-30,true,https://example.com/bad/review/bad-review

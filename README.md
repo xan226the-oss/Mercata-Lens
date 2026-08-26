@@ -43,7 +43,7 @@ Customer pain-point evidence is implemented as a deterministic, evidence-first r
 
 The 50-row handoff is recorded in [`docs/evidence/review-audit.csv`](docs/evidence/review-audit.csv). Only `review_id` and classifier-derived `system_labels` are populated; `human_labels`, `outcome`, `notes`, `auditor`, and `date` remain blank. The sampling and acceptance record is [`docs/evidence/manual-pain-point-check.md`](docs/evidence/manual-pain-point-check.md), and the unchanged ruleset baseline plus future change template is [`docs/evidence/review-rule-changelog.md`](docs/evidence/review-rule-changelog.md). The human audit is **Incomplete — awaiting user judgments**; the artifact does not claim classification accuracy, market prevalence, sales, demand, or a completed human-validation gate.
 
-Economics, opportunity scoring, and final decision logic remain unimplemented. The current category statistics and rule-matched review signals do not establish wider-market coverage, sales, demand, profitability, or purchase advice.
+Economics, opportunity scoring, and final decision logic are implemented as local, evidence-bounded workflows. The decision report only outputs continue research, insufficient evidence, or pause with a validation plan. It does not establish wider-market coverage, sales, demand, profitability, or purchase advice. Human review audit, weight sensitivity answers, user thresholds, external research, market validation, realized economics, persistence, deployment, and production use remain incomplete.
 
 ## Getting started
 
@@ -145,4 +145,4 @@ Open the printed local URL. Home shows the synthetic Demo source, 12 products, 7
 
 ## License and status
 
-Exploratory project scaffold for product research. No production claims are made about sales, margins, or market share. Category statistics and traceability are implemented for the active local sample. Customer pain points, economics, opportunity scoring, decision logic, AI, backend services, persistence, scraping, and production validation remain unimplemented.
+Exploratory project scaffold for product research. No production claims are made about sales, margins, or market share. Category statistics and traceability are implemented for the active local sample. Customer pain points, economics, opportunity scoring, and bounded decision logic are implemented as local workflows; AI, backend services, persistence, scraping, and production validation remain unimplemented.

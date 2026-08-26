@@ -32,6 +32,9 @@ function Probe() {
       <span data-testid="research-status">{research.status}</span>
       <span data-testid="apply-result" />
       <span data-testid="economic-scenarios">{JSON.stringify(research.economicScenarios)}</span>
+      <span data-testid="decision-conditions">{JSON.stringify(research.decisionConditions)}</span>
+      <button onClick={() => research.replaceDecisionConditions({ continueConditions: [" continue "], pauseConditions: ["pause"], stopConditions: ["stop"] })}>Set decision conditions</button>
+      <button onClick={() => research.replaceDecisionConditions({ continueConditions: [...research.decisionConditions.continueConditions, "external"], pauseConditions: [...research.decisionConditions.pauseConditions], stopConditions: [...research.decisionConditions.stopConditions] })}>Mutate decision snapshot</button>
       <button onClick={() => {
         const scenario = research.economicScenarios[1];
         if (!scenario) return;
@@ -198,24 +201,19 @@ describe("ResearchContext current-session corrections", () => {
     expect(screen.getByTestId("weights-contract")).toHaveTextContent('"demand":30');
     expect(Number(screen.getByTestId("weights-reset-key").textContent)).toBeGreaterThan(afterImportResetKey);
   });
-  it("preserves weights after failed import and resets them after successful replacement", async () => {
+  it("keeps decision conditions defensive and resets them only on replacement", async () => {
     stubDemoFetch();
     const user = userEvent.setup();
-    function WeightProbe() {
-      const research = useResearch();
-      return <div>
-        <span data-testid="weights">{JSON.stringify(research.opportunityWeights)}</span>
-        <button onClick={() => research.replaceOpportunityWeights({ demand: 40, supply_gap: 20, economics: 15, differentiation: 15, risk: 10 })}>Set valid weights</button>
-        <button onClick={() => research.importCsv("bad", "bad")}>Import invalid CSV</button>
-        <button onClick={() => research.importCsv(productsCsv, reviewsCsv)}>Import valid CSV</button>
-      </div>;
-    }
-    render(<ResearchProvider><WeightProbe /></ResearchProvider>);
-    await waitFor(() => expect(screen.getByTestId("weights")).toHaveTextContent('"demand":30'));
-    await user.click(screen.getByRole("button", { name: "Set valid weights" }));
+    render(<ResearchProvider><Probe /></ResearchProvider>);
+    await waitFor(() => expect(screen.getByTestId("source-kind")).toHaveTextContent("demo"));
+    await user.click(screen.getByRole("button", { name: "Set decision conditions" }));
+    expect(screen.getByTestId("decision-conditions")).toHaveTextContent("continue");
+    await user.click(screen.getByRole("button", { name: "Mutate decision snapshot" }));
+    expect(screen.getByTestId("decision-conditions")).toHaveTextContent("external");
     await user.click(screen.getByRole("button", { name: "Import invalid CSV" }));
-    expect(screen.getByTestId("weights")).toHaveTextContent('"demand":40');
+    expect(screen.getByTestId("decision-conditions")).toHaveTextContent("external");
     await user.click(screen.getByRole("button", { name: "Import valid CSV" }));
-    await waitFor(() => expect(screen.getByTestId("weights")).toHaveTextContent('"demand":30'));
+    await waitFor(() => expect(screen.getByTestId("source-kind")).toHaveTextContent("user_upload"));
+    expect(screen.getByTestId("decision-conditions")).toHaveTextContent('"continueConditions":[]');
   });
 });

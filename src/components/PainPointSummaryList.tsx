@@ -20,7 +20,7 @@ export function PainPointSummaryList({ summaries, activeLabel, disabled, onActiv
       <div className="section-heading">
         <span className="section-kicker">Signal index</span>
         <h2 id="pain-point-summary-title">Review signals</h2>
-        <p>Stable catalogue order; counts are not additive.</p>
+        <p>Click a signal to filter the review queue. Counts can overlap.</p>
       </div>
       <ol className="pain-point-summary__list">
         {summaries.map((summary) => {

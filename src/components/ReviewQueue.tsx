@@ -52,7 +52,7 @@ export function ReviewQueue({ rows, status, activeLabel, selectedReviewId, disab
       <div className="section-heading">
         <span className="section-kicker">Review triage</span>
         <h2 id="review-queue-title">Review queue</h2>
-        <p>{filteredRows.length} reviews in this view.</p>
+        <p>{filteredRows.length} reviews in this view. Click a review ID to inspect and correct its evidence.</p>
       </div>
       <div className="review-queue__filters" aria-label="Review status filters">
         {STATUS_OPTIONS.map((option) => (

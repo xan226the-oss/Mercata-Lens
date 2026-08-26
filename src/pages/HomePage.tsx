@@ -72,6 +72,7 @@ export function HomePage() {
             <span className="section-kicker">Decision cautions</span>
             <h2 id="decision-cautions-title">Keep the evidence boundary visible</h2>
             <ul><li>Review count is not sales.</li><li>{sourceKind === "demo" ? "Demo data is not live market data." : "User-uploaded data is not a market forecast."}</li><li>Economics is incomplete until required cost inputs exist.</li></ul>
+            <p className="home-interaction-hint">Start with the data quality step, then open each available module from the left navigation.</p>
           </section>
         </>
       ) : null}

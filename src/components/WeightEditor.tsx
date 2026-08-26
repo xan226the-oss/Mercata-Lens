@@ -74,7 +74,7 @@ export function WeightEditor({ weights, onReplaceWeights, onReset, resetKey, onV
       <div className="weight-editor__header">
         <div>
           <h2 id="weight-editor-title">Current-session scoring weights</h2>
-          <p>Scoring model is a configurable hypothesis. Weights are not persisted.</p>
+          <p>Adjust the five dimensions to test a different ranking. The total must equal 100.</p>
         </div>
         <button type="button" onClick={reset}>Restore defaults</button>
       </div>
@@ -97,7 +97,7 @@ export function WeightEditor({ weights, onReplaceWeights, onReset, resetKey, onV
         })}
       </div>
       <p className={`weight-editor__total${totalValid ? "" : " weight-editor__total--invalid"}`} data-testid="weight-total" aria-live="polite">
-        Draft total: {Number.isInteger(total) ? total : total.toFixed(2)}
+        {totalValid ? "Ready to rank · " : "Adjust weights · "}Draft total: {Number.isInteger(total) ? total : total.toFixed(2)} / 100
       </p>
       {errors.total && <p className="weight-editor__error" id="weight-error-total" role="alert" aria-live="assertive">{errors.total}</p>}
     </section>

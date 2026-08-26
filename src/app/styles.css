@@ -41,16 +41,21 @@ input {
 }
 
 .app-shell {
-  min-height: 100vh;
+  height: 100vh;
+  min-height: 0;
   display: grid;
   grid-template-columns: 220px minmax(0, 1fr);
 }
 
 .app-sidebar {
-  min-height: 100vh;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 28px;
+  overflow-y: auto;
   padding: 28px 16px 22px;
   background: var(--color-surface);
   border-right: 1px solid var(--color-border);
@@ -93,12 +98,26 @@ input {
   color: var(--color-ink);
   text-decoration: none;
   font-size: 13px;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.research-nav__item::after {
+  content: "Open";
+  grid-column: 2;
+  color: transparent;
+  font-size: 10px;
+  transition: color 0.15s ease;
+}
+
+.research-nav__item:hover::after,
+.research-nav__item--active::after {
+  color: var(--color-primary);
 }
 
 .research-nav__item:hover {
   background: var(--color-surface-subtle);
   border-color: var(--color-border);
+  transform: translateX(2px);
 }
 
 .research-nav__item--active {
@@ -106,6 +125,11 @@ input {
   border-color: #c9dbe9;
   color: #245578;
   font-weight: 600;
+}
+
+.research-nav__item--locked::after {
+  content: "Evidence required";
+  color: var(--color-muted);
 }
 
 .research-nav__item--locked {
@@ -150,9 +174,11 @@ input {
 
 .app-workspace {
   min-width: 0;
-  min-height: 100vh;
+  height: 100vh;
+  min-height: 0;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 .workspace-header {
@@ -178,6 +204,42 @@ input {
 
 .workspace-scope span[aria-hidden="true"] {
   color: var(--color-muted);
+}
+
+.workspace-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.language-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 30px;
+  padding: 4px 9px 4px 5px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-primary);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.language-switch:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.language-switch__current {
+  display: inline-grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-primary-soft);
+  font-size: 10px;
 }
 
 .source-badge {
@@ -269,13 +331,6 @@ input {
   margin: 0;
   color: var(--color-muted);
   font-size: 15px;
-}
-
-.page {
-  padding: 28px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
 }
 
 .page {
@@ -440,6 +495,15 @@ input {
   margin: 12px 0 0;
   padding-left: 20px;
   color: var(--color-muted);
+}
+
+.home-interaction-hint {
+  margin: 16px 0 0 !important;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-primary) !important;
+  font-size: 13px !important;
+  font-weight: 600;
 }
 
 .import-panel {
@@ -647,13 +711,28 @@ input {
 
 @media (max-width: 900px) {
   .app-shell {
+    height: auto;
+    min-height: 100vh;
     grid-template-columns: 1fr;
   }
 
   .app-sidebar {
+    position: static;
+    height: auto;
     min-height: auto;
+    overflow-y: visible;
     border-right: 0;
     border-bottom: 1px solid var(--color-border);
+  }
+
+  .app-brand {
+    max-width: 260px;
+  }
+
+  .app-workspace {
+    height: auto;
+    min-height: 0;
+    overflow-y: visible;
   }
 
   .research-nav {
@@ -1330,10 +1409,30 @@ input {
   cursor: pointer;
 }
 
+.pain-point-summary__button::after,
+.pain-point-page .filter-button::after,
+.weight-editor__header button::after,
+.review-queue__select::after,
+.opportunity-card button::after,
+.validation-plan__evidence button::after {
+  content: " ↗";
+  color: var(--color-muted);
+  font-size: 11px;
+}
+
 .pain-point-summary__button:hover,
-.pain-point-summary__item--active .pain-point-summary__button {
+.pain-point-summary__item--active .pain-point-summary__button,
+.pain-point-page .filter-button:hover,
+.weight-editor__header button:hover,
+.review-queue__select:hover,
+.opportunity-card button:hover,
+.validation-plan__evidence button:hover {
   border-color: var(--color-primary);
   background: var(--color-primary-soft);
+}
+
+.review-queue__row--selected td {
+  box-shadow: inset 3px 0 0 var(--color-primary);
 }
 
 .pain-point-summary__button:disabled,

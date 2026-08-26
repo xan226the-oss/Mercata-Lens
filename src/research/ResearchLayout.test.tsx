@@ -71,6 +71,22 @@ describe("ResearchLayout Light Slate shell", () => {
     expect(screen.getByRole("link", { name: /Data quality/i })).toHaveAttribute("href", "/quality");
   });
 
+  it("resets the workspace scroll position when switching research steps", async () => {
+    stubDemoFetch();
+    renderApp();
+    await waitFor(() => expect(screen.getByTestId("source-badge")).toHaveTextContent("Demo data"));
+
+    const workspace = document.querySelector<HTMLElement>(".app-workspace");
+    expect(workspace).not.toBeNull();
+    const scrollTo = vi.fn();
+    Object.defineProperty(workspace, "scrollTo", { configurable: true, value: scrollTo });
+
+    await userEvent.click(screen.getByRole("link", { name: /Data quality/i }));
+
+    await waitFor(() => expect(scrollTo).toHaveBeenCalledWith({ top: 0, left: 0, behavior: "auto" }));
+  });
+
+
   it("shows User upload after a successful import", async () => {
     stubDemoFetch();
     renderApp();

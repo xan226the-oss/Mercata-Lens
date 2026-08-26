@@ -77,7 +77,7 @@ export function ImportPanel({ importCsv }: ImportPanelProps) {
       {fileError ? <div className="status-banner status-banner--error" role="alert" data-testid="import-file-error"><span className="status-banner__label">Blocking error:</span> <span className="status-banner__text">{fileError}</span></div> : null}
       <div className="import-actions">
         <button type="button" onClick={onImport} disabled={!canImport} data-testid="import-button">{IMPORT_BUTTON_TEXT}</button>
-        <p className="import-note">{IMPORT_NOTE}</p>
+        <p className="import-note">{canImport ? "Both files are ready. Import to validate and replace the current research." : "Choose both CSV files to enable import."}</p>
       </div>
       <div className="import-samples">
         <span>Sample files (synthetic, not Amazon template data):</span>

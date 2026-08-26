@@ -68,6 +68,54 @@ describe("research export", () => {
     expect(second.report.ranking.issues).toHaveLength(1);
   });
 
+  it("snapshots primitive and hostile CandidateIssue IDs deterministically at ranking and score levels", () => {
+    const nestedId = { z: ["nested", { value: 1 }], a: true };
+    const throwingProxy = new Proxy({}, { ownKeys: () => { throw new Error("blocked"); } });
+    const circular: Record<string, unknown> = {};
+    circular.self = circular;
+    const accessor = Object.defineProperty({}, "value", { get: () => { throw new Error("getter must not run"); }, enumerable: true });
+    const hostileReport: DecisionReport = {
+      ...report,
+      ranking: {
+        status: "incomplete",
+        winnerId: null,
+        scores: [{ opportunityId: "easy_clean", status: "incomplete", total: null, contributions: [], issues: [
+          { kind: "candidate", code: "invalid_id", id: nestedId, message: "nested" },
+          { kind: "candidate", code: "invalid_id", id: 42, message: "number" },
+          { kind: "candidate", code: "invalid_id", id: throwingProxy, message: "proxy" },
+            { kind: "candidate", code: "invalid_id", id: circular, message: "cycle" },
+            { kind: "candidate", code: "invalid_id", id: accessor, message: "accessor" },
+            { kind: "candidate", code: "invalid_id", id: Symbol("id"), message: "symbol" },
+        ] }],
+        issues: [{ kind: "candidate", code: "invalid_id", id: "primitive", message: "primitive" }],
+      },
+    };
+    const hostileInput = { ...input, report: hostileReport } satisfies ResearchExportInput;
+    const first = buildResearchExport(hostileInput);
+    const firstScoreIssues = first.report.ranking.scores[0].issues as readonly { id?: unknown }[];
+    expect(firstScoreIssues[0]?.id).toEqual({ a: true, z: ["nested", { value: 1 }] });
+    expect(firstScoreIssues[1]?.id).toBe(42);
+    expect(firstScoreIssues.slice(2).map((issue) => issue.id)).toEqual([
+      { kind: "unavailable", reason: "candidate_id_not_safely_snapshotable" },
+      { kind: "unavailable", reason: "candidate_id_not_safely_snapshotable" },
+      { kind: "unavailable", reason: "candidate_id_not_safely_snapshotable" },
+      { kind: "unavailable", reason: "candidate_id_not_safely_snapshotable" },
+    ]);
+    const firstRankingIssues = first.report.ranking.issues as readonly { id?: unknown }[];
+    expect(firstRankingIssues[0]?.id).toBe("primitive");
+    const second = buildResearchExport(hostileInput);
+    Object.defineProperty(
+      firstScoreIssues[0]?.id as Record<string, unknown>,
+      "z",
+      { value: ["mutated"], enumerable: true, configurable: true, writable: true },
+    );
+    const inputScoreIssues = hostileInput.report.ranking.scores[0].issues as readonly { id?: unknown }[];
+    expect(inputScoreIssues[0]?.id).toEqual({ z: ["nested", { value: 1 }], a: true });
+    const secondScoreIssues = second.report.ranking.scores[0].issues as readonly { id?: unknown }[];
+    expect(secondScoreIssues[0]?.id).toEqual({ a: true, z: ["nested", { value: 1 }] });
+    expect(serializeResearchExport(hostileInput)).toBe(serializeResearchExport(hostileInput));
+  });
+
   it("creates, downloads, and revokes a real JSON Blob URL", () => {
     const originalCreate = URL.createObjectURL;
     const originalRevoke = URL.revokeObjectURL;

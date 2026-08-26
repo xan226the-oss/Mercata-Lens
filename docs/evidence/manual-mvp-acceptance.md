@@ -4,8 +4,8 @@
 
 ## Automated evidence
 
-- Task 8B focused tests cover Context condition normalization/lifecycle, defensive copies, DecisionStatus, ValidationPlan, DecisionPage, and export behavior: 5 files, 21 tests; the export side-effect test is included in the 3 export tests.
-- Full Vitest suite passes with no skipped core tests: 35 files, 290 tests.
+- Task 8B focused tests cover Context condition normalization/lifecycle, defensive copies, DecisionStatus, ValidationPlan, DecisionPage, and export behavior: 5 files, 24 tests; the export side-effect test is included in the 4 export tests.
+- Full Vitest suite passes with no skipped core tests: 35 files, 293 tests.
 - TypeScript compilation and the standard production build pass: `corepack pnpm build` completed successfully after the final discriminated-union copy fix.
 - Frozen dependency installation was re-run in the Codex fresh verification and passed. The temporary dependency backup at `/tmp/mercata-lens-node_modules-rebuild-20260826` remains preserved and is not part of the application output.
 - Export tests cover schema version, provenance, ruleset, corrections, economics scenarios, weights, conditions, report, limitations, deterministic serialization, deep defensive copies, and browser download side effects.

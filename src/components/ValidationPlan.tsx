@@ -22,7 +22,7 @@ function TextList({ title, values, testId }: { title: string; values: readonly s
 export function ValidationPlan({ report, onEvidenceClick }: ValidationPlanProps): ReactElement {
   return (
     <section className="validation-plan" aria-labelledby="validation-plan-title">
-      <div className="validation-plan__header"><span className="section-kicker">Evidence boundaries</span><h2 id="validation-plan-title">Validation plan</h2><p>Actions remain local and evidence-led. They do not constitute sourcing, pricing, launch, or purchase advice.</p></div>
+      <div className="validation-plan__header"><span className="section-kicker">Evidence boundaries</span><h2 id="validation-plan-title" data-testid="validation-plan-title">Validation plan</h2><p>Actions remain local and evidence-led. They do not constitute sourcing, pricing, launch, or purchase advice.</p></div>
       <div className="validation-plan__grid">
         <section className="validation-plan__actions"><h3>Next actions</h3>{report.nextActions.length === 0 ? <p>None recorded.</p> : <ol>{report.nextActions.map((action, index) => <li key={`${action.owner}-${action.action}-${index}`}><strong>{action.owner}</strong><span>{action.action}</span><small>Evidence expected: {action.evidenceExpected}</small></li>)}</ol>}</section>
         <EvidenceList title="Support evidence" ids={report.supportEvidenceIds} onEvidenceClick={onEvidenceClick} />

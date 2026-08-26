@@ -43,6 +43,67 @@ function cloneScenario(scenario: EconomicScenario): EconomicScenario {
   return { ...scenario, inputs: { ...scenario.inputs }, provenance: Object.fromEntries(Object.entries(scenario.provenance).map(([key, value]) => [key, value ? { ...value } : null])) as EconomicScenario["provenance"] };
 }
 
+const UNSAFE_CANDIDATE_ID = {
+  kind: "unavailable",
+  reason: "candidate_id_not_safely_snapshotable",
+} as const;
+
+function unsafeCandidateId(): typeof UNSAFE_CANDIDATE_ID {
+  return { ...UNSAFE_CANDIDATE_ID };
+}
+
+function snapshotCandidateId(value: unknown): unknown {
+  const snapshot = (candidate: unknown, active: WeakSet<object>): { ok: true; value: unknown } | { ok: false } => {
+    if (candidate === null) return { ok: true, value: null };
+    if (typeof candidate === "string" || typeof candidate === "boolean") return { ok: true, value: candidate };
+    if (typeof candidate === "number") return Number.isFinite(candidate) ? { ok: true, value: candidate } : { ok: false };
+    if (typeof candidate !== "object" || active.has(candidate)) return { ok: false };
+
+    active.add(candidate);
+    try {
+      if (Array.isArray(candidate)) {
+        const copy: unknown[] = [];
+        for (let index = 0; index < candidate.length; index += 1) {
+          const descriptor = Object.getOwnPropertyDescriptor(candidate, String(index));
+          if (!descriptor || !("value" in descriptor)) return { ok: false };
+          const child = snapshot(descriptor.value, active);
+          if (!child.ok) return { ok: false };
+          copy.push(child.value);
+        }
+        return { ok: true, value: copy };
+      }
+
+      const prototype = Object.getPrototypeOf(candidate);
+      if (prototype !== Object.prototype && prototype !== null) return { ok: false };
+      const copy: Record<string, unknown> = {};
+      const keys = Reflect.ownKeys(candidate);
+      if (keys.some((key) => typeof key !== "string")) return { ok: false };
+      for (const key of (keys as string[]).sort()) {
+        const descriptor = Object.getOwnPropertyDescriptor(candidate, key);
+        if (!descriptor || !("value" in descriptor)) return { ok: false };
+        const child = snapshot(descriptor.value, active);
+        if (!child.ok) return { ok: false };
+        copy[key] = child.value;
+      }
+      return { ok: true, value: copy };
+    } catch {
+      return { ok: false };
+    } finally {
+      active.delete(candidate);
+    }
+  };
+
+  const result = snapshot(value, new WeakSet<object>());
+  return result.ok ? result.value : unsafeCandidateId();
+}
+
+function cloneOpportunityIssue(issue: RankingResult["issues"][number]): RankingResult["issues"][number] {
+  return {
+    ...issue,
+    ...(issue.kind === "candidate" && "id" in issue ? { id: snapshotCandidateId(issue.id) } : {}),
+  };
+}
+
 function cloneOpportunityScore(score: RankingResult["scores"][number]): RankingResult["scores"][number] {
   if (score.status === "complete") {
     return {
@@ -58,7 +119,7 @@ function cloneOpportunityScore(score: RankingResult["scores"][number]): RankingR
     status: "incomplete",
     total: null,
     contributions: score.contributions.map((contribution) => ({ ...contribution, evidenceIds: [...contribution.evidenceIds] })),
-    issues: score.issues.map((issue) => ({ ...issue })),
+    issues: score.issues.map(cloneOpportunityIssue),
   };
 }
 
@@ -66,7 +127,7 @@ function cloneRanking(ranking: RankingResult): RankingResult {
   const scores = ranking.scores.map(cloneOpportunityScore);
   if (ranking.status === "winner") return { status: "winner", winnerId: ranking.winnerId, scores, issues: [] };
   if (ranking.status === "no_clear_winner") return { status: "no_clear_winner", winnerId: null, scores, issues: [] };
-  return { status: "incomplete", winnerId: null, scores, issues: ranking.issues.map((issue) => ({ ...issue })) };
+  return { status: "incomplete", winnerId: null, scores, issues: ranking.issues.map(cloneOpportunityIssue) };
 }
 
 function cloneReport(report: DecisionReport): DecisionReport {

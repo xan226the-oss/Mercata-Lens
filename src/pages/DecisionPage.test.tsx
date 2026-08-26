@@ -28,6 +28,7 @@ function ContextHarness() {
   const research = useResearch();
   return (
     <div>
+      <button type="button" onClick={() => research.replaceOpportunityWeights({ demand: 20, supply_gap: 35, economics: 20, differentiation: 15, risk: 10 })}>Set no-clear-winner weights</button>
       <button type="button" onClick={() => research.replaceDecisionConditions({
         continueConditions: ["Continue with traceable evidence"],
         pauseConditions: ["Pause for human review"],
@@ -52,7 +53,7 @@ function renderDecision(withHarness = false) {
 }
 
 describe("DecisionPage", () => {
-  it("renders the bounded report route without fabricating data", async () => {
+  it("renders the bounded report route without fabricating data", () => {
     vi.stubGlobal("fetch", vi.fn(() => new Promise<Response>(() => undefined)) as unknown as typeof fetch);
     renderDecision();
     expect(screen.getByTestId("decision-no-data")).toHaveTextContent("No active research data is available");
@@ -68,6 +69,17 @@ describe("DecisionPage", () => {
     expect(screen.getByText(/sales, demand, market-share, sourcing, pricing, launch, or purchase recommendation/i)).toBeVisible();
     expect(screen.queryByText(/market share is established/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/purchase advice is available/i)).not.toBeInTheDocument();
+  });
+
+  it("renders a real no-clear-winner report without fabricating a winner", async () => {
+    const user = userEvent.setup();
+    renderDecision(true);
+    await waitFor(() => expect(screen.getByTestId("decision-status")).toBeVisible());
+    await user.click(screen.getByRole("button", { name: "Set no-clear-winner weights" }));
+    expect(screen.getByTestId("decision-status")).toHaveTextContent("Continue research");
+    expect(screen.getByTestId("decision-status")).toHaveTextContent("No clear winner");
+    expect(screen.getByText("Collect discriminating evidence to resolve the opportunity tie.")).toBeVisible();
+    expect(screen.queryByText(/Leading hypothesis in the configured comparison:/)).not.toBeInTheDocument();
   });
 
   it("pauses only for an explicitly selected exact stop condition", async () => {
@@ -134,5 +146,24 @@ describe("DecisionPage", () => {
     expect(screen.getByTestId("decision-conditions-summary")).toHaveTextContent("Stop when the evidence gate fails");
     await user.click(screen.getByRole("button", { name: "Import valid from harness" }));
     await waitFor(() => expect(screen.getByTestId("decision-conditions-summary")).toHaveTextContent("None recorded."));
+  });
+
+  it("clears conditions, triggered stop, selected evidence, and restores Demo after reload", async () => {
+    const user = userEvent.setup();
+    renderDecision(true);
+    await waitFor(() => expect(screen.getByTestId("decision-status")).toBeVisible());
+    await user.click(screen.getByRole("button", { name: "Set harness conditions" }));
+    await user.click(screen.getByLabelText("Stop when the evidence gate fails"));
+    expect(screen.getByRole("heading", { name: "Pause" })).toBeVisible();
+    const reviewButton = screen.getAllByRole("button").find((button) => button.textContent?.startsWith("review:"));
+    expect(reviewButton).toBeDefined();
+    await user.click(reviewButton!);
+    expect(screen.getByTestId("decision-selected-evidence")).not.toHaveTextContent("Select an evidence reference");
+    await user.click(screen.getByRole("button", { name: "Reload Demo from harness" }));
+    await waitFor(() => expect(screen.getByRole("heading", { name: "Continue research" })).toBeVisible());
+    expect(screen.getByTestId("analysis-source-badge")).toHaveTextContent("Synthetic demo");
+    expect(screen.getByTestId("decision-conditions-summary")).toHaveTextContent("None recorded.");
+    expect(screen.getByTestId("decision-selected-evidence")).toHaveTextContent("Select an evidence reference to inspect its source or calculation explanation.");
+    expect(screen.queryByTestId("triggered-stop-conditions")).not.toBeInTheDocument();
   });
 });

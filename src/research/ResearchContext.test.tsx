@@ -34,7 +34,18 @@ function Probe() {
       <span data-testid="economic-scenarios">{JSON.stringify(research.economicScenarios)}</span>
       <span data-testid="decision-conditions">{JSON.stringify(research.decisionConditions)}</span>
       <button onClick={() => research.replaceDecisionConditions({ continueConditions: [" continue ", "duplicate", "duplicate", " second "], pauseConditions: ["pause", "pause"], stopConditions: ["stop", "stop"] })}>Set decision conditions</button>
+      <button onClick={() => {
+        const external = {
+          continueConditions: [" external ", "external-duplicate"],
+          pauseConditions: ["external-pause"],
+          stopConditions: ["external-stop"],
+        };
+        research.replaceDecisionConditions(external);
+        external.continueConditions[0] = "mutated external";
+        external.continueConditions.push("late external");
+      }}>Set external conditions</button>
       <button onClick={() => research.replaceDecisionConditions({ continueConditions: [...research.decisionConditions.continueConditions, "external"], pauseConditions: [...research.decisionConditions.pauseConditions], stopConditions: [...research.decisionConditions.stopConditions] })}>Mutate decision snapshot</button>
+      <button onClick={() => research.replaceOpportunityWeights({ demand: 30, supply_gap: 25, economics: 20, differentiation: 15, risk: 10 })}>Trigger unrelated update</button>
       <button onClick={() => {
         const scenario = research.economicScenarios[1];
         if (!scenario) return;
@@ -206,10 +217,14 @@ describe("ResearchContext current-session corrections", () => {
     const user = userEvent.setup();
     render(<ResearchProvider><Probe /></ResearchProvider>);
     await waitFor(() => expect(screen.getByTestId("source-kind")).toHaveTextContent("demo"));
+    await user.click(screen.getByRole("button", { name: "Set external conditions" }));
+    expect(screen.getByTestId("decision-conditions")).toHaveTextContent("external");
+    expect(screen.getByTestId("decision-conditions")).not.toHaveTextContent("mutated external");
+    expect(screen.getByTestId("decision-conditions")).not.toHaveTextContent("late external");
+    await user.click(screen.getByRole("button", { name: "Trigger unrelated update" }));
+    expect(screen.getByTestId("decision-conditions")).toHaveTextContent("external");
+    expect(screen.getByTestId("decision-conditions")).not.toHaveTextContent("mutated external");
     await user.click(screen.getByRole("button", { name: "Set decision conditions" }));
-    expect(screen.getByTestId("decision-conditions")).toHaveTextContent("continue");
-    expect(screen.getByTestId("decision-conditions")).toHaveTextContent("duplicate");
-    expect(screen.getByTestId("decision-conditions")).toHaveTextContent("second");
     expect(screen.getByTestId("decision-conditions")).toHaveTextContent("continue");
     expect(screen.getByTestId("decision-conditions")).toHaveTextContent("duplicate");
     expect(screen.getByTestId("decision-conditions")).toHaveTextContent("second");
@@ -223,5 +238,8 @@ describe("ResearchContext current-session corrections", () => {
     await user.click(screen.getByRole("button", { name: "Import valid CSV" }));
     await waitFor(() => expect(screen.getByTestId("source-kind")).toHaveTextContent("user_upload"));
     expect(screen.getByTestId("decision-conditions")).toHaveTextContent('"continueConditions":[]');
+    await user.click(screen.getByRole("button", { name: "Set decision conditions" }));
+    await user.click(screen.getByRole("button", { name: "Reload failing demo" }));
+    await waitFor(() => expect(screen.getByTestId("decision-conditions")).toHaveTextContent('"continueConditions":[]'));
   });
 });

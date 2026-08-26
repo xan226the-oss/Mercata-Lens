@@ -1,6 +1,6 @@
 import type { EconomicScenario, ResearchDataset } from "../domain/types";
 import type { PainPointCorrections } from "../domain/painPoints";
-import type { OpportunityWeights, RankingResult } from "../domain/opportunities";
+import type { OpportunityWeights } from "../domain/opportunities";
 import type { DecisionConditions, DecisionReport } from "../domain/decision";
 
 export const RESEARCH_EXPORT_SCHEMA_VERSION = 1 as const;
@@ -46,9 +46,16 @@ function cloneScenario(scenario: EconomicScenario): EconomicScenario {
 function cloneReport(report: DecisionReport): DecisionReport {
   return {
     ...report,
-    ranking: JSON.parse(JSON.stringify(report.ranking)) as RankingResult,
+    ranking: {
+      ...report.ranking,
+      scores: report.ranking.scores.map((score) => ({
+        ...score,
+        contributions: score.contributions.map((contribution) => ({ ...contribution, evidenceIds: [...contribution.evidenceIds] })),
+        issues: score.issues.map((issue) => ({ ...issue })),
+      })),
+      issues: report.ranking.issues.map((issue) => ({ ...issue })),
+    },
     supportEvidenceIds: [...report.supportEvidenceIds],
-    oppositionEvidenceIds: [...report.oppositionEvidenceIds],
     assumptions: [...report.assumptions],
     missingData: [...report.missingData],
     nextActions: report.nextActions.map((action) => ({ ...action })),
@@ -88,10 +95,11 @@ export function serializeResearchExport(input: ResearchExportInput): string {
 
 export function downloadResearchExport(input: ResearchExportInput, downloadName = "mercata-lens-research.json"): void {
   const blob = new Blob([serializeResearchExport(input)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
+  const objectUrl = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
-  anchor.href = url;
+  anchor.href = objectUrl;
   anchor.download = downloadName;
   anchor.click();
-  URL.revokeObjectURL(url);
+  anchor.remove();
+  URL.revokeObjectURL(objectUrl);
 }

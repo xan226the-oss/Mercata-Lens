@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactElement } from "react";
+import { useEffect, useMemo, useState, type ReactElement } from "react";
 import { PageHeader } from "../components/PageHeader";
 import { DataSourceBadge } from "../components/DataSourceBadge";
 import { DecisionStatus } from "../components/DecisionStatus";
@@ -24,6 +24,10 @@ const DIMENSION_LABELS: Record<string, string> = { demand: "demand", supply_gap:
 function lines(value: readonly string[]): string { return value.join("\n"); }
 function parseLines(value: string): string[] { return value.split("\n"); }
 
+function emptyConditions(): DecisionConditions {
+  return { continueConditions: [], pauseConditions: [], stopConditions: [] };
+}
+
 function evidenceDetail(evidenceId: string, dataset: NonNullable<ReturnType<typeof useResearch>["dataset"]>, scenarios: readonly EconomicScenario[], hypotheses: ReturnType<typeof createOpportunityHypotheses>): ReactElement {
   const [kind, value] = evidenceId.split(":", 2);
   if (kind === "review") {
@@ -47,7 +51,12 @@ export function DecisionPage(): ReactElement {
   const { status, dataset, sourceKind, qualityReport, corrections, economicScenarios, opportunityWeights, decisionConditions, replaceDecisionConditions } = useResearch();
   const [triggeredStopConditions, setTriggeredStopConditions] = useState<string[]>([]);
   const [selectedEvidenceId, setSelectedEvidenceId] = useState<string | null>(null);
-  const [savedConditions, setSavedConditions] = useState<DecisionConditions>(decisionConditions);
+  const savedConditions = decisionConditions;
+
+  useEffect(() => {
+    setTriggeredStopConditions([]);
+    setSelectedEvidenceId(null);
+  }, [dataset]);
 
   const summaries = useMemo(() => dataset ? summarizePainPoints(dataset, corrections) : [], [dataset, corrections]);
   const hypotheses = useMemo(() => dataset && sourceKind ? createOpportunityHypotheses(dataset, summaries, economicScenarios) : [], [dataset, sourceKind, summaries, economicScenarios]);
@@ -79,7 +88,6 @@ export function DecisionPage(): ReactElement {
 
   const updateConditions = (key: keyof DecisionConditions, value: string) => {
     const next = { ...savedConditions, [key]: parseLines(value) };
-    setSavedConditions(next);
     replaceDecisionConditions(next);
     if (key === "stopConditions") setTriggeredStopConditions((current) => current.filter((condition) => next.stopConditions.includes(condition)));
   };

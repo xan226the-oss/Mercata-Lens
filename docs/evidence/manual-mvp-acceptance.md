@@ -1,30 +1,33 @@
 # Task 8B — Manual MVP acceptance record
 
-**Status:** Automated and browser-observed evidence is recorded below. Human exercises remain incomplete.
+**Status:** Automated, browser-observed, and human-incomplete evidence are separated below. This record describes the completed acceptance flow only where the automated evidence exercises the behavior.
 
 ## Automated evidence
 
-- Focused DecisionStatus, ValidationPlan, DecisionPage, export, Context, and upstream regression tests pass.
-- Full Vitest suite passes with no skipped core tests.
-- TypeScript compilation and lint pass. The standard `pnpm build` reached Vite but the host safe-delete guard blocked emptying the existing ignored `dist/assets` directory; the same production build completed successfully with Vite output redirected to `/tmp/mercata-lens-dist`.
-- Frozen install and `git diff --check` pass.
-- Export tests cover schema version, provenance, ruleset, corrections, economics scenarios, weights, conditions, report, limitations, deterministic serialization, defensive copies, and absence of browser-internal key strings.
-- Playwright specs cover the Demo route path, invalid CSV diagnostics, failed-import preservation, download initiation, console/page-error capture, and 1440×900, 900×900, and 390×844 viewports.
+- Task 8B focused tests cover Context condition normalization/lifecycle, defensive copies, DecisionStatus, ValidationPlan, DecisionPage, and export behavior: 5 files, 15 tests; the added export side-effect test brings the focused export coverage to 3 export tests.
+- Full Vitest suite passes with no skipped core tests: 35 files, 284 tests.
+- TypeScript compilation pass: `tsc --noEmit` completed successfully before the dependency-directory guard interrupted later pnpm commands.
+- Export tests cover schema version, provenance, ruleset, corrections, economics scenarios, weights, conditions, report, limitations, deterministic serialization, deep defensive copies, and browser download side effects.
+- Playwright uses one project and executes 3 tests: one complete Demo test that iterates through 1440×900, 900×900, and 390×844 sequentially, plus two invalid-CSV tests.
+- Invalid CSV Playwright coverage includes exact file/row/field/reason diagnostics, active Demo preservation, and a separate no-active-data locked-route scenario.
+- Console errors, page errors, React warnings, duplicate-key warnings, and resource failures fail the browser tests. Only an exact `/favicon.ico` request is tracked separately.
 
 ## Browser-observed evidence
 
-- The active source remains visibly labelled `Demo data`.
+- The active source remains visibly labelled `Demo data` during the complete Demo flow.
 - `review_count` is displayed as review evidence, not sales.
-- Decision status is exposed with a semantic `status` or `alert` region and is not conveyed by color alone.
-- Decision conditions are editable as user-authored current-session text.
-- Only explicitly checked exact stop conditions are sent to the approved decision domain as triggered conditions.
-- Evidence references resolve to review records, named economics scenarios, or assumption explanations in a stable selected-evidence region.
-- JSON download is initiated by a user click and uses a deterministic file name.
-- The page includes a no-horizontal-overflow assertion at the minimum viewport.
+- Pain-point correction is performed through the real review queue, non-blank reason field, and Apply action; the corrected state is then visible.
+- Base economics is filled through the real editor and the calculated result is visible as an assumption-bound contribution, not realized profit.
+- Weight edits affect the current comparison and Restore defaults restores the visible default values and ranking state.
+- Decision conditions are entered through the page, including blank-line trimming, and only an explicitly checked exact stop condition produces Pause.
+- Review, economics, assumption, and opposition evidence references resolve in the selected evidence region.
+- Print mode retains source/status/limitations and hides the JSON interaction controls.
+- Keyboard focus reaches the JSON download control and the minimum viewport has no horizontal overflow.
+- The downloaded JSON is parsed from the actual downloaded file and includes the required top-level schema, provenance, ruleset, corrections, scenarios, weights, conditions, report, and limitations fields without React or browser-internal keys.
 
 ## Human-incomplete evidence
 
-The following are not completed by WorkBuddy and must not be represented as completed validation:
+The following remain incomplete and must not be represented as completed validation:
 
 - 50-review human audit and classification accuracy baseline;
 - user-authored weight sensitivity answers;

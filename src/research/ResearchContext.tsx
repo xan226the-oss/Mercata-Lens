@@ -127,10 +127,18 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
     pauseConditions: string[];
     stopConditions: string[];
   }) => {
+    const normalize = (values: readonly string[]) => {
+      const seen = new Set<string>();
+      return values.filter((value): value is string => typeof value === "string" && value.trim().length > 0).filter((value) => {
+        if (seen.has(value)) return false;
+        seen.add(value);
+        return true;
+      });
+    };
     setDecisionConditions({
-      continueConditions: [...conditions.continueConditions],
-      pauseConditions: [...conditions.pauseConditions],
-      stopConditions: [...conditions.stopConditions],
+      continueConditions: normalize(conditions.continueConditions),
+      pauseConditions: normalize(conditions.pauseConditions),
+      stopConditions: normalize(conditions.stopConditions),
     });
   }, []);
 

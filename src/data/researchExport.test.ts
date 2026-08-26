@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { buildResearchExport, serializeResearchExport } from "./researchExport";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { buildResearchExport, downloadResearchExport, serializeResearchExport } from "./researchExport";
 import type { ResearchExportInput } from "./researchExport";
 
 const input = {
@@ -30,5 +30,25 @@ describe("research export", () => {
     input.conditions.continueConditions.push("mutated");
     expect(output.corrections["r-1"].add).toEqual(["noise"]);
     expect(output.conditions.continueConditions).toEqual(["keep evidence traceable"]);
+  });
+
+  it("creates, downloads, and revokes a real JSON Blob URL", () => {
+    const originalCreate = URL.createObjectURL;
+    const originalRevoke = URL.revokeObjectURL;
+    URL.createObjectURL = vi.fn(() => "blob:test");
+    URL.revokeObjectURL = vi.fn();
+    const click = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => undefined);
+    const append = vi.spyOn(HTMLAnchorElement.prototype, "remove").mockImplementation(() => undefined);
+    downloadResearchExport(input, "acceptance.json");
+    const createObjectURL = URL.createObjectURL as ReturnType<typeof vi.fn>;
+    const revokeObjectURL = URL.revokeObjectURL as ReturnType<typeof vi.fn>;
+    expect(createObjectURL).toHaveBeenCalledWith(expect.objectContaining({ type: "application/json" }));
+    expect(click).toHaveBeenCalledOnce();
+    expect(append).toHaveBeenCalledOnce();
+    expect(revokeObjectURL).toHaveBeenCalledWith("blob:test");
+    URL.createObjectURL = originalCreate;
+    URL.revokeObjectURL = originalRevoke;
+    click.mockRestore();
+    append.mockRestore();
   });
 });

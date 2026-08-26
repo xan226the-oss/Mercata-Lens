@@ -1783,3 +1783,15 @@ input {
 .decision-export button { min-height: 40px; padding: 8px 14px; border: 1px solid var(--color-primary); border-radius: var(--radius-sm); background: var(--color-primary); color: #fff; cursor: pointer; font-weight: 600; }
 @media (max-width: 900px) { .decision-conditions__fields, .validation-plan__grid, .validation-plan__conditions { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 560px) { .decision-conditions__fields, .validation-plan__grid, .validation-plan__conditions { grid-template-columns: 1fr; } .decision-export { align-items: flex-start; flex-direction: column; } .decision-status, .decision-conditions, .validation-plan, .decision-evidence-focus, .decision-export { padding: 16px; } }
+@media print {
+  .decision-page .decision-conditions textarea,
+  .decision-page .decision-trigger-fieldset,
+  .decision-page .decision-export button { display: none; }
+  .decision-page .decision-status,
+  .decision-page .validation-plan,
+  .decision-page .decision-evidence-focus,
+  .decision-page .decision-export { break-inside: avoid; border-color: #777; color: #111; background: #fff; }
+  .decision-page .decision-status p,
+  .decision-page .validation-plan p,
+  .decision-page .decision-export p { color: #111; }
+}

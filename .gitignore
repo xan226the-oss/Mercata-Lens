@@ -30,3 +30,8 @@ pnpm-debug.log*
 
 # TypeScript build info
 *.tsbuildinfo
+
+# Model credentials stay local
+.env
+.env.*
+!.env.example

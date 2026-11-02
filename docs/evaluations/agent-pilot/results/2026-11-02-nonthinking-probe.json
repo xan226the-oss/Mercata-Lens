@@ -1,0 +1,25 @@
+{
+  "caseId": "T03",
+  "settings": {
+    "enable_thinking": false,
+    "max_tokens": 1024
+  },
+  "elapsedMs": 3640,
+  "reportedModel": "qwen3.7-plus",
+  "usage": {
+    "total_tokens": 3479,
+    "completion_tokens": 124,
+    "prompt_tokens": 3355,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "text_tokens": 3355
+    }
+  },
+  "contractPassed": true,
+  "answer": "单条评论无法证明产品绝对不会漏水。该评论仅反映特定用户在有限使用周期内的正面体验，提及密封件外观良好且未观察到泄漏。局限性在于：样本单一，缺乏长期耐久性数据，未覆盖极端使用场景或制造批次差异。其他评论中存在不同产品的泄漏报告，表明泄漏风险在同类产品中可能存在，但不能直接推导至该产品。需结合更多独立验证和长期测试来评估可靠性。引用存在不等于支持普遍结论，建议抽查原文以确认上下文。",
+  "reviewIds": [
+    "r027"
+  ],
+  "requestId": "nonthinking-probe-T03",
+  "revision": "probe"
+}

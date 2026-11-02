@@ -1,0 +1,401 @@
+{
+  "model": "qwen3.7-plus",
+  "calls": 20,
+  "output": [
+    {
+      "caseId": "T01",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 3855,
+      "contractPassed": false,
+      "error": "unverified_response",
+      "usage": {
+        "total_tokens": 3441,
+        "completion_tokens": 79,
+        "prompt_tokens": 3362,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3362
+        }
+      },
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T02",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 3096,
+      "contractPassed": false,
+      "error": "unverified_response",
+      "usage": {
+        "total_tokens": 3461,
+        "completion_tokens": 106,
+        "prompt_tokens": 3355,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3355
+        }
+      },
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T03",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 3466,
+      "contractPassed": false,
+      "error": "unverified_response",
+      "usage": {
+        "total_tokens": 3499,
+        "completion_tokens": 144,
+        "prompt_tokens": 3355,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "text_tokens": 3355
+        }
+      },
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T04",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 4736,
+      "contractPassed": false,
+      "error": "unverified_response",
+      "usage": {
+        "total_tokens": 3522,
+        "completion_tokens": 164,
+        "prompt_tokens": 3358,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3358
+        }
+      },
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T05",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 3170,
+      "contractPassed": false,
+      "error": "unverified_response",
+      "usage": {
+        "total_tokens": 3467,
+        "completion_tokens": 112,
+        "prompt_tokens": 3355,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3355
+        }
+      },
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T06",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 12412,
+      "contractPassed": false,
+      "error": "unverified_response",
+      "usage": {
+        "total_tokens": 4051,
+        "completion_tokens": 693,
+        "prompt_tokens": 3358,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3358
+        }
+      },
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T07",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 2820,
+      "contractPassed": false,
+      "error": "unverified_response",
+      "usage": {
+        "total_tokens": 3457,
+        "completion_tokens": 97,
+        "prompt_tokens": 3360,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3360
+        }
+      },
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T08",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 11783,
+      "contractPassed": false,
+      "error": "unverified_response",
+      "usage": {
+        "total_tokens": 4007,
+        "completion_tokens": 654,
+        "prompt_tokens": 3353,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3353
+        }
+      },
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T09",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 2916,
+      "contractPassed": false,
+      "error": "unverified_response",
+      "usage": {
+        "total_tokens": 3446,
+        "completion_tokens": 94,
+        "prompt_tokens": 3352,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3352
+        }
+      },
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T10",
+      "repeat": 1,
+      "status": "SKIPPED",
+      "reason": "Previous turn failed; not a valid contextual test",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T11",
+      "repeat": 1,
+      "status": "SKIPPED",
+      "reason": "Previous turn failed; not a valid contextual test",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T12",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 2724,
+      "contractPassed": false,
+      "error": "unverified_response",
+      "usage": {
+        "total_tokens": 3494,
+        "completion_tokens": 97,
+        "prompt_tokens": 3397,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3397
+        }
+      },
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T01",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 3203,
+      "contractPassed": false,
+      "error": "unverified_response",
+      "usage": {
+        "total_tokens": 3504,
+        "completion_tokens": 142,
+        "prompt_tokens": 3362,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "text_tokens": 3362
+        }
+      },
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T02",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 2465,
+      "contractPassed": false,
+      "error": "unverified_response",
+      "usage": {
+        "total_tokens": 3454,
+        "completion_tokens": 99,
+        "prompt_tokens": 3355,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "text_tokens": 3355
+        }
+      },
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T03",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 3145,
+      "contractPassed": true,
+      "missingExpectedIds": [],
+      "answer": "单条评论无法证明产品绝对不会漏水。该评论仅反映特定用户在有限使用周期内的正面体验，提及密封件外观良好且未观察到泄漏。局限在于样本单一、观察时间短，且其他评论中存在同一产品不同批次的泄漏报告或不同产品的泄漏案例，表明泄漏风险可能受个体差异、装配或使用条件影响。需结合更多长期测试和批次质量数据验证密封可靠性，不能仅凭此条排除潜在缺陷。",
+      "reviewIds": [
+        "r027"
+      ],
+      "usage": {
+        "total_tokens": 3470,
+        "completion_tokens": 115,
+        "prompt_tokens": 3355,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "text_tokens": 3355
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "区分暂未漏水与永久保证，不反向读成漏水投诉。"
+    },
+    {
+      "caseId": "T04",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 3485,
+      "contractPassed": false,
+      "error": "unverified_response",
+      "usage": {
+        "total_tokens": 3469,
+        "completion_tokens": 111,
+        "prompt_tokens": 3358,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "text_tokens": 3358
+        }
+      },
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T05",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 4235,
+      "contractPassed": false,
+      "error": "unverified_response",
+      "usage": {
+        "total_tokens": 3525,
+        "completion_tokens": 170,
+        "prompt_tokens": 3355,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "text_tokens": 3355
+        }
+      },
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T06",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 6441,
+      "contractPassed": false,
+      "error": "unverified_response",
+      "usage": {
+        "total_tokens": 3703,
+        "completion_tokens": 345,
+        "prompt_tokens": 3358,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "text_tokens": 3358
+        }
+      },
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T07",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 3238,
+      "contractPassed": false,
+      "error": "unverified_response",
+      "usage": {
+        "total_tokens": 3485,
+        "completion_tokens": 125,
+        "prompt_tokens": 3360,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "text_tokens": 3360
+        }
+      },
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T08",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 12232,
+      "contractPassed": false,
+      "error": "unverified_response",
+      "usage": {
+        "total_tokens": 4055,
+        "completion_tokens": 702,
+        "prompt_tokens": 3353,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "text_tokens": 3353
+        }
+      },
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T09",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 6947,
+      "contractPassed": false,
+      "error": "unverified_response",
+      "usage": {
+        "total_tokens": 3468,
+        "completion_tokens": 116,
+        "prompt_tokens": 3352,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "text_tokens": 3352
+        }
+      },
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T10",
+      "repeat": 2,
+      "status": "SKIPPED",
+      "reason": "Previous turn failed; not a valid contextual test",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T11",
+      "repeat": 2,
+      "status": "SKIPPED",
+      "reason": "Previous turn failed; not a valid contextual test",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T12",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 2794,
+      "contractPassed": false,
+      "error": "unverified_response",
+      "usage": {
+        "total_tokens": 3506,
+        "completion_tokens": 109,
+        "prompt_tokens": 3397,
+        "prompt_tokens_details": {
+          "cached_tokens": 2816,
+          "text_tokens": 3397
+        }
+      },
+      "humanReview": "PENDING"
+    }
+  ],
+  "scope": "synthetic demo; not market evidence; semantic judgments pending"
+}

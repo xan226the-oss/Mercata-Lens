@@ -1,0 +1,14 @@
+{
+  "resultFile": "2026-11-02T11-13-47.778Z.json",
+  "settings": {
+    "enable_thinking": false,
+    "max_tokens": 1024,
+    "temperature": 0,
+    "timeoutMs": 30000
+  },
+  "actualCalls": 20,
+  "data": "76 synthetic demo reviews",
+  "billingVerified": false,
+  "quotaProtection": "User confirmed free quota and provider stop-on-exhaustion enabled",
+  "semanticReview": "Codex assisted review; not independently human validated"
+}

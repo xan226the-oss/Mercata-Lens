@@ -1,0 +1,21 @@
+{
+  "settings": {
+    "enable_thinking": false,
+    "max_tokens": 1024
+  },
+  "caseId": "T01",
+  "httpStatus": 200,
+  "content": "{\n\"answer\": \"评论r001指出清洗困难，具体表现为内部存在容易积聚粘液的角落，且反复刷洗难以清除。这反映了结构设计可能导致清洁死角和生物膜残留的风险。可解决性假设包括优化内壁曲率以消除锐角、采用更易清洁的表面材料或提供专用清洁工具。待验证项需确认该结构问题是否普遍存在于同型号其他单元，以及不同清洁方式的有效性。引用内容仅来自r001原文，提醒用户抽查原文以确认具体结构细节。\",\n\"reviewIds\": [\n\"r001\"\n]\n}",
+  "usage": {
+    "total_tokens": 3491,
+    "completion_tokens": 129,
+    "prompt_tokens": 3362,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "text_tokens": 3362
+    }
+  },
+  "finishReason": "stop",
+  "contractPassed": false,
+  "elapsedMs": 3275
+}

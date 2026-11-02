@@ -1,3 +1,4 @@
+import { AgentWorkspace } from "../agent/AgentWorkspace";
 import { Routes, Route } from "react-router-dom";
 import { ResearchProvider } from "../research/ResearchContext";
 import { ResearchLayout } from "../research/ResearchLayout";
@@ -10,6 +11,7 @@ export default function App() {
       <ResearchProvider>
         <ResearchLayout>
           <Routes>
+            <Route path="/assistant" element={<AgentWorkspace />} />
             {researchRoutes.map((route, index) =>
               route.index ? (
                 <Route key={index} index element={route.element} />

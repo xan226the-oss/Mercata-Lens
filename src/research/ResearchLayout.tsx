@@ -59,7 +59,7 @@ export function ResearchLayout({ children }: { children: React.ReactNode }) {
   }
 
   function lockReasonFor(path: string): string | null {
-    if (path === "/" || path === "/quality") return null;
+    if (path === "/" || path === "/quality" || path === "/assistant") return null;
     const state = moduleStateFor(path);
     if (state === null) return language === "zh" ? "尚未加载研究数据。" : "No research data loaded yet.";
     if (state === "locked") {
@@ -109,6 +109,7 @@ export function ResearchLayout({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
+        <NavLink to="/assistant" className="research-nav__item">{language === "zh" ? "研究助手" : "Research assistant"}</NavLink>
         <p className="evidence-rule">{copy.evidenceRule}</p>
       </aside>
 
@@ -146,7 +147,7 @@ export function ResearchLayout({ children }: { children: React.ReactNode }) {
         </main>
 
         <footer className="workspace-footer">
-          {copy.localResearch}
+          {location.pathname === "/assistant" ? (language === "zh" ? "本地研究；模型调用需单独配置与费用授权。" : "Local research; model calls require configuration and cost authorization.") : copy.localResearch}
         </footer>
       </div>
     </div>

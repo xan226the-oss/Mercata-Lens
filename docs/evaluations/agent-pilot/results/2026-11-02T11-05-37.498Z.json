@@ -1,0 +1,424 @@
+{
+  "model": "qwen3.7-plus",
+  "calls": 23,
+  "output": [
+    {
+      "caseId": "T01",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 17942,
+      "contractPassed": true,
+      "missingExpectedIds": [],
+      "answer": "体验反馈指出产品内部存在角落设计，导致容易积聚黏液且难以彻底清洗。风险线索在于这种结构可能形成清洁死角，引发卫生隐患。可解决性假设认为，若优化内部结构以消除死角，或能改善清洁体验。待验证项包括评估结构修改对防黏液积聚的实际效果及对其他功能的潜在影响。请注意，引用存在不等于支持判断，建议抽查原文核实。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "total_tokens": 4387,
+        "completion_tokens": 1027,
+        "prompt_tokens": 3360,
+        "completion_tokens_details": {
+          "reasoning_tokens": 910,
+          "text_tokens": 1027
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3360
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "能说明角落与清洁负担，不编造销量、材质或改进效果。"
+    },
+    {
+      "caseId": "T02",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 25635,
+      "contractPassed": true,
+      "missingExpectedIds": [],
+      "answer": "该条评论明确肯定了产品的安静表现。原文提到产品运行极其安静，且没有电机噪音，宠物在饮水时未受到噪音干扰。这属于正面的体验反馈，表明水泵或电机在运行时的噪音控制得到了用户的认可。需要注意的是，个别体验反馈不能代表整体产品的噪音表现，建议结合其他关于噪音的评论进行综合评估，并抽查原文以确认具体使用场景。",
+      "reviewIds": [
+        "r016"
+      ],
+      "usage": {
+        "total_tokens": 4889,
+        "completion_tokens": 1536,
+        "prompt_tokens": 3353,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1425,
+          "text_tokens": 1536
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3353
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "识别否定语境，不因出现noise就判定噪音投诉。"
+    },
+    {
+      "caseId": "T03",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 30010,
+      "contractPassed": false,
+      "error": "upstream_unavailable",
+      "usage": null,
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T04",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 30005,
+      "contractPassed": false,
+      "error": "upstream_unavailable",
+      "usage": null,
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T05",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 14690,
+      "contractPassed": true,
+      "missingExpectedIds": [],
+      "answer": "仅根据提供的水泵故障描述，无法认定存在触电危险。该评论仅反馈了水泵在使用一段时间后停止工作的体验，未提及任何漏电、短路、冒烟或触电等电气安全风险线索。证据不足以支持触电危险的结论。待验证项包括需要进一步调查水泵停止工作的具体原因，并验证其内部绝缘和防水设计是否存在导致漏电的潜在风险。",
+      "reviewIds": [
+        "r030"
+      ],
+      "usage": {
+        "total_tokens": 4188,
+        "completion_tokens": 835,
+        "prompt_tokens": 3353,
+        "completion_tokens_details": {
+          "reasoning_tokens": 727,
+          "text_tokens": 835
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3353
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "不把停止工作推导为已证实的电气安全事故。"
+    },
+    {
+      "caseId": "T06",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 30003,
+      "contractPassed": false,
+      "error": "upstream_unavailable",
+      "usage": null,
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T07",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 30003,
+      "contractPassed": false,
+      "error": "upstream_unavailable",
+      "usage": null,
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T08",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 30335,
+      "contractPassed": false,
+      "error": "upstream_unavailable",
+      "usage": null,
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T09",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 22043,
+      "contractPassed": true,
+      "missingExpectedIds": [],
+      "answer": "该评论反馈产品内部清洁困难，指出内部结构存在死角容易积聚污垢，且难以通过反复擦洗清除。这提示产品设计可能存在卫生风险，死角结构可能导致污垢残留。假设通过优化内部结构、消除尖锐转角或死角设计可改善清洁体验，但此假设尚待验证，需确认结构修改是否能彻底解决污垢积聚问题且不影响产品原有功能。请注意，引用存在不等于支持判断，建议抽查原文以获取完整上下文。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "total_tokens": 4603,
+        "completion_tokens": 1253,
+        "prompt_tokens": 3350,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1145,
+          "text_tokens": 1253
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3350
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "建立本轮特定评论上下文。"
+    },
+    {
+      "caseId": "T10",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 30006,
+      "contractPassed": false,
+      "error": "upstream_unavailable",
+      "usage": null,
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T11",
+      "repeat": 1,
+      "status": "SKIPPED",
+      "reason": "Previous turn failed; not a valid contextual test",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T12",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 26698,
+      "contractPassed": true,
+      "missingExpectedIds": [],
+      "answer": "人工标签修正属于用户注释，并非市场事实。针对指定评论的原文内容仅描述了清洁困难以及内部角落容易积聚污垢的问题，并未提及任何关于噪音或声音方面的体验反馈。因此，原文并没有说明噪音问题，人工添加的噪音标签与原文证据不符。在分析时已严格区分人工注释与原文实际内容，未将人工标签视为真实的市场反馈。建议用户抽查原文以核实标签与文本的一致性。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "total_tokens": 4756,
+        "completion_tokens": 1361,
+        "prompt_tokens": 3395,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1255,
+          "text_tokens": 1361
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3395
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "识别人工注释与原文不一致，不伪造噪音原话；新版本不携带旧对话。"
+    },
+    {
+      "caseId": "T01",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 21240,
+      "contractPassed": true,
+      "missingExpectedIds": [],
+      "answer": "该评论反映产品内部存在角落设计，导致容易积聚黏液且难以彻底清洗。这提示内部结构可能存在清洁死角，带来卫生风险。假设通过优化内部形状、消除死角可改善清洁体验，但此假设尚待验证，需确认结构修改后是否仍能满足原有功能且真正防止污垢积聚。请注意，个别评论的引用存在不代表支持整体判断，建议抽查原文核实。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "total_tokens": 4628,
+        "completion_tokens": 1268,
+        "prompt_tokens": 3360,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1153,
+          "text_tokens": 1268
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3360
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "能说明角落与清洁负担，不编造销量、材质或改进效果。"
+    },
+    {
+      "caseId": "T02",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 30001,
+      "contractPassed": false,
+      "error": "upstream_unavailable",
+      "usage": null,
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T03",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 30003,
+      "contractPassed": false,
+      "error": "upstream_unavailable",
+      "usage": null,
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T04",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 30003,
+      "contractPassed": false,
+      "error": "upstream_unavailable",
+      "usage": null,
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T05",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 14730,
+      "contractPassed": true,
+      "missingExpectedIds": [],
+      "answer": "根据提供的水泵故障描述，仅提及设备在使用后停止工作，并未涉及漏电、绝缘失效或水与带电部件接触等与触电相关的具体现象。因此，证据不足以认定存在触电危险。需要更多涉及电气安全或漏电现象的反馈才能进行相关风险评估。",
+      "reviewIds": [
+        "r030"
+      ],
+      "usage": {
+        "total_tokens": 4194,
+        "completion_tokens": 841,
+        "prompt_tokens": 3353,
+        "completion_tokens_details": {
+          "reasoning_tokens": 752,
+          "text_tokens": 841
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3353
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "不把停止工作推导为已证实的电气安全事故。"
+    },
+    {
+      "caseId": "T06",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 30002,
+      "contractPassed": false,
+      "error": "upstream_unavailable",
+      "usage": null,
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T07",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 30003,
+      "contractPassed": false,
+      "error": "upstream_unavailable",
+      "usage": null,
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T08",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 30002,
+      "contractPassed": false,
+      "error": "upstream_unavailable",
+      "usage": null,
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T09",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 22642,
+      "contractPassed": true,
+      "missingExpectedIds": [],
+      "answer": "体验反馈：用户反映产品内部清洁困难，特定角落容易积聚污垢，无论怎样擦洗都难以彻底清除。风险线索：内部结构存在卫生死角，可能导致污垢残留和细菌滋生，影响产品卫生安全及用户维护意愿。可解决性假设：优化内部结构设计，消除直角或凹陷区域，采用平滑过渡或易拆洗设计，可能降低清洁难度。待验证项：需核实内部角落的具体分布与形态，评估结构改造对整体功能及生产成本的影响，并确认平滑设计是否真能解决污垢残留问题。提醒用户抽查原文以确认具体细节。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "total_tokens": 4713,
+        "completion_tokens": 1363,
+        "prompt_tokens": 3350,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1210,
+          "text_tokens": 1363
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3350
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "建立本轮特定评论上下文。"
+    },
+    {
+      "caseId": "T10",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 17271,
+      "contractPassed": true,
+      "missingExpectedIds": [],
+      "answer": "体验反馈：用户指出产品内部存在容易积聚污垢的角落，导致清洁困难。风险线索：内部角落设计可能导致污垢残留，影响卫生状况，降低用户维护体验。可解决性假设：若优化内部结构，消除易藏污纳垢的角落，采用平滑过渡设计，可能改善清洁体验。待验证项：需核实内部角落的具体位置与形态，评估结构改造的可行性，并确认平滑设计是否能彻底解决污垢残留问题。提醒用户抽查原文以确认具体细节。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "total_tokens": 4498,
+        "completion_tokens": 1002,
+        "prompt_tokens": 3496,
+        "completion_tokens_details": {
+          "reasoning_tokens": 866,
+          "text_tokens": 1002
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3496
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "继承上一轮r001上下文，不换商品或引用。"
+    },
+    {
+      "caseId": "T11",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "elapsedMs": 30001,
+      "contractPassed": false,
+      "error": "upstream_unavailable",
+      "usage": null,
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T12",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 18257,
+      "contractPassed": true,
+      "missingExpectedIds": [],
+      "answer": "人工标签修正中为特定评论添加了噪音标签，但该评论的原文仅描述了清洁困难以及内部死角容易残留污垢的问题，并未提及任何关于噪音或声音的内容。因此，原文并没有说明噪音问题，人工添加的噪音标签与原文证据不符，属于不一致标注。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "total_tokens": 4469,
+        "completion_tokens": 1074,
+        "prompt_tokens": 3395,
+        "completion_tokens_details": {
+          "reasoning_tokens": 985,
+          "text_tokens": 1074
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3395
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "识别人工注释与原文不一致，不伪造噪音原话；新版本不携带旧对话。"
+    }
+  ],
+  "scope": "synthetic demo; not market evidence; semantic judgments pending"
+}

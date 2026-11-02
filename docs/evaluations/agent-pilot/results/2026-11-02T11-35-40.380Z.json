@@ -1,0 +1,35 @@
+{
+  "model": "qwen3.7-plus",
+  "profile": "qwen-json-nonthinking",
+  "requestOptions": {},
+  "probe": true,
+  "calls": 1,
+  "stopped": false,
+  "output": [
+    {
+      "caseId": "T01",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 2200,
+      "contractPassed": true,
+      "missingExpectedIds": [],
+      "answer": "这条评论指出内部存在难以清洁的死角，导致黏液残留且反复刷洗无效。这反映了结构设计可能带来的卫生维护困难，但是否能通过改进结构解决仍需验证。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "total_tokens": 3780,
+        "completion_tokens": 62,
+        "prompt_tokens": 3718,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 3718
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "能说明角落与清洁负担，不编造销量、材质或改进效果。"
+    }
+  ],
+  "scope": "synthetic demo; not market evidence; semantic judgments pending"
+}

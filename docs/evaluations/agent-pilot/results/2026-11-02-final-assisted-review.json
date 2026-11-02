@@ -1,0 +1,150 @@
+{
+  "reviewer": "Codex assisted review, not independent human validation",
+  "resultFile": "2026-11-02T11-40-41.087Z.json",
+  "rows": [
+    {
+      "caseId": "T01",
+      "repeat": 1,
+      "status": "ASSISTED_REVIEW_OK",
+      "note": "本次Codex辅助核对未发现关键方向性错误，仍不等同独立人工验收。"
+    },
+    {
+      "caseId": "T02",
+      "repeat": 1,
+      "status": "ASSISTED_REVIEW_OK",
+      "note": "本次Codex辅助核对未发现关键方向性错误，仍不等同独立人工验收。"
+    },
+    {
+      "caseId": "T03",
+      "repeat": 1,
+      "status": "NEEDS_REVIEW",
+      "note": "正文补充其他样本反馈，却未列出对应评论；虽可在数据中找到相关信息，引用链仍不完整。"
+    },
+    {
+      "caseId": "T04",
+      "repeat": 1,
+      "status": "NEEDS_REVIEW",
+      "note": "正文补充其他样本反馈，却未列出对应评论；虽可在数据中找到相关信息，引用链仍不完整。"
+    },
+    {
+      "caseId": "T05",
+      "repeat": 1,
+      "status": "ASSISTED_REVIEW_OK",
+      "note": "本次Codex辅助核对未发现关键方向性错误，仍不等同独立人工验收。"
+    },
+    {
+      "caseId": "T06",
+      "repeat": 1,
+      "status": "SYSTEM_NOTICE",
+      "note": "服务端固定文案，非模型自由生成的事实解释。"
+    },
+    {
+      "caseId": "T07",
+      "repeat": 1,
+      "status": "ASSISTED_REVIEW_OK",
+      "note": "本次Codex辅助核对未发现关键方向性错误，仍不等同独立人工验收。"
+    },
+    {
+      "caseId": "T08",
+      "repeat": 1,
+      "status": "SYSTEM_NOTICE",
+      "note": "服务端固定文案，非模型自由生成的事实解释。"
+    },
+    {
+      "caseId": "T09",
+      "repeat": 1,
+      "status": "ASSISTED_REVIEW_OK",
+      "note": "本次Codex辅助核对未发现关键方向性错误，仍不等同独立人工验收。"
+    },
+    {
+      "caseId": "T10",
+      "repeat": 1,
+      "status": "ASSISTED_REVIEW_OK",
+      "note": "本次Codex辅助核对未发现关键方向性错误，仍不等同独立人工验收。"
+    },
+    {
+      "caseId": "T11",
+      "repeat": 1,
+      "status": "ASSISTED_REVIEW_OK",
+      "note": "本次Codex辅助核对未发现关键方向性错误，仍不等同独立人工验收。"
+    },
+    {
+      "caseId": "T12",
+      "repeat": 1,
+      "status": "ASSISTED_REVIEW_OK",
+      "note": "本次Codex辅助核对未发现关键方向性错误，仍不等同独立人工验收。"
+    },
+    {
+      "caseId": "T01",
+      "repeat": 2,
+      "status": "ASSISTED_REVIEW_OK",
+      "note": "本次Codex辅助核对未发现关键方向性错误，仍不等同独立人工验收。"
+    },
+    {
+      "caseId": "T02",
+      "repeat": 2,
+      "status": "ASSISTED_REVIEW_OK",
+      "note": "本次Codex辅助核对未发现关键方向性错误，仍不等同独立人工验收。"
+    },
+    {
+      "caseId": "T03",
+      "repeat": 2,
+      "status": "NEEDS_REVIEW",
+      "note": "正文补充其他样本反馈，却未列出对应评论；虽可在数据中找到相关信息，引用链仍不完整。"
+    },
+    {
+      "caseId": "T04",
+      "repeat": 2,
+      "status": "REJECTED",
+      "note": "正文带评论编号，被现有数字/编号校验拦截；没有展示给用户。"
+    },
+    {
+      "caseId": "T05",
+      "repeat": 2,
+      "status": "ASSISTED_REVIEW_OK",
+      "note": "本次Codex辅助核对未发现关键方向性错误，仍不等同独立人工验收。"
+    },
+    {
+      "caseId": "T06",
+      "repeat": 2,
+      "status": "SYSTEM_NOTICE",
+      "note": "服务端固定文案，非模型自由生成的事实解释。"
+    },
+    {
+      "caseId": "T07",
+      "repeat": 2,
+      "status": "ASSISTED_REVIEW_OK",
+      "note": "本次Codex辅助核对未发现关键方向性错误，仍不等同独立人工验收。"
+    },
+    {
+      "caseId": "T08",
+      "repeat": 2,
+      "status": "SYSTEM_NOTICE",
+      "note": "服务端固定文案，非模型自由生成的事实解释。"
+    },
+    {
+      "caseId": "T09",
+      "repeat": 2,
+      "status": "ASSISTED_REVIEW_OK",
+      "note": "本次Codex辅助核对未发现关键方向性错误，仍不等同独立人工验收。"
+    },
+    {
+      "caseId": "T10",
+      "repeat": 2,
+      "status": "ASSISTED_REVIEW_OK",
+      "note": "本次Codex辅助核对未发现关键方向性错误，仍不等同独立人工验收。"
+    },
+    {
+      "caseId": "T11",
+      "repeat": 2,
+      "status": "NEEDS_REVIEW",
+      "note": "正文补充其他样本反馈，却未列出对应评论；虽可在数据中找到相关信息，引用链仍不完整。"
+    },
+    {
+      "caseId": "T12",
+      "repeat": 2,
+      "status": "ASSISTED_REVIEW_OK",
+      "note": "本次Codex辅助核对未发现关键方向性错误，仍不等同独立人工验收。"
+    }
+  ]
+}

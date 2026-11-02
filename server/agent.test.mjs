@@ -49,3 +49,16 @@ test('explicit frontend port is accepted without allowing arbitrary origins',asy
   assert.equal((await fetch(base+'/api/agent/status',{headers:{Origin:'http://127.0.0.1:3001'}})).status,403);
  }finally{await new Promise(r=>server.close(r));}
 });
+test('qwen profile is explicit, restricted to Bailian HTTPS and sends nonthinking JSON with total output bound',async()=>{
+ const env={MODEL_CALLS_ENABLED:'true',MODEL_ENDPOINT:'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',MODEL_NAME:'qwen3.7-plus',MODEL_API_KEY:'secret',MODEL_PROFILE:'qwen-json-nonthinking'};
+ const config=readConfig(env);assert.equal(config.enabled,true);
+ for(const change of [{MODEL_ENDPOINT:'https://evil.example/chat'},{MODEL_NAME:'other'},{MODEL_PROFILE:'typo'},{MODEL_ENDPOINT:'http://localhost/chat'}])assert.equal(readConfig({...env,...change}).enabled,false);
+ let sent;const fake=async(u,o)=>{sent=JSON.parse(o.body);return new Response(JSON.stringify({choices:[{message:{content:JSON.stringify({answer:'样本反映清洁困难，改进效果尚待验证。',reviewIds:['r001']})}}]}));};
+ await runModel(valid,config,fake);assert.equal(sent.enable_thinking,false);assert.equal(sent.response_format.type,'json_object');assert.equal(sent.max_completion_tokens,1024);assert.equal(sent.max_tokens,undefined);assert.ok(sent.messages[0].content.includes('批次'));assert.ok(sent.messages[0].content.includes('这条评论'));
+ await runModel(valid,{...config,profile:''},fake);assert.equal(sent.enable_thinking,undefined);assert.equal(sent.response_format,undefined);
+});
+test('scope notices use fixed system text, never uncited model claims',()=>{
+ const reply=validateReply({scopeNotice:'demo_provenance',answer:'这是编造内容99',reviewIds:[]});
+ assert.equal(reply.scopeNotice,'demo_provenance');assert.ok(reply.answer.includes('模拟'));assert.equal(reply.answer.includes('99'),false);
+ for(const value of [{scopeNotice:'unknown',answer:'x',reviewIds:[]},{scopeNotice:'demo_provenance',answer:'x',reviewIds:['r001']},{answer:'无引用分析',reviewIds:[]}])assert.throws(()=>validateReply(value));
+});

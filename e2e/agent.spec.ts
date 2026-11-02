@@ -63,3 +63,11 @@ test('Chinese assistant navigation text stays inside the active link at all view
   expect(fits,`Chinese label must fit its selected link at ${width}px`).toBe(true);
  }
 });
+test('canonical scope notice is labeled as system content without fabricated review references',async({page})=>{
+ await page.route('**/api/agent/status',r=>r.fulfill({json:{enabled:true}}));
+ await page.route('**/api/agent/chat',async r=>{const b=r.request().postDataJSON();await r.fulfill({json:{requestId:b.requestId,revision:b.revision,scopeNotice:'demo_provenance',answer:'这些数据是项目内置的模拟演示样本，并非从真实平台采集，不能代表美国市场消费者。',reviewIds:[]}});});
+ await page.goto('/assistant');await expect(page.getByText(/Model enabled/)).toBeVisible();
+ await page.getByLabel('Question',{exact:true}).fill('Are these real reviews?');await page.getByRole('button',{name:'Send',exact:true}).click();
+ const message=page.locator('.agent-message-assistant');await expect(message.getByText('System scope notice',{exact:true})).toBeVisible();
+ await expect(message.getByRole('button',{name:/View review/})).toHaveCount(0);
+});

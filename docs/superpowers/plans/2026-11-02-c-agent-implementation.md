@@ -16,29 +16,32 @@
 
 ## Task 1 本地接口与输出契约
 文件：server/agent.mjs、server/agent.test.mjs、.env.example、package.json、vite.config.ts、.gitignore。
-- [ ] 先写Node测试：未配置与未授权调用被拒绝、请求来源与大小受限、未知引用拒绝、上游失败不泄漏密钥、结构化响应引用校验。
-- [ ] 执行node --test server/agent.test.mjs，确认缺失实现导致失败。
-- [ ] 实现GET /api/agent/status与POST /api/agent/chat；配置MODEL_ENDPOINT、MODEL_NAME、MODEL_API_KEY和MODEL_CALLS_ENABLED=true才启用。
-- [ ] 验证结构化answer/reviewIds，核对demo原文及标签快照，限制历史和字段长度、请求超时、响应体大小。
-- [ ] 模型提示区分数据与指令，拒绝外部数据和未知引用；文案数字不由模型生成，统计在前端固定区域展示。
-- [ ] 添加本地服务启动脚本及Vite代理，测试通过并提交。
+- [x] 先写Node测试：未配置与未授权调用被拒绝、请求来源与大小受限、未知引用拒绝、上游失败不泄漏密钥、结构化响应引用校验。
+- [x] 执行node --test server/agent.test.mjs，确认缺失实现导致失败。
+- [x] 实现GET /api/agent/status与POST /api/agent/chat；配置MODEL_ENDPOINT、MODEL_NAME、MODEL_API_KEY和MODEL_CALLS_ENABLED=true才启用。
+- [x] 验证结构化answer/reviewIds，核对demo原文及标签快照，限制历史和字段长度、请求超时、响应体大小。
+- [x] 模型提示区分数据与指令，拒绝外部数据和未知引用；文案数字不由模型生成，统计在前端固定区域展示。
+- [x] 添加本地服务启动脚本及Vite代理，测试通过并提交。
 
 ## Task 2 前端会话与双栏
 文件：src/agent/contract.ts、src/agent/contract.test.ts、src/agent/AgentWorkspace.tsx、src/agent/AgentWorkspace.test.tsx、src/agent/agent.css、src/app/App.tsx、src/research/ResearchLayout.tsx。
 契约：请求question、revision、requestId、sourceKind、history、当前评论与有效标签；响应answer、reviewIds、revision、requestId。研究或纠错对象变化使旧请求失效。
-- [ ] 先写测试：阻止空输入和并发、旧响应丢弃、无效引用阻断、未配置不可发送、失败保留输入、窄屏切换证据。
-- [ ] 执行聚焦Vitest，确认失败，再实现最小代码。
-- [ ] 复用现有分类、纠错与ResearchContext；点击引用定位原文、可返回；修改原因必填，应用后旧解释失效。
-- [ ] 状态与消息均清楚区分模型结果和规则结果；历史只发送当前版本已验证结果。
-- [ ] 追加/assistant路由，不改变原有六条路径契约；添加双语入口与基本文案。
-- [ ] 通过聚焦测试并提交。
+- [x] 先写测试：阻止空输入和并发、旧响应丢弃、无效引用阻断、未配置不可发送、失败保留输入、窄屏切换证据。
+- [x] 执行聚焦Vitest，确认失败，再实现最小代码。
+- [x] 复用现有分类、纠错与ResearchContext；点击引用定位原文、可返回；修改原因必填，应用后旧解释失效。
+- [x] 状态与消息均清楚区分模型结果和规则结果；历史只发送当前版本已验证结果。
+- [x] 追加/assistant路由，不改变原有六条路径契约；添加双语入口与基本文案。
+- [x] 通过聚焦测试并提交。
 
 ## Task 3 集成验证与交付
 文件：e2e/agent.spec.ts、README.md、docs/evidence/agent-integration-2026-11-02.md。
-- [ ] 使用本地测试替身验证三轮上下文、引用、纠错失效和超时恢复；明确这不是模型实测。
-- [ ] 浏览器检查390、900、1440px下布局、引用切换、无模型降级；原有规则流程回归。
-- [ ] 执行npm test、node --test server/agent.test.mjs、npm run build及适当Playwright测试。
-- [ ] 审查diff与密钥边界，记录真实命令结果、局限与模型待配置事项；提交代码与验收记录。
+- [x] 使用本地测试替身验证三轮上下文、引用、纠错失效和超时恢复；明确这不是模型实测。
+- [x] 浏览器检查390、900、1440px下布局、引用切换、无模型降级；原有规则流程回归。
+- [x] 执行npm test、node --test server/agent.test.mjs、npm run build及适当Playwright测试。
+- [x] 审查diff与密钥边界，记录真实命令结果、局限与模型待配置事项；提交代码与验收记录。
 
 ## 真实模型验收后续
 待用户提供服务商与费用授权后，在本地安全配置密钥，运行真实三轮与接口成功率、延迟、引用语义支持测试。本批不能将这些项目标记为通过。
+
+## 执行结果
+本批三项任务已执行，详见docs/evidence/agent-integration-2026-11-02.md。真实模型验收后续仍未执行；不计入本批已完成项。独立复核发现的两项P2已修复并获APPROVED。

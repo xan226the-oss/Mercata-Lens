@@ -97,6 +97,7 @@ export function ResearchLayout({ children }: { children: React.ReactNode }) {
               <NavLink
                 key={step.path}
                 to={step.path}
+                aria-label={copy.nav[index]}
                 end={step.path === "/"}
                 className={({ isActive }) =>
                   `research-nav__item${isActive ? " research-nav__item--active" : ""}`
@@ -109,7 +110,7 @@ export function ResearchLayout({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
-        <NavLink to="/assistant" className="research-nav__item">{language === "zh" ? "研究助手" : "Research assistant"}</NavLink>
+        <NavLink to="/assistant" aria-label={language === "zh" ? "研究助手" : "Research assistant"} className={({ isActive }) => `research-nav__item research-nav__assistant${isActive ? " research-nav__item--active" : ""}`}>{language === "zh" ? "研究助手" : "Research assistant"}</NavLink>
         <p className="evidence-rule">{copy.evidenceRule}</p>
       </aside>
 

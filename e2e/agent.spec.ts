@@ -9,7 +9,7 @@ test('three contextual turns with a transport stub, citation focus, correction i
   const b=r.request().postDataJSON();requests.push(b);
   await r.fulfill({json:{requestId:b.requestId,revision:b.revision,answer:'这条模拟评论提到内部角落难以清洁，不能据此决定采购。',reviewIds:['r001']}});
  });
- await page.goto('/assistant');await expect(page.getByText(/Model ready/)).toBeVisible();
+ await page.goto('/assistant');await expect(page.getByText(/Model enabled/)).toBeVisible();
  for(const [i,question] of ['What cleaning issues occur?','Show the original and limits.','What still needs validation?'].entries()){
   await page.getByLabel('Question',{exact:true}).fill(question);await page.getByRole('button',{name:'Send',exact:true}).click();
   await expect(page.locator('.agent-message-assistant')).toHaveCount(i+1);
@@ -20,6 +20,12 @@ test('three contextual turns with a transport stub, citation focus, correction i
  await expect(page.getByRole('button',{name:'Apply and recalculate'})).toBeDisabled();
  await page.getByLabel('Correction reason',{exact:true}).fill('Manual test judgment for synthetic demo, not a human accuracy audit.');
  await page.getByRole('button',{name:'Apply and recalculate'}).click();await expect(page.locator('.agent-stale')).toHaveCount(6);
+ await page.getByLabel('Question',{exact:true}).fill('Explain after the correction.');
+ await page.getByRole('button',{name:'Send',exact:true}).click();
+ await expect(page.locator('.agent-message-assistant')).toHaveCount(4);
+ expect(requests[3].history).toEqual([]);
+ expect(requests[3].revision).not.toBe(requests[2].revision);
+ expect(requests[3].corrections[0]).toMatchObject({reviewId:'r001',add:['noise']});
  await fs.mkdir('/tmp/mercata-agent-screens',{recursive:true});
  for(const width of [1440,900,390]){
   await page.setViewportSize({width,height:900});

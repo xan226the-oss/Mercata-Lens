@@ -29,14 +29,14 @@ it('disabled model never sends a question and leaves evidence available',async()
  expect(await screen.findByText(/Hard to clean/)).toBeInTheDocument();
 });
 it('shows a verified reply and opens the cited original',async()=>{
- handler=async b=>reply(b);const user=setup();await screen.findByText(/Model ready/);
+ handler=async b=>reply(b);const user=setup();await screen.findByText(/Model enabled/);
  await user.type(screen.getByLabelText('Question'),'cleaning');await user.click(screen.getByRole('button',{name:'Send'}));
  await screen.findByText('这条模拟样本提到清洗困难。');await user.click(screen.getByRole('button',{name:'View review r001'}));
  await waitFor(()=>expect(screen.getByRole('heading',{name:'Original evidence r001'})).toHaveFocus());
 });
 it('rejects stale replies after a correction even when transport ignores abort',async()=>{
  let resolve!:(r:Response)=>void;let request:any;
- handler=b=>{request=b;return new Promise(r=>{resolve=r;});};const user=setup();await screen.findByText(/Model ready/);
+ handler=b=>{request=b;return new Promise(r=>{resolve=r;});};const user=setup();await screen.findByText(/Model enabled/);
  await user.type(screen.getByLabelText('Question'),'cleaning');await user.click(screen.getByRole('button',{name:'Send'}));
  await user.click(screen.getByRole('button',{name:'change revision'}));
  await act(async()=>resolve(reply(request)));
@@ -44,12 +44,18 @@ it('rejects stale replies after a correction even when transport ignores abort',
  await waitFor(()=>expect(screen.getByRole('button',{name:'Send'})).toBeEnabled());
 });
 it('preserves draft and offers retry after failure',async()=>{
- handler=async()=>new Response(JSON.stringify({error:'upstream_unavailable'}),{status:502});const user=setup();await screen.findByText(/Model ready/);
+ handler=async()=>new Response(JSON.stringify({error:'upstream_unavailable'}),{status:502});const user=setup();await screen.findByText(/Model enabled/);
  await user.type(screen.getByLabelText('Question'),'cleaning');await user.click(screen.getByRole('button',{name:'Send'}));
  await screen.findByRole('button',{name:'Retry'});expect(screen.getByLabelText('Question')).toHaveValue('cleaning');
 });
 it('blocks fabricated citations',async()=>{
  handler=async b=>new Response(JSON.stringify({answer:'unsafe answer',reviewIds:['fake'],requestId:b.requestId,revision:b.revision}));
- const user=setup();await screen.findByText(/Model ready/);await user.type(screen.getByLabelText('Question'),'cleaning');await user.click(screen.getByRole('button',{name:'Send'}));
+ const user=setup();await screen.findByText(/Model enabled/);await user.type(screen.getByLabelText('Question'),'cleaning');await user.click(screen.getByRole('button',{name:'Send'}));
  await screen.findByRole('alert');expect(screen.queryByText('unsafe answer')).not.toBeInTheDocument();
+});
+it('supports arrow-key navigation between the narrow-screen content tabs',async()=>{
+ const user=setup();await screen.findByText(/Model enabled/);
+ const dialogue=screen.getByRole('tab',{name:'Dialogue'});dialogue.focus();await user.keyboard('{ArrowRight}');
+ expect(screen.getByRole('tab',{name:'Evidence'})).toHaveFocus();
+ expect(screen.getByRole('tab',{name:'Evidence'})).toHaveAttribute('aria-selected','true');
 });

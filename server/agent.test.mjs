@@ -35,3 +35,17 @@ test('HTTP disabled mode, origin, host, header and size guards',async()=>{
   assert.equal((await fetch(base+'/api/agent/chat',{method:'POST',headers,body:'x'.repeat(70000)})).status,413);
  } finally {await new Promise(r=>server.close(r));}
 });
+test('aborted request body does not produce an unhandled rejection or stop the gateway',async()=>{
+ const {connect}=await import('node:net');const server=createAgentServer({enabled:false});await new Promise(r=>server.listen(0,'127.0.0.1',r));const port=server.address().port;
+ try {
+  await new Promise(resolve=>{const socket=connect(port,'127.0.0.1',()=>{socket.write('POST /api/agent/chat HTTP/1.1\r\nHost: 127.0.0.1:'+port+'\r\nContent-Type: application/json\r\nX-Mercata-Agent: 1\r\nContent-Length: 1000\r\n\r\n{"question":');setTimeout(()=>socket.destroy(),10);});socket.on('close',resolve);});
+  await new Promise(r=>setTimeout(r,20));assert.equal((await fetch(`http://127.0.0.1:${port}/api/agent/status`)).status,200);
+ }finally{await new Promise(r=>server.close(r));}
+});
+test('explicit frontend port is accepted without allowing arbitrary origins',async()=>{
+ const server=createAgentServer(readConfig({PORT:'3000'}));await new Promise(r=>server.listen(0,'127.0.0.1',r));const base=`http://127.0.0.1:${server.address().port}`;
+ try {
+  assert.equal((await fetch(base+'/api/agent/status',{headers:{Origin:'http://127.0.0.1:3000'}})).status,200);
+  assert.equal((await fetch(base+'/api/agent/status',{headers:{Origin:'http://127.0.0.1:3001'}})).status,403);
+ }finally{await new Promise(r=>server.close(r));}
+});

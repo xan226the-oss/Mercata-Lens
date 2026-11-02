@@ -11,7 +11,7 @@ const fail=(code)=>{throw new Error(code);};
 export function readConfig(env=process.env){
  const endpoint=env.MODEL_ENDPOINT??'';let valid=false;
  try {const u=new URL(endpoint);valid=!u.username&&!u.password&&(u.protocol==='https:'||(u.protocol==='http:'&&['127.0.0.1','localhost'].includes(u.hostname)));} catch { /* incomplete config is disabled */ }
- return {enabled:env.MODEL_CALLS_ENABLED==='true'&&valid&&Boolean(env.MODEL_NAME&&env.MODEL_API_KEY),endpoint,model:env.MODEL_NAME??'',key:env.MODEL_API_KEY??''};
+ return {enabled:env.MODEL_CALLS_ENABLED==='true'&&valid&&Boolean(env.MODEL_NAME&&env.MODEL_API_KEY),endpoint,model:env.MODEL_NAME??'',key:env.MODEL_API_KEY??'',frontendPort:Number(env.PORT)||5173};
 }
 /** Validate all client-controlled context; raw uploaded reviews are never accepted. */
 export function validateRequest(b){
@@ -51,12 +51,16 @@ export function createAgentServer(config=readConfig(),fetcher=fetch){
   const send=(status,data)=>{res.writeHead(status);res.end(JSON.stringify(data));};
   const host=req.headers.host??'';let hostname;try{hostname=new URL('http://'+host).hostname;}catch{return send(403,{error:'forbidden'});}
   const origin=req.headers.origin;
-  if(!['127.0.0.1','localhost'].includes(hostname)||origin&&!['http://127.0.0.1:5173','http://localhost:5173','http://127.0.0.1:4173','http://localhost:4173'].includes(origin))return send(403,{error:'forbidden'});
+  const trustedOrigins=[...new Set([config.frontendPort??5173,4173])].flatMap(port=>[`http://127.0.0.1:${port}`,`http://localhost:${port}`]);
+  if(!['127.0.0.1','localhost'].includes(hostname)||origin&&!trustedOrigins.includes(origin))return send(403,{error:'forbidden'});
   if(req.url==='/api/agent/status'&&req.method==='GET')return send(200,{enabled:config.enabled,sourceKind:'demo'});
   if(req.url!=='/api/agent/chat'||req.method!=='POST')return send(404,{error:'not_found'});
   if(req.headers['x-mercata-agent']!=='1'||!req.headers['content-type']?.startsWith('application/json'))return send(403,{error:'forbidden'});
-  let raw='';let bytes=0;
-  for await (const part of req){bytes+=part.length;if(bytes>65536){send(413,{error:'request_too_large'});return;}raw+=part.toString('utf8');}
+  const parts=[];let bytes=0;
+  try {
+   for await (const part of req){bytes+=part.length;if(bytes>65536){send(413,{error:'request_too_large'});return;}parts.push(part);}
+  } catch { if(!res.destroyed)send(400,{error:'request_interrupted'});return; }
+  const raw=Buffer.concat(parts).toString('utf8');
   let body;try{body=validateRequest(JSON.parse(raw));}catch{return send(400,{error:'invalid_request'});}
   if(!config.enabled)return send(503,{error:'model_not_configured'});
   try {send(200,await runModel(body,config,fetcher));}catch(e){send(e.message==='unverified_response'?422:502,{error:e.message==='unverified_response'?'unverified_response':'upstream_unavailable'});}

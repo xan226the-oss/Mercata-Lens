@@ -46,3 +46,20 @@ test('real page never invents responses when status is disabled',async({page})=>
  await page.getByLabel('Question',{exact:true}).fill('cleaning');await expect(page.getByRole('button',{name:'Send',exact:true})).toBeDisabled();
  await expect(page.locator('.agent-message-assistant')).toHaveCount(0);expect(calls).toBe(0);
 });
+test('Chinese assistant navigation text stays inside the active link at all viewports',async({page})=>{
+ await page.route('**/api/agent/status',r=>r.fulfill({json:{enabled:false}}));
+ await page.goto('/assistant');await page.getByRole('button',{name:'Switch language'}).click();
+ // Reproduce the shared navigation grid loading after the assistant stylesheet (including HMR).
+ await page.addStyleTag({content:'.research-nav__item { display:grid; grid-template-columns:24px minmax(0,1fr); }'});
+ for(const width of [1440,900,390]){
+  await page.setViewportSize({width,height:900});
+  const link=page.getByRole('link',{name:'研究助手',exact:true});await expect(link).toHaveAttribute('aria-current','page');
+  const fits=await link.evaluate(el=>{
+   const bounds=el.getBoundingClientRect();const label=el.querySelector('.research-nav__label');
+   const range=document.createRange();range.selectNodeContents(label??el.firstChild!);
+   const rects=Array.from(range.getClientRects());
+   return rects.length===1 && rects.every(r=>r.left>=bounds.left&&r.right<=bounds.right&&r.top>=bounds.top&&r.bottom<=bounds.bottom);
+  });
+  expect(fits,`Chinese label must fit its selected link at ${width}px`).toBe(true);
+ }
+});

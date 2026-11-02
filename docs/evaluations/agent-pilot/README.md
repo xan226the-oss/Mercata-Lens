@@ -1,6 +1,7 @@
 # 评论洞察模型小样本横测
 准备日期：2026年11月2日
 状态：用例与脚本离线预检完成；真实模型横测未开始，没有适用性排名。
+用户费用约束：只用免费额度，用完即停。不授权付费调用、充值或额度耗尽后自动扣费。
 
 ## 候选与Key
 优先在同一服务平台比较三个候选：Qwen3.8-Flash、Qwen3.7-Plus、DeepSeek-V4.1-Flash。阿里云百炼模型目录列出这三项；同一账号、地域和Key是否有对应权限，仍需控制台确认。不要将不同地域或其他平台价格直接套用。
@@ -30,13 +31,13 @@ node scripts/benchmark-agent.mjs
 已运行输出：12个用例、2次重复、每模型计划24次、externalCalls为0、modelResults为NOT_RUN。
 
 真实调用前，确认平台、地域、模型标识、预算、Key权限及非思考模式参数，将密钥填入本地被忽略的.env.local。不要通过聊天或版本库传递Key。实际模型设置必须在三者之间记录清楚，不能把默认思考模式和关闭思考模式混为一组。
-在明确费用授权后才允许：
+仅在核实当前账号、地域和目标模型的免费额度，并确认服务端可阻止额度耗尽后转付费后，才允许：
 ```bash
-BENCH_LIVE_APPROVED=true node --env-file=.env.local scripts/benchmark-agent.mjs --live
+BENCH_LIVE_APPROVED=true BENCH_FREE_ONLY_CONFIRMED=true node --env-file=.env.local scripts/benchmark-agent.mjs --live
 ```
-仍须MODEL_CALLS_ENABLED=true及完整模型配置；上述命令只是说明，本次没有运行真实调用。
+仍须MODEL_CALLS_ENABLED=true及完整模型配置；上述命令只是说明，本次没有运行真实调用。BENCH_FREE_ONLY_CONFIRMED是人工核实后的运行门槛，不是计费系统的自动监控或免费保证。供应商无法设置免费耗尽即停、额度状态不明或模型不在赠送范围时，不运行；不通过小额付费探针验证。
 脚本将每次输出限制为1024 tokens、调用上限24次且不自动重试。部分供应商的思考配置可通过BENCH_REQUEST_OPTIONS_JSON指定（仅thinking、enable_thinking）；应先核对目标服务官方接口，再做连接探针。该设置是否被供应商接受需要真实验证。
 结果保存到results/，包含成功回答、引用、耗时、usage与待审阅状态；失败单列，供应商原始错误与Key不写入结果。脚本调用次数和输出上限不是货币账单的硬限额；硬预算需在服务控制台设置，未完成预算确认前不运行。
 
 ## 当前结论
-没有Key与费用授权，尚不能判断哪个模型最适合。建议先开通百炼按量API的Key，不购买面向编程工具的订阅来替代应用API。若该账号地域不能调用三个候选，再按实际权限调整名单，平台本身功能保持不变。
+免费额度条件与Key尚未核实，尚不能判断哪个模型最适合。建议先开通百炼按量API的Key，不购买面向编程工具的订阅来替代应用API。若该账号地域不能调用三个候选，再按实际权限调整名单，平台本身功能保持不变。

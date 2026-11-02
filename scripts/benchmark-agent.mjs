@@ -14,6 +14,7 @@ if(!live){
  console.log(JSON.stringify({mode:'preflight_only',cases:cases.length,repeats:rounds,plannedCallsPerModel:total,externalCalls:0,modelResults:'NOT_RUN'},null,2));
  process.exit(0);
 }
+if(process.env.BENCH_FREE_ONLY_CONFIRMED!=='true')throw new Error('Free-only policy: verify model quota and provider-side no-paid-fallback protection before running. This flag is an attestation, not a billing guard.');
 if(process.env.BENCH_LIVE_APPROVED!=='true'||!config.enabled)throw new Error('Live run requires configured model, explicit call enablement and BENCH_LIVE_APPROVED=true after user budget authorization.');
 const output=[];let calls=0;
 for(let repeat=1;repeat<=rounds;repeat++){

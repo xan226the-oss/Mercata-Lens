@@ -1,0 +1,174 @@
+{
+  "resultFile": "2026-11-03T06-28-56.619Z.json",
+  "reviewer": "Codex assisted, not independent human gold",
+  "rows": [
+    {
+      "caseId": "T01",
+      "repeat": 1,
+      "reviewType": "Codex_assisted_semantic_check",
+      "observation": "与指定原文和初步rubric核对，未观察到关键方向性错误；不替代独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T02",
+      "repeat": 1,
+      "reviewType": "Codex_assisted_semantic_check",
+      "observation": "与指定原文和初步rubric核对，未观察到关键方向性错误；不替代独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T03",
+      "repeat": 1,
+      "reviewType": "Codex_assisted_semantic_check",
+      "observation": "与指定原文和初步rubric核对，未观察到关键方向性错误；不替代独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T04",
+      "repeat": 1,
+      "reviewType": "Codex_assisted_semantic_check",
+      "observation": "与指定原文和初步rubric核对，未观察到关键方向性错误；不替代独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T05",
+      "repeat": 1,
+      "reviewType": "Codex_assisted_semantic_check",
+      "observation": "与指定原文和初步rubric核对，未观察到关键方向性错误；不替代独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T06",
+      "repeat": 1,
+      "reviewType": "canonical_system_notice",
+      "observation": "固定系统说明，不计作模型自由回答质量。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T07",
+      "repeat": 1,
+      "reviewType": "Codex_assisted_semantic_check",
+      "observation": "与指定原文和初步rubric核对，未观察到关键方向性错误；不替代独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T08",
+      "repeat": 1,
+      "reviewType": "canonical_system_notice",
+      "observation": "固定系统说明，不计作模型自由回答质量。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T09",
+      "repeat": 1,
+      "reviewType": "Codex_assisted_semantic_check",
+      "observation": "与指定原文和初步rubric核对，未观察到关键方向性错误；不替代独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T10",
+      "repeat": 1,
+      "reviewType": "Codex_assisted_semantic_check",
+      "observation": "与指定原文和初步rubric核对，未观察到关键方向性错误；不替代独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T11",
+      "repeat": 1,
+      "reviewType": "Codex_assisted_semantic_check",
+      "observation": "与指定原文和初步rubric核对，未观察到关键方向性错误；不替代独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T12",
+      "repeat": 1,
+      "reviewType": "Codex_assisted_semantic_check",
+      "observation": "与指定原文和初步rubric核对，未观察到关键方向性错误；不替代独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T01",
+      "repeat": 2,
+      "reviewType": "Codex_assisted_semantic_check",
+      "observation": "与指定原文和初步rubric核对，未观察到关键方向性错误；不替代独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T02",
+      "repeat": 2,
+      "reviewType": "Codex_assisted_semantic_check",
+      "observation": "与指定原文和初步rubric核对，未观察到关键方向性错误；不替代独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T03",
+      "repeat": 2,
+      "reviewType": "Codex_assisted_semantic_check",
+      "observation": "与指定原文和初步rubric核对，未观察到关键方向性错误；不替代独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T04",
+      "repeat": 2,
+      "reviewType": "Codex_assisted_semantic_check",
+      "observation": "与指定原文和初步rubric核对，未观察到关键方向性错误；不替代独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T05",
+      "repeat": 2,
+      "reviewType": "Codex_assisted_semantic_check",
+      "observation": "与指定原文和初步rubric核对，未观察到关键方向性错误；不替代独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T06",
+      "repeat": 2,
+      "reviewType": "canonical_system_notice",
+      "observation": "固定系统说明，不计作模型自由回答质量。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T07",
+      "repeat": 2,
+      "reviewType": "Codex_assisted_semantic_check",
+      "observation": "与指定原文和初步rubric核对，未观察到关键方向性错误；不替代独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T08",
+      "repeat": 2,
+      "reviewType": "canonical_system_notice",
+      "observation": "固定系统说明，不计作模型自由回答质量。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T09",
+      "repeat": 2,
+      "reviewType": "Codex_assisted_semantic_check",
+      "observation": "与指定原文和初步rubric核对，未观察到关键方向性错误；不替代独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T10",
+      "repeat": 2,
+      "reviewType": "Codex_assisted_semantic_check",
+      "observation": "与指定原文和初步rubric核对，未观察到关键方向性错误；不替代独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T11",
+      "repeat": 2,
+      "reviewType": "Codex_assisted_semantic_check",
+      "observation": "与指定原文和初步rubric核对，未观察到关键方向性错误；不替代独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "caseId": "T12",
+      "repeat": 2,
+      "reviewType": "Codex_assisted_semantic_check",
+      "observation": "与指定原文和初步rubric核对，未观察到关键方向性错误；不替代独立人工验收。",
+      "humanReview": "PENDING"
+    }
+  ]
+}

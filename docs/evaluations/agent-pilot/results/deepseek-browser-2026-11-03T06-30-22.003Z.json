@@ -1,0 +1,138 @@
+{
+  "model": "deepseek-v4.1-flash",
+  "transport": "live browser -> Vite proxy -> gateway -> Bailian",
+  "checks": [
+    "Three live turns include current history",
+    "Citation opens original evidence and moves focus",
+    "Correction requires reason",
+    "Correction marks all old turns stale",
+    "Corrected question uses new revision, empty history and annotation",
+    "Injected error preserves draft",
+    "Explicit retry recovers after an injected local error",
+    "Data provenance is canonical system notice"
+  ],
+  "requests": [
+    {
+      "question": "我们先只讨论模拟评论r001。它描述了什么问题？",
+      "revision": "775cdfd7-d688-42ab-95fe-9628b3c4c4d1",
+      "historyLength": 0,
+      "corrections": [],
+      "transport": "real_gateway"
+    },
+    {
+      "question": "刚才说的那个问题，原文是什么依据？不要切换到其他评论。",
+      "revision": "775cdfd7-d688-42ab-95fe-9628b3c4c4d1",
+      "historyLength": 2,
+      "corrections": [],
+      "transport": "real_gateway"
+    },
+    {
+      "question": "那这个问题解决后是不是就可以直接进货了？请说明还要验证什么。",
+      "revision": "775cdfd7-d688-42ab-95fe-9628b3c4c4d1",
+      "historyLength": 4,
+      "corrections": [],
+      "transport": "real_gateway"
+    },
+    {
+      "question": "我给r001人工加了噪音标签。请区分人工标签和原文，原文真的说明噪音问题了吗？",
+      "revision": "ec4c826b-8963-4be0-b542-86c534b9dcf8",
+      "historyLength": 0,
+      "corrections": [
+        {
+          "reviewId": "r001",
+          "add": [
+            "noise"
+          ],
+          "remove": [],
+          "reason": "Live acceptance test: intentionally inconsistent noise annotation on a synthetic cleaning review; not human accuracy labeling."
+        }
+      ],
+      "transport": "real_gateway"
+    },
+    {
+      "question": "只根据r001的原文，下一步需要验证什么？",
+      "revision": "ec4c826b-8963-4be0-b542-86c534b9dcf8",
+      "historyLength": 2,
+      "corrections": [
+        {
+          "reviewId": "r001",
+          "add": [
+            "noise"
+          ],
+          "remove": [],
+          "reason": "Live acceptance test: intentionally inconsistent noise annotation on a synthetic cleaning review; not human accuracy labeling."
+        }
+      ],
+      "transport": "injected_local_502"
+    },
+    {
+      "question": "只根据r001的原文，下一步需要验证什么？",
+      "revision": "ec4c826b-8963-4be0-b542-86c534b9dcf8",
+      "historyLength": 2,
+      "corrections": [
+        {
+          "reviewId": "r001",
+          "add": [
+            "noise"
+          ],
+          "remove": [],
+          "reason": "Live acceptance test: intentionally inconsistent noise annotation on a synthetic cleaning review; not human accuracy labeling."
+        }
+      ],
+      "transport": "real_gateway"
+    },
+    {
+      "question": "这些评论是不是从Amazon真实采集的，能否代表美国市场用户？",
+      "revision": "ec4c826b-8963-4be0-b542-86c534b9dcf8",
+      "historyLength": 4,
+      "corrections": [
+        {
+          "reviewId": "r001",
+          "add": [
+            "noise"
+          ],
+          "remove": [],
+          "reason": "Live acceptance test: intentionally inconsistent noise annotation on a synthetic cleaning review; not human accuracy labeling."
+        }
+      ],
+      "transport": "real_gateway"
+    }
+  ],
+  "answers": [
+    {
+      "question": "我们先只讨论模拟评论r001。它描述了什么问题？",
+      "elapsedMs": 1616,
+      "text": "Model explanation\n\n这条评论描述的是清洁困难：内部存在边角，反复刷洗仍会积留黏液。这是用户对清洁体验的反馈，不能据此判断结构改动是否有效，也不能据此作经营判断；具体结构原因和可解决性仍需验证。\n\nView review r001"
+    },
+    {
+      "question": "刚才说的那个问题，原文是什么依据？不要切换到其他评论。",
+      "elapsedMs": 1268,
+      "text": "Model explanation\n\n原文依据是这条评论中的英文原句：“Hard to clean. The inside has corners that trap slime no matter how many times I scrub.” 原意是内部边角容易积留黏液，反复刷洗仍难清洁。这是模拟样本中的单条体验反馈，不能据此判断结构原因或改进是否有效。\n\nView review r001"
+    },
+    {
+      "question": "那这个问题解决后是不是就可以直接进货了？请说明还要验证什么。",
+      "elapsedMs": 1392,
+      "text": "Model explanation\n\n不能据此作经营判断。这条评论只反映内部边角易积留黏液、反复刷洗仍难清洁的体验；即使假设结构改动能改善清洁，也仍需验证改动后的实际清洁效果、边角是否仍易残留、长期使用后的表现，以及是否引入新的使用问题。现有样本没有材质、结构方案或改进验证数据，无法证明问题已解决，也不能据此判断是否适合进货。\n\nView review r001"
+    },
+    {
+      "question": "我给r001人工加了噪音标签。请区分人工标签和原文，原文真的说明噪音问题了吗？",
+      "elapsedMs": 1390,
+      "text": "Model explanation\n\n人工标签“噪音”是用户注释，不是原文事实。所引用的这条评论原文只谈清洁困难，称内部有角落反复刷洗仍会积黏液，并未提到噪音。因此原文不支持噪音问题；该标签与原文不一致，应视为待核对的注释。引用存在不代表支持判断，建议抽查原文。\n\nView review r001"
+    },
+    {
+      "question": "只根据r001的原文，下一步需要验证什么？",
+      "elapsedMs": 1482,
+      "text": "Model explanation\n\n仅依据所引用的这条评论原文，需要验证的是内部角落为何容易积黏液、反复刷洗仍难清除，以及是否存在可拆洗或减少死角的清洁结构。原文没有提到噪音，人工添加的噪音标签与原文不一致，不能作为噪音问题的依据；噪音是否真实存在仍需另行验证。引用存在不等于支持判断，建议抽查原文。\n\nView review r001"
+    },
+    {
+      "question": "这些评论是不是从Amazon真实采集的，能否代表美国市场用户？",
+      "elapsedMs": 1289,
+      "text": "System scope notice\n\n这些数据是项目内置的模拟演示样本，并非从真实平台采集，不能代表美国市场消费者。"
+    }
+  ],
+  "injectedFailure": true,
+  "completed": true,
+  "screenshot": "/Users/xanthe/Documents/Mercata Lens/docs/evidence/assistant-deepseek-acceptance-2026-11-03T06-30-22.003Z.png",
+  "realGatewayRequests": 6,
+  "screenshotRelocatedFrom": "/Users/xanthe/Documents/Mercata%20Lens/docs/evidence/assistant-deepseek-acceptance-2026-11-03T06-30-22.003Z.png"
+}

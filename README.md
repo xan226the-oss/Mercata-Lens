@@ -163,7 +163,7 @@ npm run dev
 
 The gateway binds only to `127.0.0.1:8787`. The frontend defaults to `127.0.0.1:5173` and will fail rather than silently switch ports. For a custom frontend port, set the same `PORT` environment variable in both terminals. The integration tests also trust the fixed Playwright origin at port 4173. No production hosting is configured.
 
-After provider choice and cost authorization, create `.env.local` using `.env.example` as a guide and configure `MODEL_ENDPOINT`, `MODEL_NAME`, `MODEL_API_KEY` and `MODEL_CALLS_ENABLED`. Never use `VITE_*` for secrets. The adapter expects a chat-completions-shaped response with JSON text containing `answer` and `reviewIds`; compatibility with a particular provider has not been tested. Other formats need their own adapter. No account, credential, purchase, recharge or external model request was made for this delivery.
+After provider choice and cost authorization, create `.env.local` using `.env.example` as a guide and configure `MODEL_ENDPOINT`, `MODEL_NAME`, `MODEL_API_KEY` and `MODEL_CALLS_ENABLED`. Never use `VITE_*` for secrets. The generic adapter expects chat-completions JSON. The original integration delivery used transport stubs; subsequent live model tests are dated separately in `docs/evaluations/agent-pilot/`. As of 2026-11-03, Bailian Beijing Qwen3.7-Plus, Qwen3.8-Flash and DeepSeek-V4.1-Flash have been tested on synthetic demo data. This does not validate arbitrary provider formats or production quality.
 
 The server uses its own canonical synthetic CSV and validates correction IDs/labels, request sizes, roles and bounded history. It limits upstream requests to 30 seconds and responses to 100 KB, checks citation existence, and rejects digit-containing answers so model text cannot supply ordinary numeric statistics. Numeric rule statistics remain in the deterministic UI. **These structural checks do not prove semantic attribution or eliminate all hallucinated/unsupported claims; original-text inspection and later human/model evaluation remain required.** The gateway does not support real uploaded data or autonomous tool orchestration.
 
@@ -175,3 +175,7 @@ npm exec playwright test
 ```
 
 The three-turn browser scenario uses an explicitly declared transport stub, not a real model. See `docs/evidence/agent-integration-2026-11-02.md` for execution results and limits.
+
+### Local model selection (2026-11-03)
+The current machine uses `MODEL_NAME=deepseek-v4.1-flash` and `MODEL_PROFILE=bailian-json-nonthinking` in the ignored `.env.local`. This was selected after the full 12-case synthetic pilot and live browser verification. Qwen3.7-Plus remains a **manual** alternative: change only `MODEL_NAME` to `qwen3.7-plus`, confirm that model has free quota and stop-on-exhaustion enabled, then restart the gateway. There is no automatic fallback or paid retry. New environments remain disabled until explicitly configured.
+See `docs/evaluations/agent-pilot/2026-11-03-DeepSeek完整验收与默认模型记录.md` for actual results and limits. `scripts/verify-agent-live.mjs` is opt-in and sends up to six real gateway requests; its one injected 502 is local and is not a provider outage.

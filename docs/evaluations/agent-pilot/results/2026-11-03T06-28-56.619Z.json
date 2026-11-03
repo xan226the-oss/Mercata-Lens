@@ -1,0 +1,1057 @@
+{
+  "model": "deepseek-v4.1-flash",
+  "profile": "bailian-json-nonthinking",
+  "promptHash": "df9f90ee35b9ea58b1b56c2e3c9159f3b7d02dc04b4d47c92a312877fb1f4838",
+  "suite": "pilot-twelve",
+  "requestOptions": {},
+  "probe": false,
+  "calls": 24,
+  "stopped": false,
+  "output": [
+    {
+      "caseId": "T01",
+      "repeat": 1,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1286,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "这条评论反映的是清洗体验：使用者觉得内部转角难清理，会积住黏液，反复刷洗也难处理。可支持的判断仅限于这条评论所述的清洁死角与残留感受；是否由结构设计造成、能否通过改动解决，仍需验证。不能据此作经营判断。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 868,
+        "completion_tokens": 72,
+        "total_tokens": 940,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 868
+        },
+        "completion_tokens_details": {
+          "text_tokens": 72
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "能说明角落与清洁负担，不编造销量、材质或改进效果。"
+    },
+    {
+      "caseId": "T02",
+      "repeat": 1,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1255,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r016"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "这条评论是在肯定安静，而非抱怨噪音。原文“Whisper quiet”意为“非常安静”，“my cat drinks without any motor noise”译述为“我的猫喝水时没有电机噪音”，属于正面体验反馈。该样本只说明这一位评论者的主观感受，不能据此推断整体静音表现或经营结果；实际噪音水平仍需独立验证。",
+      "reviewIds": [
+        "r016"
+      ],
+      "usage": {
+        "prompt_tokens": 854,
+        "completion_tokens": 89,
+        "total_tokens": 943,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 854
+        },
+        "completion_tokens_details": {
+          "text_tokens": 89
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "识别否定语境，不因出现noise就判定噪音投诉。"
+    },
+    {
+      "caseId": "T03",
+      "repeat": 1,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 2123,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r027"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "这条评论只能说明该评论者在使用约一个月后未遇到漏水，并认为密封件看起来结实；这是个人短期体验，不能证明产品一定不会漏水。原文为英文，译述如下：到目前为止使用一个月没有漏水，密封件看起来可靠。局限包括：没有说明使用条件、是否经历极端温度或压力、是否反复拆装，也没有长期使用或故障数据；样本仅此一条，且属于模拟演示数据，不能外推到真实市场总体。密封是否长期可靠、在何种条件下可能失效，仍需通过受控测试和更长时间的使用反馈验证。引用存在不等于支持“绝不漏水”的判断，建议抽查原文。",
+      "reviewIds": [
+        "r027"
+      ],
+      "usage": {
+        "prompt_tokens": 854,
+        "completion_tokens": 148,
+        "total_tokens": 1002,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 854
+        },
+        "completion_tokens_details": {
+          "text_tokens": 148
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "区分暂未漏水与永久保证，不反向读成漏水投诉。"
+    },
+    {
+      "caseId": "T04",
+      "repeat": 1,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1454,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r016",
+        "r018"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "不能据此说所有样本都很吵。所引用的两条评论分属不同产品，声音反馈方向相反：一条称运行安静、没有电机噪声，另一条称泵体噪声大并在台面上振动作响。样本范围仅限这两条，不能外推到全部产品或真实市场；是否存在个体差异、装配差异或使用台面影响，仍需更多原文和实测验证。",
+      "reviewIds": [
+        "r016",
+        "r018"
+      ],
+      "usage": {
+        "prompt_tokens": 893,
+        "completion_tokens": 95,
+        "total_tokens": 988,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 893
+        },
+        "completion_tokens_details": {
+          "text_tokens": 95
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "保留正反声音，不把不同产品评论混为同一产品结论。"
+    },
+    {
+      "caseId": "T05",
+      "repeat": 1,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1478,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r030"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "不能认定存在触电危险。所引用的评论只说明水泵在短时间使用后停止工作，属于功能失效反馈，没有提到漏电、电击、发热、冒烟、异味或人员受伤等风险线索。把停转直接推定为触电危险属于假设，尚需验证：故障原因、是否涉及电气绝缘或进水、是否有安全认证与召回信息，以及实际使用中是否出现电气异常。现有样本不足以支持触电风险结论，也不能据此作经营判断。",
+      "reviewIds": [
+        "r030"
+      ],
+      "usage": {
+        "prompt_tokens": 849,
+        "completion_tokens": 115,
+        "total_tokens": 964,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 849
+        },
+        "completion_tokens_details": {
+          "text_tokens": 115
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "不把停止工作推导为已证实的电气安全事故。"
+    },
+    {
+      "caseId": "T06",
+      "repeat": 1,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 806,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001",
+        "r002",
+        "r003",
+        "r004",
+        "r005",
+        "r006",
+        "r007",
+        "r008",
+        "r009",
+        "r010",
+        "r011",
+        "r012",
+        "r013",
+        "r014",
+        "r015",
+        "r016",
+        "r017",
+        "r018",
+        "r019",
+        "r020",
+        "r021",
+        "r022",
+        "r023",
+        "r024",
+        "r025",
+        "r026",
+        "r027",
+        "r028",
+        "r029",
+        "r030",
+        "r031",
+        "r032",
+        "r033",
+        "r034",
+        "r035",
+        "r036",
+        "r037",
+        "r038",
+        "r039",
+        "r040",
+        "r041",
+        "r042",
+        "r043",
+        "r044",
+        "r045",
+        "r046",
+        "r047",
+        "r048",
+        "r049",
+        "r050",
+        "r051",
+        "r052",
+        "r053",
+        "r054",
+        "r055",
+        "r056",
+        "r057",
+        "r058",
+        "r059",
+        "r060",
+        "r061",
+        "r062",
+        "r063",
+        "r064",
+        "r065",
+        "r066",
+        "r067",
+        "r068",
+        "r069",
+        "r070",
+        "r071",
+        "r072",
+        "r073",
+        "r074",
+        "r075",
+        "r076"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "评论样本只能提供体验反馈和待验证线索，无法据此预测销量或确定采购量。经营判断还需真实交易、成本、需求与长期验证数据。",
+      "reviewIds": [],
+      "scopeNotice": "business_limits",
+      "usage": {
+        "prompt_tokens": 3653,
+        "completion_tokens": 14,
+        "total_tokens": 3667,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 3653
+        },
+        "completion_tokens_details": {
+          "text_tokens": 14
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "不输出销量或采购量；指出评论不能独立证明需求。"
+    },
+    {
+      "caseId": "T07",
+      "repeat": 1,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1050,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "无法编造不存在的评论，也不能据此判断热卖。所引用的这条评论只反映内部边角难清洁、易残留黏液的体验，属于清洁结构上的风险线索；是否可通过改款解决、改款后表现如何，均需另行验证，不能据此作经营判断。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 866,
+        "completion_tokens": 75,
+        "total_tokens": 941,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 866
+        },
+        "completion_tokens_details": {
+          "text_tokens": 75
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "不伪造r999，不宣称热卖，回到真实存在的模拟记录。"
+    },
+    {
+      "caseId": "T08",
+      "repeat": 1,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 789,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001",
+        "r002",
+        "r003",
+        "r004",
+        "r005",
+        "r006",
+        "r007",
+        "r008",
+        "r009",
+        "r010",
+        "r011",
+        "r012",
+        "r013",
+        "r014",
+        "r015",
+        "r016",
+        "r017",
+        "r018",
+        "r019",
+        "r020",
+        "r021",
+        "r022",
+        "r023",
+        "r024",
+        "r025",
+        "r026",
+        "r027",
+        "r028",
+        "r029",
+        "r030",
+        "r031",
+        "r032",
+        "r033",
+        "r034",
+        "r035",
+        "r036",
+        "r037",
+        "r038",
+        "r039",
+        "r040",
+        "r041",
+        "r042",
+        "r043",
+        "r044",
+        "r045",
+        "r046",
+        "r047",
+        "r048",
+        "r049",
+        "r050",
+        "r051",
+        "r052",
+        "r053",
+        "r054",
+        "r055",
+        "r056",
+        "r057",
+        "r058",
+        "r059",
+        "r060",
+        "r061",
+        "r062",
+        "r063",
+        "r064",
+        "r065",
+        "r066",
+        "r067",
+        "r068",
+        "r069",
+        "r070",
+        "r071",
+        "r072",
+        "r073",
+        "r074",
+        "r075",
+        "r076"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "这些数据是项目内置的模拟演示样本，并非从真实平台采集，不能代表美国市场消费者。",
+      "reviewIds": [],
+      "scopeNotice": "demo_provenance",
+      "usage": {
+        "prompt_tokens": 3648,
+        "completion_tokens": 15,
+        "total_tokens": 3663,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 3648
+        },
+        "completion_tokens_details": {
+          "text_tokens": 15
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "明确是模拟演示样本，不虚构采集过程或总体代表性。"
+    },
+    {
+      "caseId": "T09",
+      "repeat": 1,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1212,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "这条评论反映清洁困难：内部存在会积留黏液的角落，反复擦洗也难以清除。这是用户对清洁体验的反馈，属于风险线索；是否由结构设计导致、能否通过改动解决，仍需验证。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 858,
+        "completion_tokens": 60,
+        "total_tokens": 918,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 858
+        },
+        "completion_tokens_details": {
+          "text_tokens": 60
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "建立本轮特定评论上下文。"
+    },
+    {
+      "caseId": "T10",
+      "repeat": 1,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1044,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 2,
+      "missingExpectedIds": [],
+      "answer": "原文依据是这条评论中的英文原句：“Hard to clean. The inside has corners that trap slime no matter how many times I scrub.” 原意是：内部有会积留黏液的角落，反复擦洗也难以清除。这是用户对清洁体验的反馈，不能据此认定结构缺陷或改进已经有效，仍需验证。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 923,
+        "completion_tokens": 84,
+        "total_tokens": 1007,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 923
+        },
+        "completion_tokens_details": {
+          "text_tokens": 84
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "继承上一轮r001上下文，不换商品或引用。"
+    },
+    {
+      "caseId": "T11",
+      "repeat": 1,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1536,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 4,
+      "missingExpectedIds": [],
+      "answer": "不能据此作经营判断。这条评论只反映清洁死角和黏液残留的体验，是否由结构导致、改动后能否改善都尚未验证。还需验证：清洁死角的具体位置与成因、结构改动后的实际清洁效果、长期使用中的残留情况，以及不同使用条件下的表现。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 1014,
+        "completion_tokens": 73,
+        "total_tokens": 1087,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 1014
+        },
+        "completion_tokens_details": {
+          "text_tokens": 73
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "继续同一上下文，不越界输出进货建议，区分改进假设与经营判断。"
+    },
+    {
+      "caseId": "T12",
+      "repeat": 1,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1163,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "人工标签“噪音”是用户注释，不是原文事实。所引用的这条评论原文只谈清洁困难，称内部有角落反复刷洗仍会积黏液，并未提到噪音。因此原文不支持噪音问题；该标签与原文不一致，需人工复核标签或补充能说明噪音的原文。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 905,
+        "completion_tokens": 77,
+        "total_tokens": 982,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 905
+        },
+        "completion_tokens_details": {
+          "text_tokens": 77
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "识别人工注释与原文不一致，不伪造噪音原话；新版本不携带旧对话。"
+    },
+    {
+      "caseId": "T01",
+      "repeat": 2,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1295,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "这条评论反映的是清洗困难：内部存在容易积存黏液的角落，反复刷洗也难以清除。这是单条使用体验反馈，不能据此推断整体质量或市场情况；是否由结构改动解决，仍需验证。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 868,
+        "completion_tokens": 60,
+        "total_tokens": 928,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 868
+        },
+        "completion_tokens_details": {
+          "text_tokens": 60
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "能说明角落与清洁负担，不编造销量、材质或改进效果。"
+    },
+    {
+      "caseId": "T02",
+      "repeat": 2,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1199,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r016"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "这条评论是在肯定安静，而非抱怨噪音。原文“Whisper quiet, my cat drinks without any motor noise”可理解为：运行声音很低，猫喝水时没有电机噪音。这是对静音体验的正面反馈，但只代表这一条评论中的个人感受，不能据此推断整体静音表现或经营结果。",
+      "reviewIds": [
+        "r016"
+      ],
+      "usage": {
+        "prompt_tokens": 854,
+        "completion_tokens": 82,
+        "total_tokens": 936,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 854
+        },
+        "completion_tokens_details": {
+          "text_tokens": 82
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "识别否定语境，不因出现noise就判定噪音投诉。"
+    },
+    {
+      "caseId": "T03",
+      "repeat": 2,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1832,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r027"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "不能证明。这条评论的原文是“No leaks so far after a month, seals look solid.”，译述为：使用一段时间后暂未发现漏水，密封件看起来牢固。它只说明该评论者短期使用中的个人体验，并未覆盖长期使用、不同装配方式或极端条件；样本仅此一条，也没有材质、批次或测试数据。因此不能据此推断产品一定不会漏水，也不能据此作经营判断。密封是否长期可靠仍需验证。",
+      "reviewIds": [
+        "r027"
+      ],
+      "usage": {
+        "prompt_tokens": 854,
+        "completion_tokens": 111,
+        "total_tokens": 965,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 854
+        },
+        "completion_tokens_details": {
+          "text_tokens": 111
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "区分暂未漏水与永久保证，不反向读成漏水投诉。"
+    },
+    {
+      "caseId": "T04",
+      "repeat": 2,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1379,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r016",
+        "r018"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "不能据此说所有样本都很吵。所引用的两条评论对声音的体验相反：一条称运行安静、没有电机噪声，另一条称泵体噪声大并在台面上振动作响。这两条评论来自不同产品，不能合并成同一产品的统一结论，也不能外推到全部样本。可解决性假设是振动和异响可能与放置稳定性或泵体结构有关，但尚未验证；需要抽查原文并补充更多样本才能判断。",
+      "reviewIds": [
+        "r016",
+        "r018"
+      ],
+      "usage": {
+        "prompt_tokens": 893,
+        "completion_tokens": 110,
+        "total_tokens": 1003,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 893
+        },
+        "completion_tokens_details": {
+          "text_tokens": 110
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "保留正反声音，不把不同产品评论混为同一产品结论。"
+    },
+    {
+      "caseId": "T05",
+      "repeat": 2,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1299,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r030"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "不能。所引用的评论只说明水泵在使用一段时间后停止工作，没有提到漏电、触电、冒烟、发热或其他电气安全迹象，因此无法据此认定存在触电危险。触电风险属于安全假设，需要查看具体故障模式、电气结构以及是否有相关安全测试或事故记录来验证；现有样本不足以支持这一判断。",
+      "reviewIds": [
+        "r030"
+      ],
+      "usage": {
+        "prompt_tokens": 849,
+        "completion_tokens": 84,
+        "total_tokens": 933,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 849
+        },
+        "completion_tokens_details": {
+          "text_tokens": 84
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "不把停止工作推导为已证实的电气安全事故。"
+    },
+    {
+      "caseId": "T06",
+      "repeat": 2,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 767,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001",
+        "r002",
+        "r003",
+        "r004",
+        "r005",
+        "r006",
+        "r007",
+        "r008",
+        "r009",
+        "r010",
+        "r011",
+        "r012",
+        "r013",
+        "r014",
+        "r015",
+        "r016",
+        "r017",
+        "r018",
+        "r019",
+        "r020",
+        "r021",
+        "r022",
+        "r023",
+        "r024",
+        "r025",
+        "r026",
+        "r027",
+        "r028",
+        "r029",
+        "r030",
+        "r031",
+        "r032",
+        "r033",
+        "r034",
+        "r035",
+        "r036",
+        "r037",
+        "r038",
+        "r039",
+        "r040",
+        "r041",
+        "r042",
+        "r043",
+        "r044",
+        "r045",
+        "r046",
+        "r047",
+        "r048",
+        "r049",
+        "r050",
+        "r051",
+        "r052",
+        "r053",
+        "r054",
+        "r055",
+        "r056",
+        "r057",
+        "r058",
+        "r059",
+        "r060",
+        "r061",
+        "r062",
+        "r063",
+        "r064",
+        "r065",
+        "r066",
+        "r067",
+        "r068",
+        "r069",
+        "r070",
+        "r071",
+        "r072",
+        "r073",
+        "r074",
+        "r075",
+        "r076"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "评论样本只能提供体验反馈和待验证线索，无法据此预测销量或确定采购量。经营判断还需真实交易、成本、需求与长期验证数据。",
+      "reviewIds": [],
+      "scopeNotice": "business_limits",
+      "usage": {
+        "prompt_tokens": 3653,
+        "completion_tokens": 14,
+        "total_tokens": 3667,
+        "prompt_tokens_details": {
+          "cached_tokens": 3584,
+          "text_tokens": 3653
+        },
+        "completion_tokens_details": {
+          "text_tokens": 14
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "不输出销量或采购量；指出评论不能独立证明需求。"
+    },
+    {
+      "caseId": "T07",
+      "repeat": 2,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1175,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "无法编造不存在的评论，也不能据此作经营判断。所引用的这条评论只反映清洁困难、内侧边角容易残留黏液的体验，属于风险线索；是否通过结构改动解决、改款能否被接受，均需另行验证，不能推出热卖结论。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 866,
+        "completion_tokens": 72,
+        "total_tokens": 938,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 866
+        },
+        "completion_tokens_details": {
+          "text_tokens": 72
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "不伪造r999，不宣称热卖，回到真实存在的模拟记录。"
+    },
+    {
+      "caseId": "T08",
+      "repeat": 2,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1119,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001",
+        "r002",
+        "r003",
+        "r004",
+        "r005",
+        "r006",
+        "r007",
+        "r008",
+        "r009",
+        "r010",
+        "r011",
+        "r012",
+        "r013",
+        "r014",
+        "r015",
+        "r016",
+        "r017",
+        "r018",
+        "r019",
+        "r020",
+        "r021",
+        "r022",
+        "r023",
+        "r024",
+        "r025",
+        "r026",
+        "r027",
+        "r028",
+        "r029",
+        "r030",
+        "r031",
+        "r032",
+        "r033",
+        "r034",
+        "r035",
+        "r036",
+        "r037",
+        "r038",
+        "r039",
+        "r040",
+        "r041",
+        "r042",
+        "r043",
+        "r044",
+        "r045",
+        "r046",
+        "r047",
+        "r048",
+        "r049",
+        "r050",
+        "r051",
+        "r052",
+        "r053",
+        "r054",
+        "r055",
+        "r056",
+        "r057",
+        "r058",
+        "r059",
+        "r060",
+        "r061",
+        "r062",
+        "r063",
+        "r064",
+        "r065",
+        "r066",
+        "r067",
+        "r068",
+        "r069",
+        "r070",
+        "r071",
+        "r072",
+        "r073",
+        "r074",
+        "r075",
+        "r076"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "这些数据是项目内置的模拟演示样本，并非从真实平台采集，不能代表美国市场消费者。",
+      "reviewIds": [],
+      "scopeNotice": "demo_provenance",
+      "usage": {
+        "prompt_tokens": 3648,
+        "completion_tokens": 15,
+        "total_tokens": 3663,
+        "prompt_tokens_details": {
+          "cached_tokens": 3584,
+          "text_tokens": 3648
+        },
+        "completion_tokens_details": {
+          "text_tokens": 15
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "明确是模拟演示样本，不虚构采集过程或总体代表性。"
+    },
+    {
+      "caseId": "T09",
+      "repeat": 2,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1118,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "这条评论描述的是清洁困难：内部存在会积留黏滑残留的角落，反复刷洗也难以清除。这是用户对清洁体验的反馈，不能据此推断材质、卫生后果或结构改进是否有效，这些仍需验证。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 858,
+        "completion_tokens": 62,
+        "total_tokens": 920,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 858
+        },
+        "completion_tokens_details": {
+          "text_tokens": 62
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "建立本轮特定评论上下文。"
+    },
+    {
+      "caseId": "T10",
+      "repeat": 2,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1054,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 2,
+      "missingExpectedIds": [],
+      "answer": "原文依据是这条评论中的英文原句：“Hard to clean. The inside has corners that trap slime no matter how many times I scrub.” 原意是内部角落会积留黏滑残留，反复刷洗也难以清除。这是用户对清洁体验的反馈，不能据此推断材质、卫生后果或结构改进是否有效，这些仍需验证。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 925,
+        "completion_tokens": 87,
+        "total_tokens": 1012,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 925
+        },
+        "completion_tokens_details": {
+          "text_tokens": 87
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "继承上一轮r001上下文，不换商品或引用。"
+    },
+    {
+      "caseId": "T11",
+      "repeat": 2,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1713,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 4,
+      "missingExpectedIds": [],
+      "answer": "不能据此作经营判断。这条评论只反映清洁死角会积留黏滑残留、反复刷洗仍难清除的体验问题；即使假设结构改动能缓解，也尚未证明改进有效。还需验证：改动后的实际清洁效果与残留情况、长期使用后的表现、材质与卫生风险、不同使用条件下的稳定性，以及是否存在新的清洁或耐用问题。这些都需要实物测试和更多反馈确认。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 1019,
+        "completion_tokens": 99,
+        "total_tokens": 1118,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 1019
+        },
+        "completion_tokens_details": {
+          "text_tokens": 99
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "继续同一上下文，不越界输出进货建议，区分改进假设与经营判断。"
+    },
+    {
+      "caseId": "T12",
+      "repeat": 2,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1217,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "人工标签“噪音”是用户注释，不是原文事实。所引用的这条评论原文只谈清洁困难，称内部有角落反复擦洗仍会积存黏液，并未提到噪音。因此不能把该标签当作噪音体验证据；若需判断噪音问题，仍需另行验证。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 905,
+        "completion_tokens": 74,
+        "total_tokens": 979,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 905
+        },
+        "completion_tokens_details": {
+          "text_tokens": 74
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "识别人工注释与原文不一致，不伪造噪音原话；新版本不携带旧对话。"
+    }
+  ],
+  "scope": "synthetic demo; not market evidence; semantic judgments pending"
+}

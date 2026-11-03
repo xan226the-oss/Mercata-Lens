@@ -52,13 +52,40 @@ answer是显示给用户的简洁中文解释。编号只放reviewIds，正文�
 用户指定某条评论时，只解释这条原文，不得顺带补充其他评论、同产品反馈或同类产品的事实。跨评论比较必须将实际用到的每条评论全部列入reviewIds，不允许正文提到其他反馈却只引用当前评论。
 原文是事实依据，人工标签是注释。产品标识不同即不能当成同一产品。没有批次字段，不能声称存在批次差异；没有材质、事故、销量或需求数据，不能虚构这些信息。假设和待验证事项必须明确标出，避免把卫生、细菌或经营结果写成已发生的事实。
 数据源是本项目内置的模拟演示样本，不是Amazon真实采集。只能说明给定样本，不能推出真实市场总体。
-用户问原文依据时，解释原意并可引用不带数字的短原句；含数字的原句留给证据面板，不改写成伪造引文。连续问答保持历史中已选评论；更换版本以本次数据和注释为准。
+提供的reviews是本次可用证据的完整范围，不得声称存在未提供的其他反馈。中文翻译要标明为译述，不能冒充原文逐字引语。用户问原文依据时，优先摘录英文原句；解释原意并可引用不带数字的短原句；含数字的原句留给证据面板，不改写成伪造引文。连续问答保持历史中已选评论；更换版本以本次数据和注释为准。
 若用户要求销量、采购或伪造结论，简洁说明无法据此判断和缺少的验证，并引用与问题直接相关的现有样本；不要为了凑引用而声称无关原文支持结论。
 输出前检查：answer无数字或编号；只包含answer和reviewIds；原文不支持的内容已删除或明确列为待验证；reviewIds与当前回答有关。只输出JSON。`;
+/** Conservative explicit-ID scoping; global/new questions keep the full sample. */
+function evidenceContext(body){
+ const named=text=>[...new Set((text.match(/\br\d{3}\b/gi)??[]).map(id=>id.toLowerCase()))];
+ const isGlobal=text=>/所有|全部|整批|整体|all reviews|whole dataset/i.test(text);
+ const follows=text=>!isGlobal(text)&&/刚才|这个问题|那个问题|那这个|原文|依据|继续|previous|that issue|original|continue/i.test(text);
+ let focus=[],start=0;
+ // Only a contiguous chain of explicit follow-ups inherits a named scope.
+ for(let i=0;i<body.history.length;i++){
+  const m=body.history[i];if(m.role!=='user')continue;
+  const next=named(m.content);
+  if(next.length){focus=next;start=i;}
+  else if(!follows(m.content)){focus=[];start=i;}
+ }
+ const wanted=named(body.question);
+ let selectedIds,history;
+ if(wanted.length){
+  selectedIds=wanted;
+  const same=focus.length===wanted.length&&focus.every(id=>wanted.includes(id));
+  history=same?body.history.slice(start):[];
+ }else if(follows(body.question)){selectedIds=focus;history=body.history.slice(start);}
+ else{return {reviews:rows,history:[]};}
+ if(!selectedIds.length)return {reviews:rows,history};
+ const selected=rows.filter(r=>selectedIds.includes(r.review_id));
+ if(!selected.length)fail('unverified_response');
+ return {reviews:selected,history};
+}
 export async function runModel(body,config,fetcher=fetch){
  validateRequest(body);if(!config.enabled)fail('model_not_configured');
+ const context=evidenceContext(body);const allowedIds=new Set(context.reviews.map(r=>r.review_id));
  let response;
- try {response=await fetcher(config.endpoint,{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${config.key}`},body:JSON.stringify({model:config.model,...(config.profile==='qwen-json-nonthinking'?{enable_thinking:false,response_format:{type:'json_object'},max_completion_tokens:1024}:{}),messages:[{role:'system',content:instruction+(config.profile==='qwen-json-nonthinking'?qwenInstruction:'')},...body.history,{role:'user',content:JSON.stringify({question:body.question,source:'synthetic_demo',reviews:rows.map(r=>({reviewId:r.review_id,productId:r.product_id,text:r.review_text,date:r.review_date})),corrections:body.corrections})}],temperature:0}),signal:AbortSignal.timeout(30000),redirect:'error'});} catch {fail('upstream_unavailable');}
+ try {response=await fetcher(config.endpoint,{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${config.key}`},body:JSON.stringify({model:config.model,...(config.profile==='qwen-json-nonthinking'?{enable_thinking:false,response_format:{type:'json_object'},max_completion_tokens:1024}:{}),messages:[{role:'system',content:instruction+(config.profile==='qwen-json-nonthinking'?qwenInstruction:'')},...context.history,{role:'user',content:JSON.stringify({question:body.question,source:'synthetic_demo',reviews:context.reviews.map(r=>({reviewId:r.review_id,productId:r.product_id,text:r.review_text,date:r.review_date})),corrections:body.corrections.filter(c=>allowedIds.has(c.reviewId)),evidenceScope:context.reviews.length===rows.length?'all_demo':'named_reviews_only'})}],temperature:0}),signal:AbortSignal.timeout(30000),redirect:'error'});} catch {fail('upstream_unavailable');}
  if(!response.ok)fail('upstream_failed');
  // Bound the streamed body before parsing; never log provider bodies or credentials.
  const reader=response.body?.getReader();if(!reader)fail('unverified_response');
@@ -66,6 +93,7 @@ export async function runModel(body,config,fetcher=fetch){
  while(true){const {value,done}=await reader.read();if(done)break;size+=value.byteLength;if(size>100000){await reader.cancel();fail('unverified_response');}chunks.push(value);}
  let reply;
  try {const raw=JSON.parse(Buffer.concat(chunks).toString('utf8'));reply=validateReply(JSON.parse(raw.choices[0].message.content));} catch {fail('unverified_response');}
+ if(reply.reviewIds.some(id=>!allowedIds.has(id)))fail('unverified_response');
  return {...reply,requestId:body.requestId,revision:body.revision};
 }
 export function createAgentServer(config=readConfig(),fetcher=fetch){

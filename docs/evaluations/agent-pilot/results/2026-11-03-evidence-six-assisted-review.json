@@ -1,0 +1,102 @@
+{
+  "reviewType": "Codex-assisted, not independent human validation",
+  "resultFile": "2026-11-03T04-00-58.981Z.json",
+  "rows": [
+    {
+      "caseId": "T03",
+      "repeat": 1,
+      "directionalReview": "NO_CRITICAL_DIRECTION_ERROR_OBSERVED",
+      "note": "中文“目前为止”是英文so far的译述，正文称为原文；译述标识仍需更清楚。",
+      "inputCount": 1,
+      "exactEnglishPresent": null
+    },
+    {
+      "caseId": "T04",
+      "repeat": 1,
+      "directionalReview": "NO_CRITICAL_DIRECTION_ERROR_OBSERVED",
+      "note": "辅助核对未见关键方向错误；不代表独立人工验收。",
+      "inputCount": 2,
+      "exactEnglishPresent": null
+    },
+    {
+      "caseId": "T05",
+      "repeat": 1,
+      "directionalReview": "NO_CRITICAL_DIRECTION_ERROR_OBSERVED",
+      "note": "辅助核对未见关键方向错误；不代表独立人工验收。",
+      "inputCount": 1,
+      "exactEnglishPresent": null
+    },
+    {
+      "caseId": "T09",
+      "repeat": 1,
+      "directionalReview": "NO_CRITICAL_DIRECTION_ERROR_OBSERVED",
+      "note": "辅助核对未见关键方向错误；不代表独立人工验收。",
+      "inputCount": 1,
+      "exactEnglishPresent": null
+    },
+    {
+      "caseId": "T10",
+      "repeat": 1,
+      "directionalReview": "NO_CRITICAL_DIRECTION_ERROR_OBSERVED",
+      "note": "英文整句与r001原文一致，中文已标译述；但本次实际输入意外包含全部76条，事后仅本地回归修复。",
+      "inputCount": 76,
+      "exactEnglishPresent": true
+    },
+    {
+      "caseId": "T11",
+      "repeat": 1,
+      "directionalReview": "NO_CRITICAL_DIRECTION_ERROR_OBSERVED",
+      "note": "辅助核对未见关键方向错误；不代表独立人工验收。",
+      "inputCount": 1,
+      "exactEnglishPresent": null
+    },
+    {
+      "caseId": "T03",
+      "repeat": 2,
+      "directionalReview": "NO_CRITICAL_DIRECTION_ERROR_OBSERVED",
+      "note": "辅助核对未见关键方向错误；不代表独立人工验收。",
+      "inputCount": 1,
+      "exactEnglishPresent": null
+    },
+    {
+      "caseId": "T04",
+      "repeat": 2,
+      "directionalReview": "NO_CRITICAL_DIRECTION_ERROR_OBSERVED",
+      "note": "辅助核对未见关键方向错误；不代表独立人工验收。",
+      "inputCount": 2,
+      "exactEnglishPresent": null
+    },
+    {
+      "caseId": "T05",
+      "repeat": 2,
+      "directionalReview": "NO_CRITICAL_DIRECTION_ERROR_OBSERVED",
+      "note": "辅助核对未见关键方向错误；不代表独立人工验收。",
+      "inputCount": 1,
+      "exactEnglishPresent": null
+    },
+    {
+      "caseId": "T09",
+      "repeat": 2,
+      "directionalReview": "NO_CRITICAL_DIRECTION_ERROR_OBSERVED",
+      "note": "辅助核对未见关键方向错误；不代表独立人工验收。",
+      "inputCount": 1,
+      "exactEnglishPresent": null
+    },
+    {
+      "caseId": "T10",
+      "repeat": 2,
+      "directionalReview": "NO_CRITICAL_DIRECTION_ERROR_OBSERVED",
+      "note": "英文整句与r001原文一致，中文已标译述；但本次实际输入意外包含全部76条，事后仅本地回归修复。",
+      "inputCount": 76,
+      "exactEnglishPresent": true
+    },
+    {
+      "caseId": "T11",
+      "repeat": 2,
+      "directionalReview": "NO_CRITICAL_DIRECTION_ERROR_OBSERVED",
+      "note": "辅助核对未见关键方向错误；不代表独立人工验收。",
+      "inputCount": 1,
+      "exactEnglishPresent": null
+    }
+  ]
+}

@@ -62,3 +62,30 @@ test('scope notices use fixed system text, never uncited model claims',()=>{
  assert.equal(reply.scopeNotice,'demo_provenance');assert.ok(reply.answer.includes('模拟'));assert.equal(reply.answer.includes('99'),false);
  for(const value of [{scopeNotice:'unknown',answer:'x',reviewIds:[]},{scopeNotice:'demo_provenance',answer:'x',reviewIds:['r001']},{answer:'无引用分析',reviewIds:[]}])assert.throws(()=>validateReply(value));
 });
+test('focused evidence forwards only named reviews and rejects out-of-scope citations',async()=>{
+ const config={enabled:true,endpoint:'https://example.test/chat',model:'m',key:'fake'};let payload;
+ const fake=ids=>async(u,o)=>{payload=JSON.parse(JSON.parse(o.body).messages.at(-1).content);return new Response(JSON.stringify({choices:[{message:{content:JSON.stringify({answer:'样本反馈需进一步验证。',reviewIds:ids})}}]}));};
+ await runModel({...valid,question:'只分析r027的防漏边界'},config,fake(['r027']));assert.deepEqual(payload.reviews.map(r=>r.reviewId),['r027']);
+ await assert.rejects(runModel({...valid,question:'只分析r027'},config,fake(['r001'])),/unverified_response/);
+ await runModel({...valid,question:'对比r016和r018'},config,fake(['r016','r018']));assert.deepEqual(payload.reviews.map(r=>r.reviewId),['r016','r018']);
+});
+test('continuation retains named evidence, while global questions retain full dataset',async()=>{
+ const config={enabled:true,endpoint:'https://example.test/chat',model:'m',key:'fake'};let payload;
+ const fake=async(u,o)=>{payload=JSON.parse(JSON.parse(o.body).messages.at(-1).content);return new Response(JSON.stringify({choices:[{message:{content:JSON.stringify({answer:'需要验证。',reviewIds:['r001']})}}]}));};
+ const history=[{role:'user',content:'只讨论r001'},{role:'assistant',content:'清洗困难。'}];
+ await runModel({...valid,history,question:'刚才那个问题的原文是什么？'},config,fake);assert.equal(payload.reviews.length,1);
+ await runModel({...valid,history,question:'现在分析所有评论'},config,fake);assert.equal(payload.reviews.length,76);
+});
+test('negative instruction not to switch to other reviews preserves focused context',async()=>{
+ const config={enabled:true,endpoint:'https://example.test/chat',model:'m',key:'fake'};let payload;
+ const fake=async(u,o)=>{payload=JSON.parse(JSON.parse(o.body).messages.at(-1).content);return new Response(JSON.stringify({choices:[{message:{content:JSON.stringify({answer:'清洁问题需验证。',reviewIds:['r001']})}}]}));};
+ await runModel({...valid,question:'刚才说的那个问题，原文是什么依据？不要切换到其他评论。',history:[{role:'user',content:'只讨论r001'},{role:'assistant',content:'清洁困难。'}]},config,fake);
+ assert.deepEqual(payload.reviews.map(r=>r.reviewId),['r001']);
+});
+test('new topic is a barrier to old focused evidence and history',async()=>{
+ const config={enabled:true,endpoint:'https://example.test/chat',model:'m',key:'fake'};let messages,payload;
+ const fake=async(u,o)=>{messages=JSON.parse(o.body).messages;payload=JSON.parse(messages.at(-1).content);return new Response(JSON.stringify({choices:[{message:{content:JSON.stringify({answer:'待验证。',reviewIds:['r001']})}}]}));};
+ const initial=[{role:'user',content:'只讨论r001'},{role:'assistant',content:'清洁困难。'}];
+ await runModel({...valid,question:'只分析r001',history:[...initial,{role:'user',content:'现在分析所有评论'},{role:'assistant',content:'其他样本漏水噪音。'}]},config,fake);assert.equal(messages.length,2);
+ await runModel({...valid,question:'刚才那个问题原文依据是什么？',history:[...initial,{role:'user',content:'这批评论的声音反馈是什么？'},{role:'assistant',content:'声音体验不同。'}]},config,fake);assert.equal(payload.reviews.length,76);assert.equal(messages.length,4);assert.ok(!JSON.stringify(messages).includes('清洁困难。'));
+});

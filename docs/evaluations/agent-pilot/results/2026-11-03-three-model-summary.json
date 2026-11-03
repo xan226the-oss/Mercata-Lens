@@ -1,0 +1,48 @@
+{
+  "configuration": "bailian-json-nonthinking; same prompt; evidence-six; two repeats",
+  "models": [
+    {
+      "model": "qwen3.7-plus",
+      "file": "2026-11-03T05-38-22.286Z.json",
+      "calls": 12,
+      "passed": 12,
+      "median": 1.955,
+      "min": 1.264,
+      "max": 4.458,
+      "tokens": 11609,
+      "cachedTokens": 5120,
+      "promptHash": "df9f90ee35b9ea58b1b56c2e3c9159f3b7d02dc04b4d47c92a312877fb1f4838",
+      "scopeMatches": true,
+      "exactEnglishTurns": 2
+    },
+    {
+      "model": "qwen3.8-flash",
+      "file": "2026-11-03T05-38-57.589Z.json",
+      "calls": 12,
+      "passed": 12,
+      "median": 1.9295,
+      "min": 1.154,
+      "max": 3.503,
+      "tokens": 11721,
+      "cachedTokens": 0,
+      "promptHash": "df9f90ee35b9ea58b1b56c2e3c9159f3b7d02dc04b4d47c92a312877fb1f4838",
+      "scopeMatches": true,
+      "exactEnglishTurns": 2
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "file": "2026-11-03T05-39-51.947Z.json",
+      "calls": 12,
+      "passed": 12,
+      "median": 1.1720000000000002,
+      "min": 0.975,
+      "max": 4.179,
+      "tokens": 11889,
+      "cachedTokens": 8448,
+      "promptHash": "df9f90ee35b9ea58b1b56c2e3c9159f3b7d02dc04b4d47c92a312877fb1f4838",
+      "scopeMatches": true,
+      "exactEnglishTurns": 2
+    }
+  ],
+  "defaultModelChanged": false
+}

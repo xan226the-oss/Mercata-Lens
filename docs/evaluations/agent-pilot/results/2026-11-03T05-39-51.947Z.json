@@ -1,0 +1,389 @@
+{
+  "model": "deepseek-v4.1-flash",
+  "profile": "bailian-json-nonthinking",
+  "promptHash": "df9f90ee35b9ea58b1b56c2e3c9159f3b7d02dc04b4d47c92a312877fb1f4838",
+  "suite": "evidence-six",
+  "requestOptions": {},
+  "probe": false,
+  "calls": 12,
+  "stopped": false,
+  "output": [
+    {
+      "caseId": "T03",
+      "repeat": 1,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1374,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r027"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "不能证明。这条评论的英文原文是“No leaks so far after a month, seals look solid.”，译述为：使用一段时间后暂未发现漏水，密封件看起来结实。它只说明该评论者短期使用中的个人体验，属于单次观察，既没有覆盖长期使用、不同安装条件或极端场景，也没有提供检测或对比证据。因此可支持的仅是“该用户短期未遇漏水”的体验反馈，不能据此推断产品一定不会漏水；密封结构是否可靠、长期是否渗漏仍需验证。",
+      "reviewIds": [
+        "r027"
+      ],
+      "usage": {
+        "prompt_tokens": 854,
+        "completion_tokens": 126,
+        "total_tokens": 980,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 854
+        },
+        "completion_tokens_details": {
+          "text_tokens": 126
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "区分暂未漏水与永久保证，不反向读成漏水投诉。"
+    },
+    {
+      "caseId": "T04",
+      "repeat": 1,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1098,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r016",
+        "r018"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "不能据此说所有样本都很吵。所引用的两条评论分属不同产品，声音反馈方向相反：一条称运行安静、没有电机噪声，另一条称泵体噪声大并在台面上振动作响。这只能说明给定样本内存在分歧，不能外推到全部样本或真实市场；是否普遍偏吵仍需更多同产品、同使用场景的原文验证。",
+      "reviewIds": [
+        "r016",
+        "r018"
+      ],
+      "usage": {
+        "prompt_tokens": 893,
+        "completion_tokens": 95,
+        "total_tokens": 988,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 893
+        },
+        "completion_tokens_details": {
+          "text_tokens": 95
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "保留正反声音，不把不同产品评论混为同一产品结论。"
+    },
+    {
+      "caseId": "T05",
+      "repeat": 1,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1234,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r030"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "不能。所引用的评论只说明水泵在短时间使用后停止工作，属于功能失效反馈，原文没有提到漏电、触电、冒烟、发热或其他电气安全现象。把停转直接认定为触电危险属于推测，尚需查看具体故障原因、电气结构和安全检测结果来验证。",
+      "reviewIds": [
+        "r030"
+      ],
+      "usage": {
+        "prompt_tokens": 849,
+        "completion_tokens": 77,
+        "total_tokens": 926,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 849
+        },
+        "completion_tokens_details": {
+          "text_tokens": 77
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "不把停止工作推导为已证实的电气安全事故。"
+    },
+    {
+      "caseId": "T09",
+      "repeat": 1,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1110,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "这条评论描述的是清洁困难：内部存在容易积存黏滑残留的角落，反复刷洗也难以清除。这是用户对清洁体验的反馈，不能据此推断材质、卫生后果或结构改进是否有效，相关原因和解决方式仍需验证。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 858,
+        "completion_tokens": 66,
+        "total_tokens": 924,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 858
+        },
+        "completion_tokens_details": {
+          "text_tokens": 66
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "建立本轮特定评论上下文。"
+    },
+    {
+      "caseId": "T10",
+      "repeat": 1,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 975,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 2,
+      "missingExpectedIds": [],
+      "answer": "原文依据是这条评论中的英文原句：“Hard to clean. The inside has corners that trap slime no matter how many times I scrub.” 原意是清洁困难，内部角落会积存黏滑残留，反复刷洗也难以清除。这是用户对清洁体验的反馈，不能据此推断材质、卫生后果或结构改进是否有效，相关原因和解决方式仍需验证。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 929,
+        "completion_tokens": 94,
+        "total_tokens": 1023,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 929
+        },
+        "completion_tokens_details": {
+          "text_tokens": 94
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "继承上一轮r001上下文，不换商品或引用。"
+    },
+    {
+      "caseId": "T11",
+      "repeat": 1,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1355,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 4,
+      "missingExpectedIds": [],
+      "answer": "不能据此作经营判断。这条评论只反映清洁死角和黏滑残留的体验问题；即使假设结构改动能缓解，也仍需验证改动后的实际清洁效果、残留是否减少、是否引入新的使用问题，以及不同使用条件下的表现。现有样本没有材质、事故或经营数据，无法支持进货结论。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 1030,
+        "completion_tokens": 80,
+        "total_tokens": 1110,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 1030
+        },
+        "completion_tokens_details": {
+          "text_tokens": 80
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "继续同一上下文，不越界输出进货建议，区分改进假设与经营判断。"
+    },
+    {
+      "caseId": "T03",
+      "repeat": 2,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1068,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r027"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "这条评论只能说明该用户短期使用后未遇到漏水，原文大意是“用了一个月目前没漏，密封看起来结实”，属于个人体验反馈，不能证明产品一定不会漏水。局限在于：使用时间有限，未覆盖长期老化、不同装配或使用条件；没有材质、批次或测试数据；样本仅为单条模拟评论。密封是否可靠、长期是否漏水仍需验证。",
+      "reviewIds": [
+        "r027"
+      ],
+      "usage": {
+        "prompt_tokens": 854,
+        "completion_tokens": 96,
+        "total_tokens": 950,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 854
+        },
+        "completion_tokens_details": {
+          "text_tokens": 96
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "区分暂未漏水与永久保证，不反向读成漏水投诉。"
+    },
+    {
+      "caseId": "T04",
+      "repeat": 2,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 4179,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r016",
+        "r018"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "不能概括为所有样本都很吵。所引用的两条评论对声音的体验相反：一条称运行安静、没有电机噪声，另一条称泵体噪声大并在台面上振动作响。两条评论对应不同产品，不能合并成同一产品的统一结论，也不能外推到全部样本。可解决性假设仅限后者：振动异响可能与放置稳定性或泵体结构有关，但尚未验证；前者是否代表长期表现也需抽查原文和更多证据。",
+      "reviewIds": [
+        "r016",
+        "r018"
+      ],
+      "usage": {
+        "prompt_tokens": 893,
+        "completion_tokens": 114,
+        "total_tokens": 1007,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 893
+        },
+        "completion_tokens_details": {
+          "text_tokens": 114
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "保留正反声音，不把不同产品评论混为同一产品结论。"
+    },
+    {
+      "caseId": "T05",
+      "repeat": 2,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1566,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r030"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "不能。所引用的评论只说明水泵在短时间使用后停止工作，属于功能失效反馈，原文没有提到漏电、触电、外壳破损、进水带电或任何安全防护失效。把停转直接认定为触电危险属于超出原文的推断。是否存在触电风险，需要查看电气安全检测、故障拆解、接地与绝缘情况以及是否有安全事件记录，这些在当前数据中都没有。",
+      "reviewIds": [
+        "r030"
+      ],
+      "usage": {
+        "prompt_tokens": 849,
+        "completion_tokens": 97,
+        "total_tokens": 946,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 849
+        },
+        "completion_tokens_details": {
+          "text_tokens": 97
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "不把停止工作推导为已证实的电气安全事故。"
+    },
+    {
+      "caseId": "T09",
+      "repeat": 2,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1046,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "这条评论描述的是清洁困难：内部存在会积留黏液的角落，反复刷洗也难以清除。这里反映的是清洁死角与黏液残留的体验反馈，属于卫生风险线索；是否由结构改动可解决，仍需验证。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 858,
+        "completion_tokens": 62,
+        "total_tokens": 920,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 858
+        },
+        "completion_tokens_details": {
+          "text_tokens": 62
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "建立本轮特定评论上下文。"
+    },
+    {
+      "caseId": "T10",
+      "repeat": 2,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1261,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 2,
+      "missingExpectedIds": [],
+      "answer": "原文依据是这条评论中的英文原句：“Hard to clean. The inside has corners that trap slime no matter how many times I scrub.” 原意是：内部有会积留黏液的角落，反复刷洗也难以清除。这里反映的是清洁死角与黏液残留的体验反馈，属于卫生风险线索；是否由结构改动可解决，仍需验证。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 925,
+        "completion_tokens": 90,
+        "total_tokens": 1015,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 925
+        },
+        "completion_tokens_details": {
+          "text_tokens": 90
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "继承上一轮r001上下文，不换商品或引用。"
+    },
+    {
+      "caseId": "T11",
+      "repeat": 2,
+      "configuredModel": "deepseek-v4.1-flash",
+      "reportedModel": "deepseek-v4.1-flash",
+      "elapsedMs": 1048,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 4,
+      "missingExpectedIds": [],
+      "answer": "不能据此作经营判断。这条评论只反映清洁死角和黏液残留的体验问题；即使假设结构改动能缓解，也仍需验证改动后的实际清洁效果、长期使用中的残留情况，以及是否引入新的使用或卫生风险。现有样本没有材质、事故或经营数据，无法支持进货结论。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 1022,
+        "completion_tokens": 78,
+        "total_tokens": 1100,
+        "prompt_tokens_details": {
+          "cached_tokens": 768,
+          "text_tokens": 1022
+        },
+        "completion_tokens_details": {
+          "text_tokens": 78
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "继续同一上下文，不越界输出进货建议，区分改进假设与经营判断。"
+    }
+  ],
+  "scope": "synthetic demo; not market evidence; semantic judgments pending"
+}

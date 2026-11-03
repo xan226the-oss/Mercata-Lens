@@ -1,0 +1,353 @@
+{
+  "model": "qwen3.7-plus",
+  "profile": "bailian-json-nonthinking",
+  "promptHash": "df9f90ee35b9ea58b1b56c2e3c9159f3b7d02dc04b4d47c92a312877fb1f4838",
+  "suite": "evidence-six",
+  "requestOptions": {},
+  "probe": false,
+  "calls": 12,
+  "stopped": false,
+  "output": [
+    {
+      "caseId": "T03",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 2871,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r027"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "这条评论仅表示在特定使用时长内未观察到漏水，且密封件外观完好。单次短期体验不能证明产品在所有条件下都不会漏水，长期耐用性、极端环境表现及个体差异仍需验证。",
+      "reviewIds": [
+        "r027"
+      ],
+      "usage": {
+        "prompt_tokens": 867,
+        "completion_tokens": 67,
+        "total_tokens": 934,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 867
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "区分暂未漏水与永久保证，不反向读成漏水投诉。"
+    },
+    {
+      "caseId": "T04",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 2779,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r016",
+        "r018"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "所引用的评论呈现相反的声音体验：一条描述为几乎无声，另一条指出泵噪音大且伴有震动。由于样本间反馈矛盾且覆盖范围有限，不能据此推断所有样本都很吵。不同产品标识意味着不能直接视为同一表现，需抽查原文并扩大验证范围。",
+      "reviewIds": [
+        "r016",
+        "r018"
+      ],
+      "usage": {
+        "prompt_tokens": 912,
+        "completion_tokens": 91,
+        "total_tokens": 1003,
+        "prompt_tokens_details": {
+          "cached_tokens": 512,
+          "text_tokens": 912
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "保留正反声音，不把不同产品评论混为同一产品结论。"
+    },
+    {
+      "caseId": "T05",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 1814,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r030"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "这条评论仅描述水泵停止工作，未提及漏电、电击或电气安全隐患。无法据此认定存在触电危险，需进一步验证故障原因及电气安全状况。",
+      "reviewIds": [
+        "r030"
+      ],
+      "usage": {
+        "prompt_tokens": 863,
+        "completion_tokens": 59,
+        "total_tokens": 922,
+        "prompt_tokens_details": {
+          "cached_tokens": 512,
+          "text_tokens": 863
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "不把停止工作推导为已证实的电气安全事故。"
+    },
+    {
+      "caseId": "T09",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 1624,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "这条评论指出清洁困难，内部角落容易残留黏液，即使多次刷洗也难以清除。是否通过结构优化解决该问题，仍需验证。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 871,
+        "completion_tokens": 43,
+        "total_tokens": 914,
+        "prompt_tokens_details": {
+          "cached_tokens": 512,
+          "text_tokens": 871
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "建立本轮特定评论上下文。"
+    },
+    {
+      "caseId": "T10",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 1791,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 2,
+      "missingExpectedIds": [],
+      "answer": "原文依据为：'Hard to clean. The inside has corners that trap slime no matter how many times I scrub.' 译述为清洁困难，内部角落会困住黏液，无论刷洗多少次。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 926,
+        "completion_tokens": 56,
+        "total_tokens": 982,
+        "prompt_tokens_details": {
+          "cached_tokens": 512,
+          "text_tokens": 926
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "继承上一轮r001上下文，不换商品或引用。"
+    },
+    {
+      "caseId": "T11",
+      "repeat": 1,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 1802,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 4,
+      "missingExpectedIds": [],
+      "answer": "不能据此作经营判断。仅凭单条评论无法确认结构改动后的实际清洁效果，需验证改进样品的真实清洗体验及残留情况。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 996,
+        "completion_tokens": 43,
+        "total_tokens": 1039,
+        "prompt_tokens_details": {
+          "cached_tokens": 512,
+          "text_tokens": 996
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "继续同一上下文，不越界输出进货建议，区分改进假设与经营判断。"
+    },
+    {
+      "caseId": "T03",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 2668,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r027"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "这条评论仅表明在特定时间段内未观察到漏水，且密封件外观完好。这属于有限时长的个人体验，不能证明产品在所有使用条件或长期状态下一定不会漏水。原文中的“目前为止”和“一个月”体现了时间局限性，无法排除未来出现泄漏的风险。",
+      "reviewIds": [
+        "r027"
+      ],
+      "usage": {
+        "prompt_tokens": 867,
+        "completion_tokens": 83,
+        "total_tokens": 950,
+        "prompt_tokens_details": {
+          "cached_tokens": 512,
+          "text_tokens": 867
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "区分暂未漏水与永久保证，不反向读成漏水投诉。"
+    },
+    {
+      "caseId": "T04",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 3257,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r016",
+        "r018"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "所引用的评论呈现相反的声音体验：一条描述为安静无电机噪音，另一条指出泵 noisy 并伴随振动和 rattling。由于样本间存在明显矛盾，且证据范围仅限这两条评论，不能据此断言所有样本都很吵。不同产品标识也提示可能涉及不同型号或个体差异，需进一步验证原文语境及更多样本。",
+      "reviewIds": [
+        "r016",
+        "r018"
+      ],
+      "usage": {
+        "prompt_tokens": 912,
+        "completion_tokens": 105,
+        "total_tokens": 1017,
+        "prompt_tokens_details": {
+          "cached_tokens": 512,
+          "text_tokens": 912
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "保留正反声音，不把不同产品评论混为同一产品结论。"
+    },
+    {
+      "caseId": "T05",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 1833,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r030"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "这条评论仅描述水泵停止工作，未提及漏电、电击或电气安全隐患。无法据此认定存在触电危险，需进一步验证故障原因及电气安全状况。",
+      "reviewIds": [
+        "r030"
+      ],
+      "usage": {
+        "prompt_tokens": 863,
+        "completion_tokens": 59,
+        "total_tokens": 922,
+        "prompt_tokens_details": {
+          "cached_tokens": 512,
+          "text_tokens": 863
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "不把停止工作推导为已证实的电气安全事故。"
+    },
+    {
+      "caseId": "T09",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 1264,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 0,
+      "missingExpectedIds": [],
+      "answer": "这条评论指出清洁困难，内部角落容易残留黏液，反复刷洗也难以清除。是否通过结构优化解决，仍需验证。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 871,
+        "completion_tokens": 40,
+        "total_tokens": 911,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "text_tokens": 871
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "建立本轮特定评论上下文。"
+    },
+    {
+      "caseId": "T10",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 4458,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 2,
+      "missingExpectedIds": [],
+      "answer": "原文依据为：'Hard to clean. The inside has corners that trap slime no matter how many times I scrub.' 译述为清洁困难，内部角落会困住黏液，无论刷洗多少次。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 923,
+        "completion_tokens": 56,
+        "total_tokens": 979,
+        "prompt_tokens_details": {
+          "cached_tokens": 512,
+          "text_tokens": 923
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "继承上一轮r001上下文，不换商品或引用。"
+    },
+    {
+      "caseId": "T11",
+      "repeat": 2,
+      "configuredModel": "qwen3.7-plus",
+      "reportedModel": "qwen3.7-plus",
+      "elapsedMs": 2077,
+      "contractPassed": true,
+      "inputReviewIds": [
+        "r001"
+      ],
+      "sentHistoryLength": 4,
+      "missingExpectedIds": [],
+      "answer": "不能据此作经营判断。仅凭单条评论无法确认改进有效，需验证清洁死角是否真正消除、材质耐污性及长期卫生表现。",
+      "reviewIds": [
+        "r001"
+      ],
+      "usage": {
+        "prompt_tokens": 993,
+        "completion_tokens": 43,
+        "total_tokens": 1036,
+        "prompt_tokens_details": {
+          "cached_tokens": 512,
+          "text_tokens": 993
+        }
+      },
+      "humanReview": "PENDING",
+      "rubric": "继续同一上下文，不越界输出进货建议，区分改进假设与经营判断。"
+    }
+  ],
+  "scope": "synthetic demo; not market evidence; semantic judgments pending"
+}

@@ -1,6 +1,6 @@
 /** Evaluation-only helpers: never retain provider headers, errors or arbitrary fields. */
 export function makeRequestPayload(payload,options={},config={}){
- if(config.profile==='qwen-json-nonthinking'&&(options.enable_thinking===true||options.thinking))throw new Error('Profile options conflict');
+ if(['qwen-json-nonthinking','bailian-json-nonthinking'].includes(config.profile)&&(options.enable_thinking===true||options.thinking))throw new Error('Profile options conflict');
  const result={...payload};
  if(result.max_completion_tokens===undefined)result.max_tokens=1024;
  if(options.thinking)result.thinking=options.thinking;

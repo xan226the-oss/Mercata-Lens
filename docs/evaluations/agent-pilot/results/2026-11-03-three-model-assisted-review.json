@@ -1,0 +1,293 @@
+{
+  "reviewType": "Codex assisted; not independent human validation",
+  "rows": [
+    {
+      "model": "qwen3.7-plus",
+      "caseId": "T03",
+      "repeat": 1,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.7-plus",
+      "caseId": "T04",
+      "repeat": 1,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.7-plus",
+      "caseId": "T05",
+      "repeat": 1,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.7-plus",
+      "caseId": "T09",
+      "repeat": 1,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.7-plus",
+      "caseId": "T10",
+      "repeat": 1,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.7-plus",
+      "caseId": "T11",
+      "repeat": 1,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.7-plus",
+      "caseId": "T03",
+      "repeat": 2,
+      "inputScopeMatchesExpected": true,
+      "note": "中文译述以引号称为原文，译述标记可更清楚；未改变漏水结论的证据边界。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.7-plus",
+      "caseId": "T04",
+      "repeat": 2,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.7-plus",
+      "caseId": "T05",
+      "repeat": 2,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.7-plus",
+      "caseId": "T09",
+      "repeat": 2,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.7-plus",
+      "caseId": "T10",
+      "repeat": 2,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.7-plus",
+      "caseId": "T11",
+      "repeat": 2,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.8-flash",
+      "caseId": "T03",
+      "repeat": 1,
+      "inputScopeMatchesExpected": true,
+      "note": "中文译述以引号称为原文，译述标记可更清楚；未改变漏水结论的证据边界。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.8-flash",
+      "caseId": "T04",
+      "repeat": 1,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.8-flash",
+      "caseId": "T05",
+      "repeat": 1,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.8-flash",
+      "caseId": "T09",
+      "repeat": 1,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.8-flash",
+      "caseId": "T10",
+      "repeat": 1,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.8-flash",
+      "caseId": "T11",
+      "repeat": 1,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.8-flash",
+      "caseId": "T03",
+      "repeat": 2,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.8-flash",
+      "caseId": "T04",
+      "repeat": 2,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.8-flash",
+      "caseId": "T05",
+      "repeat": 2,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.8-flash",
+      "caseId": "T09",
+      "repeat": 2,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.8-flash",
+      "caseId": "T10",
+      "repeat": 2,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "qwen3.8-flash",
+      "caseId": "T11",
+      "repeat": 2,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "caseId": "T03",
+      "repeat": 1,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "caseId": "T04",
+      "repeat": 1,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "caseId": "T05",
+      "repeat": 1,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "caseId": "T09",
+      "repeat": 1,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "caseId": "T10",
+      "repeat": 1,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "caseId": "T11",
+      "repeat": 1,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "caseId": "T03",
+      "repeat": 2,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "caseId": "T04",
+      "repeat": 2,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "caseId": "T05",
+      "repeat": 2,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "caseId": "T09",
+      "repeat": 2,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "caseId": "T10",
+      "repeat": 2,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "caseId": "T11",
+      "repeat": 2,
+      "inputScopeMatchesExpected": true,
+      "note": "辅助核对未见关键方向性错误；不是独立人工验收。",
+      "humanReview": "PENDING"
+    }
+  ]
+}

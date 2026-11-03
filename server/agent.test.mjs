@@ -89,3 +89,13 @@ test('new topic is a barrier to old focused evidence and history',async()=>{
  await runModel({...valid,question:'只分析r001',history:[...initial,{role:'user',content:'现在分析所有评论'},{role:'assistant',content:'其他样本漏水噪音。'}]},config,fake);assert.equal(messages.length,2);
  await runModel({...valid,question:'刚才那个问题原文依据是什么？',history:[...initial,{role:'user',content:'这批评论的声音反馈是什么？'},{role:'assistant',content:'声音体验不同。'}]},config,fake);assert.equal(payload.reviews.length,76);assert.equal(messages.length,4);assert.ok(!JSON.stringify(messages).includes('清洁困难。'));
 });
+test('shared Bailian comparison profile uses the same instructions and bounds for all three candidates',async()=>{
+ const base={MODEL_CALLS_ENABLED:'true',MODEL_ENDPOINT:'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',MODEL_API_KEY:'fake',MODEL_PROFILE:'bailian-json-nonthinking'};
+ let prompts=[];
+ for(const model of ['qwen3.7-plus','qwen3.8-flash','deepseek-v4.1-flash']){
+  const config=readConfig({...base,MODEL_NAME:model});assert.equal(config.enabled,true);
+  await runModel({...valid,question:'解释r001'},config,async(u,o)=>{const b=JSON.parse(o.body);prompts.push(b.messages[0].content);assert.equal(b.enable_thinking,false);assert.equal(b.response_format.type,'json_object');assert.equal(b.max_completion_tokens,1024);return new Response(JSON.stringify({choices:[{message:{content:JSON.stringify({answer:'清洁问题需验证。',reviewIds:['r001']})}}]}));});
+ }
+ assert.equal(new Set(prompts).size,1);
+ assert.equal(readConfig({...base,MODEL_NAME:'unknown'}).enabled,false);
+});

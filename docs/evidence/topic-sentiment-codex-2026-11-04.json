@@ -1,0 +1,536 @@
+{
+  "source": "Codex",
+  "date": "2026-11-04",
+  "humanReview": "PENDING",
+  "reviewCount": 50,
+  "aspectCount": 58,
+  "sentimentCounts": {
+    "正面": 22,
+    "负面": 32,
+    "中性": 4
+  },
+  "rows": [
+    {
+      "review_id": "r001",
+      "topic": "清洁体验",
+      "sentiment": "负面",
+      "evidence": "Hard to clean.",
+      "reason": "明确表示难清洗。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r002",
+      "topic": "清洁体验",
+      "sentiment": "负面",
+      "evidence": "Cleaning takes forever.",
+      "reason": "明确抱怨清洗耗时。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r003",
+      "topic": "清洁体验",
+      "sentiment": "负面",
+      "evidence": "Very hard to clean, the motor chamber is impossible to reach",
+      "reason": "明确表示很难清洗且电机腔无法触及。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r004",
+      "topic": "清洁体验",
+      "sentiment": "负面",
+      "evidence": "I stopped using it because scrubbing took too long.",
+      "reason": "因刷洗耗时而停止使用。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r005",
+      "topic": "其他",
+      "sentiment": "正面",
+      "evidence": "The wide bowl sounds nice",
+      "reason": "对宽口碗设计有初步肯定；仅是听起来不错，不当作容量评价。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r005",
+      "topic": "清洁体验",
+      "sentiment": "负面",
+      "evidence": "it is a pain to clean every few days.",
+      "reason": "明确认为定期清洗麻烦。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r006",
+      "topic": "清洁体验",
+      "sentiment": "负面",
+      "evidence": "Not the easiest to clean.",
+      "reason": "委婉表达清洗不方便，不能反读成容易清洗。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r007",
+      "topic": "清洁体验",
+      "sentiment": "负面",
+      "evidence": "Hard to clean",
+      "reason": "明确表示难清洗。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r007",
+      "topic": "其他",
+      "sentiment": "负面",
+      "evidence": "it smells after a few days unless I take everything apart.",
+      "reason": "有条件的异味反馈；未彻底拆洗时几天后有异味，不推断已发生健康损害。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r008",
+      "topic": "清洁体验",
+      "sentiment": "正面",
+      "evidence": "Easy to clean, the parts come apart simply",
+      "reason": "肯定清洗和拆卸便利性。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r009",
+      "topic": "清洁体验",
+      "sentiment": "正面",
+      "evidence": "Much easier to clean than my old fountain.",
+      "reason": "明确相对旧设备更易清洗。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r010",
+      "topic": "清洁体验",
+      "sentiment": "负面",
+      "evidence": "the filter housing is a bit awkward to clean each week.",
+      "reason": "对滤芯外壳的清洗便利性轻度不满；总体尚可未单独强加给其他主题。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r011",
+      "topic": "声音表现",
+      "sentiment": "负面",
+      "evidence": "Too noisy at night",
+      "reason": "明确抱怨夜间噪音。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r012",
+      "topic": "声音表现",
+      "sentiment": "正面",
+      "evidence": "Silent fountain as promised.",
+      "reason": "肯定静音符合预期。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r013",
+      "topic": "声音表现",
+      "sentiment": "正面",
+      "evidence": "Very quiet, only a faint trickle sound when full.",
+      "reason": "肯定安静，记录满水这一条件。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r014",
+      "topic": "声音表现",
+      "sentiment": "正面",
+      "evidence": "Quiet enough that it does not bother me during sleep.",
+      "reason": "肯定睡眠时不受干扰。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r015",
+      "topic": "声音表现",
+      "sentiment": "负面",
+      "evidence": "Gets noisy when the water level drops",
+      "reason": "明确指出低水位条件下的噪音，不能改成全程都吵。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r016",
+      "topic": "声音表现",
+      "sentiment": "正面",
+      "evidence": "Whisper quiet, my cat drinks without any motor noise.",
+      "reason": "无电机噪音是正面反馈，不因noise词出现标负面。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r017",
+      "topic": "声音表现",
+      "sentiment": "正面",
+      "evidence": "Pump is quiet but there is a soft gurgle, acceptable.",
+      "reason": "虽有轻微水声但明确可接受，整体肯定声音体验。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r018",
+      "topic": "声音表现",
+      "sentiment": "负面",
+      "evidence": "Noisy pump that vibrates and rattles on the counter.",
+      "reason": "噪音、台面振动和异响共同构成负面声音体验。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r019",
+      "topic": "声音表现",
+      "sentiment": "负面",
+      "evidence": "Not as quiet as advertised",
+      "reason": "低于宣传的静音预期。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r020",
+      "topic": "声音表现",
+      "sentiment": "正面",
+      "evidence": "Quiet pump, barely audible.",
+      "reason": "明确肯定安静。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r021",
+      "topic": "密封防漏",
+      "sentiment": "负面",
+      "evidence": "Started leaking from the bottom seal after a few weeks.",
+      "reason": "几周后底部密封处漏水；保留出现时间。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r022",
+      "topic": "密封防漏",
+      "sentiment": "负面",
+      "evidence": "Leaks around the lid whenever it is full to the top.",
+      "reason": "加满至顶部时盖子周围漏水。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r023",
+      "topic": "密封防漏",
+      "sentiment": "负面",
+      "evidence": "Small leak from the connector",
+      "reason": "即使少量渗漏也属于负面反馈。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r024",
+      "topic": "密封防漏",
+      "sentiment": "负面",
+      "evidence": "Leaked water onto my floor after two weeks of use.",
+      "reason": "使用两周后漏到地板。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r025",
+      "topic": "密封防漏",
+      "sentiment": "负面",
+      "evidence": "There is a slow leak from the pump cable opening.",
+      "reason": "缓慢渗漏仍是负面；不据此推断触电事故。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r026",
+      "topic": "密封防漏",
+      "sentiment": "负面",
+      "evidence": "Leaked everywhere on day one, returned it.",
+      "reason": "首日严重漏水并退货。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r027",
+      "topic": "密封防漏",
+      "sentiment": "正面",
+      "evidence": "No leaks so far after a month, seals look solid.",
+      "reason": "当前一个月内无漏水是有限正面反馈，不代表永久防漏。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r028",
+      "topic": "密封防漏",
+      "sentiment": "正面",
+      "evidence": "No leakage, the gasket fits well.",
+      "reason": "无漏水并肯定密封垫贴合。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r029",
+      "topic": "水泵可靠性",
+      "sentiment": "负面",
+      "evidence": "Pump died after two months.",
+      "reason": "两个月后损坏。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r029",
+      "topic": "其他",
+      "sentiment": "负面",
+      "evidence": "Replacement part was expensive.",
+      "reason": "对替换件费用不满；原文未说是滤芯，不能标作滤芯成本。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r030",
+      "topic": "水泵可靠性",
+      "sentiment": "负面",
+      "evidence": "The pump stopped working after six weeks.",
+      "reason": "六周后停机，不能扩展成已证实的电气事故。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r031",
+      "topic": "水泵可靠性",
+      "sentiment": "负面",
+      "evidence": "Pump became weak after a while and needed frequent priming.",
+      "reason": "水泵变弱且需频繁重新引水。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r032",
+      "topic": "水泵可靠性",
+      "sentiment": "正面",
+      "evidence": "Pump still going strong after four months of daily use.",
+      "reason": "明确肯定每日使用四个月后仍运行良好。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r033",
+      "topic": "水泵可靠性",
+      "sentiment": "负面",
+      "evidence": "Pump died after two months, very disappointing.",
+      "reason": "损坏并明确失望。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r034",
+      "topic": "声音表现",
+      "sentiment": "正面",
+      "evidence": "Quiet pump",
+      "reason": "明确表示水泵安静。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r034",
+      "topic": "水泵可靠性",
+      "sentiment": "中性",
+      "evidence": "has lasted three months with regular cleaning.",
+      "reason": "仅陈述定期清洁条件下的使用时长；未明确称寿命长或可靠，不将时间本身当作肯定。此边界建议复核。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r035",
+      "topic": "水泵可靠性",
+      "sentiment": "负面",
+      "evidence": "Pump got clogged and stopped after a month",
+      "reason": "堵塞停机属于负面可靠性反馈；清理处理另记为清洁主题的中性动作，不推断难清洗。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r035",
+      "topic": "清洁体验",
+      "sentiment": "中性",
+      "evidence": "had to clean it out.",
+      "reason": "记录堵塞后需要清理这一维护动作，未评价清理是否困难，不推断清洗负担。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r036",
+      "topic": "水泵可靠性",
+      "sentiment": "正面",
+      "evidence": "Pump has been reliable for over six months.",
+      "reason": "明确肯定六个月以上的可靠性。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r037",
+      "topic": "滤芯维护与成本",
+      "sentiment": "负面",
+      "evidence": "Filter replacements add up",
+      "reason": "抱怨换芯费用累积，不将每月两个单独当作负面依据。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r038",
+      "topic": "滤芯维护与成本",
+      "sentiment": "负面",
+      "evidence": "Replacement filters are pricey and hard to find locally.",
+      "reason": "价格高且本地购买不便，同属于滤芯维护负担。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r039",
+      "topic": "滤芯维护与成本",
+      "sentiment": "正面",
+      "evidence": "Filters are cheap enough",
+      "reason": "肯定价格可以接受。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r039",
+      "topic": "滤芯维护与成本",
+      "sentiment": "负面",
+      "evidence": "but you need them often.",
+      "reason": "转折强调更换频繁的负担；与价格正面并存，不合并成中性。倾向强度较弱，建议复核。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r040",
+      "topic": "滤芯维护与成本",
+      "sentiment": "正面",
+      "evidence": "Filter cost is okay",
+      "reason": "费用可接受是较弱的正面态度。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r040",
+      "topic": "滤芯维护与成本",
+      "sentiment": "中性",
+      "evidence": "it is a recurring expense.",
+      "reason": "仅陈述持续开支事实，没有明确贵或负担重；though有保留语气但不足以强判负面，建议复核。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r041",
+      "topic": "滤芯维护与成本",
+      "sentiment": "正面",
+      "evidence": "Low-cost filters, one of the reasons I bought this.",
+      "reason": "明确肯定价格低并视为购买理由。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r042",
+      "topic": "滤芯维护与成本",
+      "sentiment": "正面",
+      "evidence": "The filter lasts long so the running cost stays low.",
+      "reason": "肯定耐用及使用成本低。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r043",
+      "topic": "滤芯维护与成本",
+      "sentiment": "中性",
+      "evidence": "Filters are average price and need changing monthly.",
+      "reason": "价格一般与每月更换是描述性信息，没有明确褒贬。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r044",
+      "topic": "滤芯维护与成本",
+      "sentiment": "负面",
+      "evidence": "Filter refills are on the expensive side compared to the fountain.",
+      "reason": "相对饮水机价格认为替换滤芯偏贵。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r045",
+      "topic": "滤芯维护与成本",
+      "sentiment": "正面",
+      "evidence": "Filter cost is fine",
+      "reason": "明确认为费用可以接受。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r045",
+      "topic": "其他",
+      "sentiment": "负面",
+      "evidence": "but the pack is large to store.",
+      "reason": "包装存放负担；不能误当作水箱容量太大。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r046",
+      "topic": "容量与补水",
+      "sentiment": "正面",
+      "evidence": "Good capacity for two cats, lasts a couple of days.",
+      "reason": "明确肯定供两只猫使用的容量与补水间隔。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r047",
+      "topic": "容量与补水",
+      "sentiment": "负面",
+      "evidence": "Too small, needs refilling every day with one cat.",
+      "reason": "太小并需每天补水，明确负面。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r048",
+      "topic": "容量与补水",
+      "sentiment": "正面",
+      "evidence": "Decent capacity, fine for a single cat.",
+      "reason": "肯定容量适合一只猫。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r049",
+      "topic": "容量与补水",
+      "sentiment": "正面",
+      "evidence": "Big tank, I only refill every few days even with three cats.",
+      "reason": "大水箱降低多猫家庭的补水频率，表达肯定。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    },
+    {
+      "review_id": "r050",
+      "topic": "容量与补水",
+      "sentiment": "负面",
+      "evidence": "Smaller than expected, refills more often than I hoped.",
+      "reason": "容量低于预期且补水频繁。",
+      "annotator": "Codex",
+      "human_review": "PENDING"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+review_id,topic,sentiment,evidence,reason,annotator,human_review
+r001,清洁体验,负面,Hard to clean.,明确表示难清洗。,Codex,PENDING
+r002,清洁体验,负面,Cleaning takes forever.,明确抱怨清洗耗时。,Codex,PENDING
+r003,清洁体验,负面,"Very hard to clean, the motor chamber is impossible to reach",明确表示很难清洗且电机腔无法触及。,Codex,PENDING
+r004,清洁体验,负面,I stopped using it because scrubbing took too long.,因刷洗耗时而停止使用。,Codex,PENDING
+r005,其他,正面,The wide bowl sounds nice,对宽口碗设计有初步肯定；仅是听起来不错，不当作容量评价。,Codex,PENDING
+r005,清洁体验,负面,it is a pain to clean every few days.,明确认为定期清洗麻烦。,Codex,PENDING
+r006,清洁体验,负面,Not the easiest to clean.,委婉表达清洗不方便，不能反读成容易清洗。,Codex,PENDING
+r007,清洁体验,负面,Hard to clean,明确表示难清洗。,Codex,PENDING
+r007,其他,负面,it smells after a few days unless I take everything apart.,有条件的异味反馈；未彻底拆洗时几天后有异味，不推断已发生健康损害。,Codex,PENDING
+r008,清洁体验,正面,"Easy to clean, the parts come apart simply",肯定清洗和拆卸便利性。,Codex,PENDING
+r009,清洁体验,正面,Much easier to clean than my old fountain.,明确相对旧设备更易清洗。,Codex,PENDING
+r010,清洁体验,负面,the filter housing is a bit awkward to clean each week.,对滤芯外壳的清洗便利性轻度不满；总体尚可未单独强加给其他主题。,Codex,PENDING
+r011,声音表现,负面,Too noisy at night,明确抱怨夜间噪音。,Codex,PENDING
+r012,声音表现,正面,Silent fountain as promised.,肯定静音符合预期。,Codex,PENDING
+r013,声音表现,正面,"Very quiet, only a faint trickle sound when full.",肯定安静，记录满水这一条件。,Codex,PENDING
+r014,声音表现,正面,Quiet enough that it does not bother me during sleep.,肯定睡眠时不受干扰。,Codex,PENDING
+r015,声音表现,负面,Gets noisy when the water level drops,明确指出低水位条件下的噪音，不能改成全程都吵。,Codex,PENDING
+r016,声音表现,正面,"Whisper quiet, my cat drinks without any motor noise.",无电机噪音是正面反馈，不因noise词出现标负面。,Codex,PENDING
+r017,声音表现,正面,"Pump is quiet but there is a soft gurgle, acceptable.",虽有轻微水声但明确可接受，整体肯定声音体验。,Codex,PENDING
+r018,声音表现,负面,Noisy pump that vibrates and rattles on the counter.,噪音、台面振动和异响共同构成负面声音体验。,Codex,PENDING
+r019,声音表现,负面,Not as quiet as advertised,低于宣传的静音预期。,Codex,PENDING
+r020,声音表现,正面,"Quiet pump, barely audible.",明确肯定安静。,Codex,PENDING
+r021,密封防漏,负面,Started leaking from the bottom seal after a few weeks.,几周后底部密封处漏水；保留出现时间。,Codex,PENDING
+r022,密封防漏,负面,Leaks around the lid whenever it is full to the top.,加满至顶部时盖子周围漏水。,Codex,PENDING
+r023,密封防漏,负面,Small leak from the connector,即使少量渗漏也属于负面反馈。,Codex,PENDING
+r024,密封防漏,负面,Leaked water onto my floor after two weeks of use.,使用两周后漏到地板。,Codex,PENDING
+r025,密封防漏,负面,There is a slow leak from the pump cable opening.,缓慢渗漏仍是负面；不据此推断触电事故。,Codex,PENDING
+r026,密封防漏,负面,"Leaked everywhere on day one, returned it.",首日严重漏水并退货。,Codex,PENDING
+r027,密封防漏,正面,"No leaks so far after a month, seals look solid.",当前一个月内无漏水是有限正面反馈，不代表永久防漏。,Codex,PENDING
+r028,密封防漏,正面,"No leakage, the gasket fits well.",无漏水并肯定密封垫贴合。,Codex,PENDING
+r029,水泵可靠性,负面,Pump died after two months.,两个月后损坏。,Codex,PENDING
+r029,其他,负面,Replacement part was expensive.,对替换件费用不满；原文未说是滤芯，不能标作滤芯成本。,Codex,PENDING
+r030,水泵可靠性,负面,The pump stopped working after six weeks.,六周后停机，不能扩展成已证实的电气事故。,Codex,PENDING
+r031,水泵可靠性,负面,Pump became weak after a while and needed frequent priming.,水泵变弱且需频繁重新引水。,Codex,PENDING
+r032,水泵可靠性,正面,Pump still going strong after four months of daily use.,明确肯定每日使用四个月后仍运行良好。,Codex,PENDING
+r033,水泵可靠性,负面,"Pump died after two months, very disappointing.",损坏并明确失望。,Codex,PENDING
+r034,声音表现,正面,Quiet pump,明确表示水泵安静。,Codex,PENDING
+r034,水泵可靠性,中性,has lasted three months with regular cleaning.,仅陈述定期清洁条件下的使用时长；未明确称寿命长或可靠，不将时间本身当作肯定。此边界建议复核。,Codex,PENDING
+r035,水泵可靠性,负面,Pump got clogged and stopped after a month,堵塞停机属于负面可靠性反馈；清理处理另记为清洁主题的中性动作，不推断难清洗。,Codex,PENDING
+r035,清洁体验,中性,had to clean it out.,记录堵塞后需要清理这一维护动作，未评价清理是否困难，不推断清洗负担。,Codex,PENDING
+r036,水泵可靠性,正面,Pump has been reliable for over six months.,明确肯定六个月以上的可靠性。,Codex,PENDING
+r037,滤芯维护与成本,负面,Filter replacements add up,抱怨换芯费用累积，不将每月两个单独当作负面依据。,Codex,PENDING
+r038,滤芯维护与成本,负面,Replacement filters are pricey and hard to find locally.,价格高且本地购买不便，同属于滤芯维护负担。,Codex,PENDING
+r039,滤芯维护与成本,正面,Filters are cheap enough,肯定价格可以接受。,Codex,PENDING
+r039,滤芯维护与成本,负面,but you need them often.,转折强调更换频繁的负担；与价格正面并存，不合并成中性。倾向强度较弱，建议复核。,Codex,PENDING
+r040,滤芯维护与成本,正面,Filter cost is okay,费用可接受是较弱的正面态度。,Codex,PENDING
+r040,滤芯维护与成本,中性,it is a recurring expense.,仅陈述持续开支事实，没有明确贵或负担重；though有保留语气但不足以强判负面，建议复核。,Codex,PENDING
+r041,滤芯维护与成本,正面,"Low-cost filters, one of the reasons I bought this.",明确肯定价格低并视为购买理由。,Codex,PENDING
+r042,滤芯维护与成本,正面,The filter lasts long so the running cost stays low.,肯定耐用及使用成本低。,Codex,PENDING
+r043,滤芯维护与成本,中性,Filters are average price and need changing monthly.,价格一般与每月更换是描述性信息，没有明确褒贬。,Codex,PENDING
+r044,滤芯维护与成本,负面,Filter refills are on the expensive side compared to the fountain.,相对饮水机价格认为替换滤芯偏贵。,Codex,PENDING
+r045,滤芯维护与成本,正面,Filter cost is fine,明确认为费用可以接受。,Codex,PENDING
+r045,其他,负面,but the pack is large to store.,包装存放负担；不能误当作水箱容量太大。,Codex,PENDING
+r046,容量与补水,正面,"Good capacity for two cats, lasts a couple of days.",明确肯定供两只猫使用的容量与补水间隔。,Codex,PENDING
+r047,容量与补水,负面,"Too small, needs refilling every day with one cat.",太小并需每天补水，明确负面。,Codex,PENDING
+r048,容量与补水,正面,"Decent capacity, fine for a single cat.",肯定容量适合一只猫。,Codex,PENDING
+r049,容量与补水,正面,"Big tank, I only refill every few days even with three cats.",大水箱降低多猫家庭的补水频率，表达肯定。,Codex,PENDING
+r050,容量与补水,负面,"Smaller than expected, refills more often than I hoped.",容量低于预期且补水频繁。,Codex,PENDING

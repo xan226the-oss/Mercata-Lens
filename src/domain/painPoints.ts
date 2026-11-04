@@ -20,7 +20,7 @@ export type CorrectionValidity = "none" | "applied" | "ignored_blank_reason";
 export interface ReviewClassification {
   reviewId: string;
   productId: string;
-  rulesetVersion: typeof PAIN_POINT_RULESET_VERSION;
+  rulesetVersion: string;
   automaticMatches: PainPointMatch[];
   automaticLabels: PainPointId[];
   effectiveLabels: PainPointId[];
@@ -47,7 +47,7 @@ export interface PainPointSummary {
   id: PainPointId;
   labelEn: string;
   labelZh: string;
-  rulesetVersion: typeof PAIN_POINT_RULESET_VERSION;
+  rulesetVersion: string;
   matchedReviewCount: number;
   reviewDenominator: number;
   reviewFraction: number | null;

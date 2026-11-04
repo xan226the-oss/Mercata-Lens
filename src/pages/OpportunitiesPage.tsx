@@ -6,7 +6,7 @@ import { WeightEditor } from "../components/WeightEditor";
 import { PageHeader } from "../components/PageHeader";
 import { DataSourceBadge } from "../components/DataSourceBadge";
 import { useResearch } from "../research/ResearchContext";
-import { summarizePainPoints } from "../domain/painPoints";
+import { aspectPainPoints } from "../domain/aspects";
 import {
   rankOpportunities,
   scoreOpportunity,
@@ -113,7 +113,7 @@ export function OpportunitiesPage() {
     status,
     dataset,
     sourceKind,
-    corrections,
+    aspectOverrides,
     economicScenarios,
     economicScenariosResetKey,
     replaceEconomicScenario,
@@ -134,7 +134,7 @@ export function OpportunitiesPage() {
   }, [economicScenariosResetKey, opportunityWeightsResetKey]);
 
   const results = useMemo(() => economicScenarios.map((scenario) => ({ scenario, result: calculateContribution(scenario.inputs) })), [economicScenarios]);
-  const summaries = useMemo(() => dataset ? summarizePainPoints(dataset, corrections) : [], [dataset, corrections]);
+  const summaries = useMemo(() => dataset ? aspectPainPoints(dataset, aspectOverrides) : [], [dataset, aspectOverrides]);
   const hypotheses = useMemo(
     () => dataset && sourceKind ? createOpportunityHypotheses(dataset, summaries, economicScenarios) : [],
     [dataset, sourceKind, summaries, economicScenarios],
@@ -156,7 +156,7 @@ export function OpportunitiesPage() {
   if (!dataset || !sourceKind || status !== "ready") {
     return (
       <section className="page opportunities-page" data-testid="economics-no-data">
-        <PageHeader eyebrow="Evidence-linked comparison" title="Opportunity comparison" description="Opportunity hypotheses are available only while a validated research dataset is active." />
+        <p>Evidence basis: negative aspects from the current topic/sentiment annotations; untagged content is not problem-free. Legacy phrase-rule corrections are separate.</p><PageHeader eyebrow="Evidence-linked comparison" title="Opportunity comparison" description="Opportunity hypotheses are available only while a validated research dataset is active." />
         <p>{status === "error" ? "The active research data could not be loaded. No Demo contribution is shown." : "No active research data is available yet. No Demo contribution is shown."}</p>
       </section>
     );
@@ -164,6 +164,7 @@ export function OpportunitiesPage() {
 
   return (
     <div className="page opportunities-page">
+      <p>Evidence basis: negative aspects only, counted once per review and group. Uncovered content is not problem-free.</p>
       <PageHeader
         eyebrow="Evidence-linked comparison"
         title="Opportunity comparison"

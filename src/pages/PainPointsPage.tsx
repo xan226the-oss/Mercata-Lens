@@ -1,3 +1,5 @@
+import {AspectWorkbench} from "../components/AspectWorkbench";
+import {useLanguage} from "../app/LanguageContext";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { DataSourceBadge } from "../components/DataSourceBadge";
 import { PageHeader } from "../components/PageHeader";
@@ -8,7 +10,7 @@ import { PAIN_POINT_RULESET_VERSION, type PainPointId } from "../domain/painPoin
 import { classifyReview, summarizePainPoints, type PainPointCorrection } from "../domain/painPoints";
 import { useResearch } from "../research/ResearchContext";
 
-export function PainPointsPage() {
+function LegacyPainPointsPage() {
   const { dataset, sourceKind, corrections, applyReviewCorrection, clearReviewCorrection } = useResearch();
   const [statusFilter, setStatusFilter] = useState<ReviewQueueStatus>("rule_matched");
   const [labelFilter, setLabelFilter] = useState<PainPointId | null>(null);
@@ -167,4 +169,9 @@ export function PainPointsPage() {
       </div>
     </section>
   );
+}
+
+export function PainPointsPage(){
+ const [legacy,setLegacy]=useState(false);const {language}=useLanguage();
+ return <section className="page"><button type="button" onClick={()=>setLegacy(v=>!v)}>{legacy?(language==="zh"?"返回主题情感":"Use aspect sentiment"):(language==="zh"?"旧版规则工作台":"Legacy rule workbench")}</button>{legacy?<><p>Legacy phrase rules only. These corrections do not change the new aspect statistics.</p><LegacyPainPointsPage/></>:<AspectWorkbench/>}</section>;
 }

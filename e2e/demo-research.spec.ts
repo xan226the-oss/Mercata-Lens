@@ -30,6 +30,7 @@ async function assertRuntimeClean(page: Page, errors: ReturnType<typeof captureR
 
 async function runDemoFlow(page: Page, width: number) {
   const errors = captureRuntimeErrors(page);
+  await page.route("**/api/agent/status",r=>r.fulfill({json:{enabled:false}}));
   await page.setViewportSize({ width, height: width === 390 ? 844 : 900 });
   await page.emulateMedia({ media: "screen" });
   await page.goto("/");
@@ -40,7 +41,10 @@ async function runDemoFlow(page: Page, width: number) {
   await expect(page.getByRole("heading", { name: "Data quality" })).toBeVisible();
   await page.getByRole("link", { name: /Category overview/i }).click();
   await expect(page.getByRole("heading", { name: /Category overview/i })).toBeVisible();
+  const statusResponse=page.waitForResponse(r=>r.url().endsWith("/api/agent/status"));
   await page.getByRole("link", { name: /Customer pain points/i }).click();
+  await (await statusResponse).finished();
+  await page.getByRole("button", {name:"Legacy rule workbench"}).click();
   await expect(page.getByRole("heading", { name: /Customer pain-point evidence/i })).toBeVisible();
 
   await page.getByRole("button", { name: "All" }).click();
@@ -99,7 +103,7 @@ async function runDemoFlow(page: Page, width: number) {
   const downloadPath = await download.path();
   expect(downloadPath).not.toBeNull();
   const payload = JSON.parse(await fs.readFile(downloadPath!, "utf8")) as Record<string, unknown>;
-  expect(payload).toMatchObject({ schemaVersion: 1, rulesetVersion: "1.0.0" });
+  expect(payload).toMatchObject({ schemaVersion: 1, rulesetVersion: "2026-11-04-r3" });
   expect(payload).toHaveProperty("datasetProvenance.sourceKind", "demo");
   expect(payload).toHaveProperty("datasetProvenance.market", "US");
   expect(payload).toHaveProperty("datasetProvenance.currency", "USD");

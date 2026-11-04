@@ -4,8 +4,7 @@ import { DataSourceBadge } from "../components/DataSourceBadge";
 import { DecisionStatus } from "../components/DecisionStatus";
 import { ValidationPlan } from "../components/ValidationPlan";
 import { buildDecisionReport, type DecisionConditions } from "../domain/decision";
-import { summarizePainPoints } from "../domain/painPoints";
-import { PAIN_POINT_RULESET_VERSION } from "../domain/painPointRules";
+import { aspectPainPoints, ASPECT_REVISION } from "../domain/aspects";
 import { calculateContribution } from "../domain/economics";
 import { rankOpportunities, type OpportunityId } from "../domain/opportunities";
 import { createOpportunityHypotheses } from "../data/opportunityHypotheses";
@@ -44,7 +43,7 @@ function evidenceDetail(evidenceId: string, dataset: NonNullable<ReturnType<type
 }
 
 export function DecisionPage(): ReactElement {
-  const { status, dataset, sourceKind, qualityReport, corrections, economicScenarios, opportunityWeights, decisionConditions, replaceDecisionConditions } = useResearch();
+  const { status, dataset, sourceKind, qualityReport, corrections, aspectOverrides, economicScenarios, opportunityWeights, decisionConditions, replaceDecisionConditions } = useResearch();
   const [triggeredStopConditions, setTriggeredStopConditions] = useState<string[]>([]);
   const [selectedEvidenceId, setSelectedEvidenceId] = useState<string | null>(null);
   const savedConditions = decisionConditions;
@@ -54,7 +53,7 @@ export function DecisionPage(): ReactElement {
     setSelectedEvidenceId(null);
   }, [dataset]);
 
-  const summaries = useMemo(() => dataset ? summarizePainPoints(dataset, corrections) : [], [dataset, corrections]);
+  const summaries = useMemo(() => dataset ? aspectPainPoints(dataset, aspectOverrides) : [], [dataset, aspectOverrides]);
   const hypotheses = useMemo(() => dataset && sourceKind ? createOpportunityHypotheses(dataset, summaries, economicScenarios) : [], [dataset, sourceKind, summaries, economicScenarios]);
   const ranking = useMemo(() => hypotheses.length === 3 ? rankOpportunities(hypotheses, opportunityWeights) : { status: "incomplete", winnerId: null, scores: [], issues: [] } as const, [hypotheses, opportunityWeights]);
   const economics = useMemo(() => Object.fromEntries(hypotheses.map((hypothesis) => [hypothesis.id, hypothesis.economics.map((scenario) => calculateContribution(scenario.inputs))])) as Record<OpportunityId, ReturnType<typeof calculateContribution>[]>, [hypotheses]);
@@ -79,7 +78,7 @@ export function DecisionPage(): ReactElement {
   }, [assumptions, economics, oppositionEvidenceIds, qualityReport, ranking, savedConditions, supportEvidenceIds, triggeredStopConditions]);
 
   if (!dataset || !sourceKind || status !== "ready" || !qualityReport || !report) {
-    return <section className="page decision-page" data-testid="decision-no-data"><PageHeader eyebrow="Decision and validation" title="Decision & validation plan" description="The report requires an active validated dataset and upstream evidence modules." /><p>No active research data is available. Complete the evidence-gated steps before opening the report.</p></section>;
+    return <section className="page decision-page" data-testid="decision-no-data"><p>Evidence basis: negative aspects from the current topic/sentiment annotations; untagged content is not problem-free. Legacy phrase-rule corrections are separate.</p><PageHeader eyebrow="Decision and validation" title="Decision & validation plan" description="The report requires an active validated dataset and upstream evidence modules." /><p>No active research data is available. Complete the evidence-gated steps before opening the report.</p></section>;
   }
 
   const updateConditions = (key: keyof DecisionConditions, value: string) => {
@@ -90,7 +89,8 @@ export function DecisionPage(): ReactElement {
 
   return (
     <section className="decision-page">
-      <PageHeader eyebrow="Decision and validation" title="Decision & validation plan" description="Compose upstream evidence into a bounded status and validation plan. This page does not infer triggers from weighted comparisons or review text." meta={<div className="decision-page__meta"><span>{dataset.category}</span><DataSourceBadge sourceKind={sourceKind} /><span>Ruleset {PAIN_POINT_RULESET_VERSION}</span></div>} />
+      <p>Evidence basis: negative aspects only, counted once per review and group. Uncovered content is not problem-free.</p>
+      <PageHeader eyebrow="Decision and validation" title="Decision & validation plan" description="Compose upstream evidence into a bounded status and validation plan. This page does not infer triggers from weighted comparisons or review text." meta={<div className="decision-page__meta"><span>{dataset.category}</span><DataSourceBadge sourceKind={sourceKind} /><span>Aspect standard {ASPECT_REVISION}</span></div>} />
       <DecisionStatus report={report} />
       <section className="decision-conditions" aria-labelledby="decision-conditions-title">
         <div><span className="section-kicker">User-authored inputs</span><h2 id="decision-conditions-title">Decision conditions</h2><p>These conditions stay in current-session memory. A stop condition triggers Pause only after an explicit exact selection.</p></div>
@@ -104,7 +104,7 @@ export function DecisionPage(): ReactElement {
       </section>
       <ValidationPlan report={report} onEvidenceClick={setSelectedEvidenceId} />
       <section className="decision-evidence-focus" aria-live="polite" data-testid="decision-selected-evidence">{selectedEvidenceId ? <><strong>{selectedEvidenceId}</strong>{evidenceDetail(selectedEvidenceId, dataset, economicScenarios, hypotheses)}</> : "Select an evidence reference to inspect its source or calculation explanation."}</section>
-      <section className="decision-export" aria-labelledby="decision-export-title"><div><span className="section-kicker">One-way local snapshot</span><h2 id="decision-export-title">Export research JSON</h2><p>Downloads a versioned snapshot. It does not import, persist, recover, or automatically save research.</p></div><button type="button" onClick={() => downloadResearchExport({ dataset, corrections, economicScenarios, weights: opportunityWeights, conditions: savedConditions, report, rulesetVersion: PAIN_POINT_RULESET_VERSION })}>Download JSON</button></section>
+      <section className="decision-export" aria-labelledby="decision-export-title"><div><span className="section-kicker">One-way local snapshot</span><h2 id="decision-export-title">Export research JSON</h2><p>Downloads a versioned snapshot. It does not import, persist, recover, or automatically save research.</p></div><button type="button" onClick={() => downloadResearchExport({ dataset, corrections, aspectOverrides, economicScenarios, weights: opportunityWeights, conditions: savedConditions, report, rulesetVersion: ASPECT_REVISION })}>Download JSON</button></section>
     </section>
   );
 }

@@ -1,0 +1,16 @@
+{
+  "model": "deepseek-v4.1-flash",
+  "scope": "76 synthetic comments, 50 user-confirmed Codex development references + 26 Codex supplemental references; NOT independent human validation",
+  "calls": 1,
+  "stopped": true,
+  "output": [
+    {
+      "reviewId": "r001",
+      "elapsedMs": 515,
+      "contractPassed": false,
+      "httpStatus": 400,
+      "error": "upstream_failed",
+      "usage": null
+    }
+  ]
+}

@@ -26,7 +26,7 @@ afterEach(()=>{vi.unstubAllGlobals();enabled=true;});
 it('disabled model never sends a question and leaves evidence available',async()=>{
  enabled=false;const user=setup();await screen.findByText(/Model is unavailable/);
  await user.type(screen.getByLabelText('Question'),'cleaning');expect(screen.getByRole('button',{name:'Send'})).toBeDisabled();
- expect(await screen.findByText(/Hard to clean/)).toBeInTheDocument();
+ expect((await screen.findAllByText(/Hard to clean/))[0]).toBeInTheDocument();
 });
 it('shows a verified reply and opens the cited original',async()=>{
  handler=async b=>reply(b);const user=setup();await screen.findByText(/Model enabled/);
@@ -58,4 +58,18 @@ it('supports arrow-key navigation between the narrow-screen content tabs',async(
  const dialogue=screen.getByRole('tab',{name:'Dialogue'});dialogue.focus();await user.keyboard('{ArrowRight}');
  expect(screen.getByRole('tab',{name:'Evidence'})).toHaveFocus();
  expect(screen.getByRole('tab',{name:'Evidence'})).toHaveAttribute('aria-selected','true');
+});
+it('invalidates dialogue when a new aspect sentiment correction is saved and sends the replacement',async()=>{
+ let sent:any;handler=async b=>{sent=b;return reply(b);};
+ const user=setup();await screen.findByText(/Model enabled/);
+ await user.type(screen.getByLabelText('Question'),'解释 r001');await user.click(screen.getByRole('button',{name:'Send'}));
+ await screen.findByText('这条模拟样本提到清洗困难。');
+ const sentiment=await screen.findByLabelText('Sentiment 1');
+ await user.selectOptions(sentiment,'中性');
+ await user.type(screen.getByLabelText('Aspect correction reason'),'tentative');
+ await user.click(screen.getByRole('button',{name:'Save aspects'}));
+ await screen.findByText(/This explanation is stale/);
+ await user.type(screen.getByLabelText('Question'),'继续');await user.click(screen.getByRole('button',{name:'Send'}));
+ await waitFor(()=>expect(sent.aspectCorrections?.[0]?.annotations[0]?.sentiment).toBe('中性'));
+ expect(sent.history).toHaveLength(0);
 });

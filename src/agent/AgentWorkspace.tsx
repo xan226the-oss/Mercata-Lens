@@ -1,26 +1,28 @@
+import {AspectEditor} from '../components/AspectEditor';
+import {annotationsFor,aspectPainPoints,ASPECT_REVISION} from '../domain/aspects';
 import { useEffect,useMemo,useRef,useState } from 'react';
 import { useResearch } from '../research/ResearchContext';
 import { useLanguage } from '../app/LanguageContext';
-import { classifyReview,summarizePainPoints,type PainPointCorrection } from '../domain/painPoints';
+import { classifyReview,type PainPointCorrection } from '../domain/painPoints';
 import { PAIN_POINT_IDS,PAIN_POINT_RULES,PAIN_POINT_RULESET_VERSION,type PainPointId } from '../domain/painPointRules';
 import { verifyReply,type Message } from './contract';
 import './agent.css';
 
 /** A separate session layer: original deterministic analyses remain unchanged. */
 export function AgentWorkspace(){
- const {dataset,corrections,applyReviewCorrection}=useResearch();
+ const {dataset,corrections,applyReviewCorrection,aspectOverrides,applyAspectOverride}=useResearch();
  const {language}=useLanguage();const zh=language==='zh';const t=(cn:string,en:string)=>zh?cn:en;
  const [capability,setCapability]=useState<'checking'|'ready'|'disabled'|'offline'>('checking');
  const [statusKey,setStatusKey]=useState(0);
  const [draft,setDraft]=useState('');const [messages,setMessages]=useState<Message[]>([]);
  const [pending,setPending]=useState(false);const [error,setError]=useState<string|null>(null);
  const [selectedId,setSelectedId]=useState('');const [tab,setTab]=useState<'dialogue'|'evidence'>('dialogue');
- const [dirty,setDirty]=useState(false);
+ const [legacyDirty,setLegacyDirty]=useState(false);const [aspectDirty,setAspectDirty]=useState(false);const dirty=legacyDirty||aspectDirty;
  const evidenceHeading=useRef<HTMLHeadingElement>(null);const citationOrigin=useRef<HTMLButtonElement|null>(null);
  const active=useRef<{id:string;revision:string;controller:AbortController}|null>(null);
- const revision=useMemo(()=>crypto.randomUUID(),[dataset,corrections]);
+ const revision=useMemo(()=>crypto.randomUUID(),[dataset,corrections,aspectOverrides]);
  const currentRevision=useRef(revision);currentRevision.current=revision;
- const summaries=useMemo(()=>dataset?summarizePainPoints(dataset,corrections):[],[dataset,corrections]);
+ const summaries=useMemo(()=>dataset?aspectPainPoints(dataset,aspectOverrides):[],[dataset,corrections,aspectOverrides]);
  const selected=dataset?.reviews.find(r=>r.reviewId===selectedId)??dataset?.reviews[0]??null;
  const classification=selected?classifyReview(selected,corrections):null;
  const canSend=capability==='ready'&&dataset?.sourceKind==='demo'&&!pending&&!dirty&&draft.trim().length>0&&draft.length<=2000;
@@ -31,7 +33,7 @@ export function AgentWorkspace(){
  },[statusKey]);
  // Invalidate immediately on research changes; late requests cannot replace current results.
  useEffect(()=>{
-  active.current?.controller.abort();active.current=null;setPending(false);setError(null);setDirty(false);
+  active.current?.controller.abort();active.current=null;setPending(false);setError(null);setLegacyDirty(false);setAspectDirty(false);
   return ()=>{active.current?.controller.abort();active.current=null;};
  },[revision]);
  async function send(){
@@ -40,7 +42,7 @@ export function AgentWorkspace(){
   active.current={id,revision:sentRevision,controller};setPending(true);setError(null);
   const timer=setTimeout(()=>controller.abort(),35000);
   try {
-   const response=await fetch('/api/agent/chat',{method:'POST',signal:controller.signal,headers:{'Content-Type':'application/json','X-Mercata-Agent':'1'},body:JSON.stringify({question,requestId:id,revision:sentRevision,sourceKind:dataset.sourceKind,history:messages.filter(m=>m.revision===sentRevision).slice(-12).map(m=>({role:m.role,content:m.content})),corrections:Object.entries(corrections).map(([reviewId,c])=>({reviewId,...c}))})});
+   const response=await fetch('/api/agent/chat',{method:'POST',signal:controller.signal,headers:{'Content-Type':'application/json','X-Mercata-Agent':'1'},body:JSON.stringify({question,requestId:id,revision:sentRevision,sourceKind:dataset.sourceKind,history:messages.filter(m=>m.revision===sentRevision).slice(-12).map(m=>({role:m.role,content:m.content})),aspectCorrections:Object.entries(aspectOverrides).map(([reviewId,c])=>({reviewId,...c,source:c.source??'manual'})),corrections:Object.entries(corrections).map(([reviewId,c])=>({reviewId,...c}))})});
    if(active.current?.id!==id||currentRevision.current!==sentRevision)return;
    if(!response.ok){const b=await response.json().catch(()=>({}));throw new Error(b.error==='unverified_response'?'unverified_response':b.error==='model_not_configured'?'model_not_configured':'request_failed');}
    const result=verifyReply(await response.json(),id,sentRevision,new Set(dataset.reviews.map(r=>r.reviewId)));
@@ -53,10 +55,10 @@ export function AgentWorkspace(){
  function returnToCitation(){setTab('dialogue');requestAnimationFrame(()=>{if(citationOrigin.current?.isConnected)citationOrigin.current.focus();else document.getElementById('agent-question')?.focus();});}
  return <section className="agent-workspace">
   <div className="agent-intro"><span className="section-kicker">Mercata Lens</span><h1>{t('研究助手','Research assistant')}</h1><p>{t('边追问，边核对原文。模型解释需要人工抽查，不替代经营决策。','Ask questions alongside original evidence. Human review is required; no purchasing advice.')}</p></div>
-  <p className="agent-boundary">{t('美国 · 宠物饮水机','US · Cat water fountain')} · {dataset?.sourceKind==='demo'?t('模拟数据','Synthetic demo'):t('当前数据','Current data')} · {dataset?.products.length??0} {t('个商品','products')} · {dataset?.reviews.length??0} {t('条评论，不是销量','reviews, not sales')} · {t('规则版本','Ruleset')} {PAIN_POINT_RULESET_VERSION}</p>
+  <p className="agent-boundary">{t('美国 · 宠物饮水机','US · Cat water fountain')} · {dataset?.sourceKind==='demo'?t('模拟数据','Synthetic demo'):t('当前数据','Current data')} · {dataset?.products.length??0} {t('个商品','products')} · {dataset?.reviews.length??0} {t('条评论，不是销量','reviews, not sales')} · {t('规则版本','Ruleset')} {PAIN_POINT_RULESET_VERSION} · {t('主题版本','Aspects')} {ASPECT_REVISION}</p>
   <div className="agent-status" role="status">{capability==='checking'?t('检查模型状态……','Checking model status…'):capability==='ready'?t('模型调用已启用；当前仅分析内置模拟样本，发送时检查服务可用性。','Model enabled; built-in demo only. Availability is checked on send.'):capability==='disabled'?t('对话暂不可用，可继续查看规则分析。','Model is unavailable. Rule analysis remains available.'):t('未连接本地对话服务，可继续查看规则分析。','Local gateway is offline. Rule analysis remains available.')} <button onClick={()=>setStatusKey(v=>v+1)} disabled={pending}>{t('检查连接','Check connection')}</button></div>
   {dataset?.sourceKind==='user_upload'&&<p role="status">{t('本批模型功能不发送上传数据；请使用内置演示研究测试对话。','Uploaded data is not sent to the model. Use the built-in demo for dialogue.')}</p>}
-  <details className="agent-rules"><summary>{t('查看当前规则分析','Current rule analysis')}</summary><p>{t('程序统计，不代表市场需求。','Program-calculated sample signals, not market demand.')}</p><ul>{summaries.map(s=><li key={s.id}>{zh?s.labelZh:s.labelEn}: {s.matchedReviewCount} / {s.reviewDenominator}</li>)}</ul></details>
+  <details className="agent-rules"><summary>{t('查看当前负面主题汇总','Current negative aspect summary')}</summary><p>{t('程序统计，不代表市场需求。','Program-calculated sample signals, not market demand.')}</p><ul>{summaries.map(s=><li key={s.id}>{zh?s.labelZh:s.labelEn}: {s.matchedReviewCount} / {s.reviewDenominator}</li>)}</ul></details>
   <div className="agent-tabs" role="tablist" aria-label={t('研究内容','Research content')}>{(['dialogue','evidence'] as const).map(value=><button role="tab" id={'agent-tab-'+value} aria-controls={'agent-panel-'+value} aria-selected={tab===value} tabIndex={tab===value?0:-1} key={value} onKeyDown={e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const next=e.key==='Home'?'dialogue':e.key==='End'?'evidence':value==='dialogue'?'evidence':'dialogue';setTab(next);document.getElementById('agent-tab-'+next)?.focus();}}} onClick={()=>setTab(value)}>{value==='dialogue'?t('对话','Dialogue'):t('证据','Evidence')}</button>)}</div>
   <div className="agent-columns">
    <section id="agent-panel-dialogue" aria-labelledby="agent-tab-dialogue" className={'agent-pane '+(tab==='dialogue'?'agent-pane-active':'')}>
@@ -69,7 +71,7 @@ export function AgentWorkspace(){
    <section id="agent-panel-evidence" aria-labelledby="agent-tab-evidence" className={'agent-pane '+(tab==='evidence'?'agent-pane-active':'')}>
     <h2 ref={evidenceHeading} tabIndex={-1}>{t('原文证据 ','Original evidence ')}{selected?.reviewId??''}</h2>
     <label htmlFor="agent-review">{t('选择评论','Select review')}</label><select id="agent-review" value={selected?.reviewId??''} disabled={dirty} onChange={e=>setSelectedId(e.target.value)}>{dataset?.reviews.map(r=><option key={r.reviewId} value={r.reviewId}>{r.reviewId} · {r.productId}</option>)}</select>
-    {selected&&classification?<><p>{selected.productId} · {selected.rating} {t('星','stars')} · {selected.reviewDate??t('日期未知','Unknown date')}</p><blockquote>{selected.reviewText}</blockquote>{classification.correction&&<p>{t('上次修改原因：','Last correction reason: ')}{classification.correction.reason}</p>}<p className="agent-source">{t('原文来源','Original source')}: {selected.sourceUrl}</p><CorrectionEditor key={revision+selected.reviewId} zh={zh} initial={classification.effectiveLabels} automatic={classification.automaticLabels} onDirty={setDirty} onApply={c=>applyReviewCorrection(selected.reviewId,c)}/></>:<p>{t('尚无有效评论。','No active review.')}</p>}
+    {selected&&classification?<><p>{selected.productId} · {selected.rating} {t('星','stars')} · {selected.reviewDate??t('日期未知','Unknown date')}</p><blockquote>{selected.reviewText}</blockquote>{classification.correction&&<p>{t('上次修改原因：','Last correction reason: ')}{classification.correction.reason}</p>}<p className="agent-source">{t('原文来源','Original source')}: {selected.sourceUrl}</p><AspectEditor key={'aspects'+revision+selected.reviewId} initial={annotationsFor(dataset!,selected,aspectOverrides)} text={selected.reviewText} zh={zh} onDirty={setAspectDirty} onSave={c=>applyAspectOverride(selected.reviewId,c)}/><p>{t('以下为旧规则修正，仅用于历史对照，不改变新版主题统计。','Legacy rule corrections below are for historical comparison and do not change aspect statistics.')}</p><CorrectionEditor key={revision+selected.reviewId} zh={zh} initial={classification.effectiveLabels} automatic={classification.automaticLabels} onDirty={setLegacyDirty} onApply={c=>applyReviewCorrection(selected.reviewId,c)}/></>:<p>{t('尚无有效评论。','No active review.')}</p>}
     <button onClick={returnToCitation}>{t('返回对话','Return to dialogue')}</button><p className="agent-limit">{t('模拟评论不是真实消费者反馈。引用存在不代表模型解释已获证实；请核对原文。纠错仅在当前会话保留。','Synthetic reviews are not real consumer feedback. Existing citations do not prove semantic support; inspect the original. Corrections last for this session only.')}</p>
    </section>
   </div>

@@ -48,8 +48,8 @@ function ImportHarness() {
   </div>;
 }
 
-function renderPage() {
-  return render(
+async function renderPage() {
+  const view = render(
     <ResearchProvider>
       <MemoryRouter initialEntries={["/pain-points"]}>
         <ResearchLayout>
@@ -59,16 +59,20 @@ function renderPage() {
       <ImportHarness />
     </ResearchProvider>,
   );
+  await userEvent.click(await screen.findByRole("button", {name:"Legacy rule workbench"}));
+  return view;
 }
 
-function renderDirectPage() {
-  return render(
+async function renderDirectPage() {
+  const view = render(
     <ResearchProvider>
       <MemoryRouter initialEntries={["/pain-points"]}>
         <Routes><Route path="/pain-points" element={<PainPointsPage />} /></Routes>
       </MemoryRouter>
     </ResearchProvider>,
   );
+  await userEvent.click(await screen.findByRole("button", {name:"Legacy rule workbench"}));
+  return view;
 }
 
 
@@ -77,7 +81,7 @@ afterEach(() => vi.unstubAllGlobals());
 describe("PainPointsPage workbench", () => {
   it("renders bounded demo provenance, seven summaries, and the default rule-matched queue", async () => {
     stubDemoFetch();
-    renderPage();
+    await renderPage();
     await waitFor(() => expect(screen.getByRole("heading", { name: "Customer pain-point evidence" })).toBeVisible());
     expect(screen.getByTestId("analysis-source-badge")).toHaveTextContent("Synthetic demo");
     expect(screen.getByText(/76 review records/i)).toBeVisible();
@@ -90,7 +94,7 @@ describe("PainPointsPage workbench", () => {
 
   it("filters by effective label and exposes raw selected evidence", async () => {
     stubDemoFetch();
-    renderPage();
+    await renderPage();
     await waitFor(() => expect(screen.getByRole("heading", { name: "Customer pain-point evidence" })).toBeVisible());
     await waitFor(() => expect(screen.getByTestId("source-badge")).toHaveTextContent("Demo data"));
     await waitFor(() => expect(screen.getByTestId("source-badge")).toHaveTextContent("Demo data"));
@@ -105,7 +109,7 @@ describe("PainPointsPage workbench", () => {
 
   it("coordinates apply, persistent announcements, filter clearing, and corrected review evidence", async () => {
     stubDemoFetch();
-    renderPage();
+    await renderPage();
     await waitFor(() => expect(screen.getByRole("heading", { name: "Customer pain-point evidence" })).toBeVisible());
     const user = userEvent.setup();
     await waitFor(() => expect(screen.getAllByRole("checkbox")).toHaveLength(7));
@@ -131,7 +135,7 @@ describe("PainPointsPage workbench", () => {
   });
   it("repeats the same announcement as a new live-region event", async () => {
     stubDemoFetch();
-    renderPage();
+    await renderPage();
     const user = userEvent.setup();
     await waitFor(() => expect(screen.getAllByRole("checkbox")).toHaveLength(7));
     await user.click(screen.getAllByRole("checkbox")[1]);
@@ -158,13 +162,13 @@ describe("PainPointsPage workbench", () => {
   });
   it("renders the direct no-data fallback outside the shell", async () => {
     vi.stubGlobal("fetch", vi.fn(() => Promise.reject(new Error("offline"))) as unknown as typeof fetch);
-    renderDirectPage();
+    await renderDirectPage();
     await waitFor(() => expect(screen.getByText("No active review evidence is available.")).toBeVisible());
   });
 
   it("keeps the real page correction through failed import and resets it after a distinct successful replacement", async () => {
     stubDemoFetch();
-    renderPage();
+    await renderPage();
     const user = userEvent.setup();
     await waitFor(() => expect(screen.getAllByRole("checkbox")).toHaveLength(7));
     await user.click(screen.getAllByRole("checkbox")[1]);
@@ -204,7 +208,7 @@ describe("PainPointsPage workbench", () => {
 
   it("keeps the clear announcement after the only corrected row is removed", async () => {
     stubDemoFetch();
-    renderPage();
+    await renderPage();
     const user = userEvent.setup();
     await waitFor(() => expect(screen.getAllByRole("checkbox")).toHaveLength(7));
     await user.click(screen.getAllByRole("checkbox")[1]);
@@ -221,7 +225,7 @@ describe("PainPointsPage workbench", () => {
   });
   it("supports a manual-only correction through All and No automatic match", async () => {
     stubDemoFetch();
-    renderPage();
+    await renderPage();
     const user = userEvent.setup();
     await waitFor(() => expect(screen.getAllByRole("checkbox")).toHaveLength(7));
     await user.click(screen.getByRole("button", { name: "All" }));

@@ -99,3 +99,39 @@ test('shared Bailian comparison profile uses the same instructions and bounds fo
  assert.equal(new Set(prompts).size,1);
  assert.equal(readConfig({...base,MODEL_NAME:'unknown'}).enabled,false);
 });
+test('aspect tagging validates enum, exact evidence and mixed contexts, and never accepts uploaded text',async()=>{
+ const {runTag,validateTagRequest}=await import('./agent.mjs');
+ assert.equal(typeof runTag,'function');assert.equal(typeof validateTagRequest,'function');
+ const config={enabled:true,endpoint:'https://example.test/chat',model:'m',key:'secret'};
+ const body={sourceKind:'demo',reviewId:'r055',requestId:'tag-one'};
+ assert.throws(()=>validateTagRequest({...body,sourceKind:'user_upload'}));
+ assert.throws(()=>validateTagRequest({...body,reviewId:'fake'}));
+ const facets=[{topic:'宠物接受度',sentiment:'正面',evidence:'One cat loves it',reason:'one cat'}, {topic:'宠物接受度',sentiment:'负面',evidence:'the other ignores it completely',reason:'the other cat'}];
+ let sent;
+ const fetcher=async(_url,opts)=>{sent=JSON.parse(opts.body);return new Response(JSON.stringify({choices:[{message:{content:JSON.stringify({annotations:facets})}}]}));};
+ const value=await runTag(body,config,fetcher);
+ assert.deepEqual(value.annotations,facets);assert.equal(value.reviewId,'r055');
+ assert.ok(!sent.messages.at(-1).content.includes('r001'));assert.ok(sent.messages[0].content.includes('中性'));assert.match(sent.messages[0].content,/JSON/i);
+ for(const change of [{topic:'其他'},{sentiment:'mixed'},{evidence:'invented quote'}]){
+  await assert.rejects(runTag(body,config,async()=>new Response(JSON.stringify({choices:[{message:{content:JSON.stringify({annotations:[{...facets[0],...change}]})}}]}))),/unverified_response/);
+ }
+});
+test('chat reconstructs base aspects server-side and scopes validated session replacements',async()=>{
+ const facets=[{topic:'清洗便利性',sentiment:'中性',evidence:'Hard to clean',reason:'test context'}];
+ const body={...valid,question:'解释 r001',aspectCorrections:[{reviewId:'r001',annotations:facets,reason:'user opinion',source:'manual'}]};
+ assert.throws(()=>validateRequest({...body,aspectCorrections:[{...body.aspectCorrections[0],annotations:[{...facets[0],topic:'其他'}]}]}));
+ let sent;
+ await runModel(body,{enabled:true,endpoint:'https://example.test/chat',model:'m',key:'s'},async(_u,o)=>{sent=JSON.parse(o.body);return new Response(JSON.stringify({choices:[{message:{content:JSON.stringify({answer:'仅说明此评论。',reviewIds:['r001']})}}]}));});
+ const context=JSON.parse(sent.messages.at(-1).content);
+ assert.deepEqual(context.aspectAnnotations,[{reviewId:'r001',source:'manual',annotations:facets}]);
+});
+test('tag HTTP route applies shared local-only guards and validates server-owned review before calling',async()=>{
+ let calls=0;const server=createAgentServer({enabled:true,endpoint:'https://example.test/chat',model:'m',key:'secret'},async()=>{calls++;return new Response(JSON.stringify({choices:[{message:{content:JSON.stringify({annotations:[{topic:'清洗便利性',sentiment:'负面',evidence:'Hard to clean',reason:'Explicit difficulty'}]})}}]}));});
+ await new Promise(r=>server.listen(0,'127.0.0.1',r));const base=`http://127.0.0.1:${server.address().port}`;
+ const headers={'Content-Type':'application/json','X-Mercata-Agent':'1'},body={reviewId:'r001',requestId:'one',sourceKind:'demo'};
+ try{
+  const value=await fetch(base+'/api/agent/tag',{method:'POST',headers,body:JSON.stringify(body)});assert.equal(value.status,200);assert.equal((await value.json()).annotations[0].topic,'清洗便利性');
+  assert.equal((await fetch(base+'/api/agent/tag',{method:'POST',headers,body:JSON.stringify({...body,sourceKind:'user_upload'})})).status,400);
+  assert.equal((await fetch(base+'/api/agent/tag',{method:'POST',headers:{...headers,Origin:'https://evil.example'},body:JSON.stringify(body)})).status,403);assert.equal(calls,1);
+ }finally{await new Promise(r=>server.close(r));}
+});

@@ -1,3 +1,4 @@
+import {annotationsFor,aspectProvenance,ASPECT_REVISION,type AspectOverrides,type AspectAnnotation} from "../domain/aspects";
 import type { EconomicScenario, ResearchDataset } from "../domain/types";
 import type { PainPointCorrections } from "../domain/painPoints";
 import type { OpportunityWeights, RankingResult } from "../domain/opportunities";
@@ -6,6 +7,7 @@ import type { DecisionConditions, DecisionReport } from "../domain/decision";
 export const RESEARCH_EXPORT_SCHEMA_VERSION = 1 as const;
 
 export interface ResearchExportInput {
+  aspectOverrides?: AspectOverrides;
   dataset: ResearchDataset;
   corrections: PainPointCorrections;
   economicScenarios: readonly EconomicScenario[];
@@ -16,6 +18,7 @@ export interface ResearchExportInput {
 }
 
 export interface ResearchExport {
+  aspectSnapshot?: {revision:string;legacyCorrectionsScope:string; records:{reviewId:string;source:string;annotations:AspectAnnotation[];correctionReason:string|null}[]};
   schemaVersion: typeof RESEARCH_EXPORT_SCHEMA_VERSION;
   datasetProvenance: {
     sourceKind: ResearchDataset["sourceKind"];
@@ -149,6 +152,7 @@ function cloneReport(report: DecisionReport): DecisionReport {
 
 export function buildResearchExport(input: ResearchExportInput): ResearchExport {
   return {
+    ...(input.aspectOverrides ? {aspectSnapshot:{revision:ASPECT_REVISION,legacyCorrectionsScope:"corrections applies only to legacy phrase-rule comparisons; current report uses negative aspect annotations",records:input.dataset.reviews.map(review=>({reviewId:review.reviewId,source:aspectProvenance(input.dataset,review,input.aspectOverrides),annotations:annotationsFor(input.dataset,review,input.aspectOverrides),correctionReason:input.aspectOverrides?.[review.reviewId]?.reason??null}))}} : {}),
     schemaVersion: RESEARCH_EXPORT_SCHEMA_VERSION,
     datasetProvenance: {
       sourceKind: input.dataset.sourceKind,

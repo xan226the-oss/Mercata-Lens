@@ -134,3 +134,7 @@ describe("research export", () => {
     remove.mockRestore();
   });
 });
+it('exports validated aspect snapshots with source attribution, including empty explicit corrections',()=>{
+ const value=buildResearchExport({...input,aspectOverrides:{}});
+ expect(value.aspectSnapshot).toMatchObject({revision:'2026-11-04-r3',records:[]});
+});

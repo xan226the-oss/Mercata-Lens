@@ -1,3 +1,4 @@
+import {validateAnnotations, type AspectOverrides, type AspectOverride} from "../domain/aspects";
 /**
  * Research context: demo loading + CSV import with a quality gate.
  * States: idle | loading | ready | error (for the demo load path);
@@ -57,6 +58,9 @@ export interface ResearchContextValue {
   loadDemo: () => void;
   /** Import two CSV texts; on failure the current research stays intact. */
   importCsv: (productsText: string, reviewsText: string) => void;
+  aspectOverrides: AspectOverrides;
+  applyAspectOverride: (reviewId:string, correction:AspectOverride)=>boolean;
+  clearAspectOverride: (reviewId:string)=>void;
   corrections: PainPointCorrections;
   applyReviewCorrection: (
     reviewId: string,
@@ -99,6 +103,13 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
   const [issues, setIssues] = useState<ParseIssue[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [importState, setImportState] = useState<ImportOutcomeState>(EMPTY_IMPORT_STATE);
+  const [aspectOverrides,setAspectOverrides] = useState<AspectOverrides>({});
+  const applyAspectOverride = useCallback((reviewId:string, correction:AspectOverride) => {
+    const review=dataset?.reviews.find(r=>r.reviewId===reviewId);
+    if(!review||!correction.reason.trim()||correction.reason.length>1000||!validateAnnotations(correction.annotations,review.reviewText))return false;
+    setAspectOverrides(current=>({...current,[reviewId]:{annotations:correction.annotations.map(a=>({...a})),reason:correction.reason,source:correction.source??"manual"}}));return true;
+  },[dataset]);
+  const clearAspectOverride=useCallback((reviewId:string)=>setAspectOverrides(current=>{const next={...current};delete next[reviewId];return next;}),[]);
   const [corrections, setCorrections] = useState<PainPointCorrections>({});
   const [economicScenarios, setEconomicScenarios] = useState<EconomicScenario[]>(() => createEconomicScenarios("demo"));
   const [economicScenariosResetKey, setEconomicScenariosResetKey] = useState(0);
@@ -171,6 +182,7 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
   const loadDemo = useMemo(
     () => () => {
       setCorrections({});
+      setAspectOverrides({});
       setDecisionConditions({ continueConditions: [], pauseConditions: [], stopConditions: [] });
       setEconomicScenarios(createEconomicScenarios("demo"));
       setOpportunityWeights({ ...DEFAULT_OPPORTUNITY_WEIGHTS });
@@ -224,6 +236,7 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
       }
       const nextQuality = assessQuality(result.dataset);
       setCorrections({});
+      setAspectOverrides({});
       setDecisionConditions({ continueConditions: [], pauseConditions: [], stopConditions: [] });
       setEconomicScenarios(createEconomicScenarios("user_upload"));
       setOpportunityWeights({ ...DEFAULT_OPPORTUNITY_WEIGHTS });
@@ -260,6 +273,7 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
       importState,
       loadDemo,
       importCsv,
+      aspectOverrides, applyAspectOverride, clearAspectOverride,
       corrections,
       applyReviewCorrection,
       clearReviewCorrection,
@@ -277,7 +291,7 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
       },
       replaceDecisionConditions,
     }),
-    [status, dataset, sourceKind, qualityReport, issues, error, importState, loadDemo, importCsv, corrections, applyReviewCorrection, clearReviewCorrection, economicScenarios, economicScenariosResetKey, replaceEconomicScenario, opportunityWeights, opportunityWeightsResetKey, replaceOpportunityWeights, resetOpportunityWeights, decisionConditions, replaceDecisionConditions],
+    [aspectOverrides, applyAspectOverride, clearAspectOverride, status, dataset, sourceKind, qualityReport, issues, error, importState, loadDemo, importCsv, corrections, applyReviewCorrection, clearReviewCorrection, economicScenarios, economicScenariosResetKey, replaceEconomicScenario, opportunityWeights, opportunityWeightsResetKey, replaceOpportunityWeights, resetOpportunityWeights, decisionConditions, replaceDecisionConditions],
   );
 
   return <ResearchContext.Provider value={value}>{children}</ResearchContext.Provider>;

@@ -1,0 +1,88 @@
+{
+  "reviewer": "Codex",
+  "independentHumanReview": false,
+  "sourceResult": "../aspect-pilot/2026-11-04T06-01-05.738Z.json",
+  "policy": "建议单独保存；不覆盖用户已确认标签或目录。",
+  "rows": [
+    {
+      "reviewId": "r001",
+      "decision": "参考漏标候选",
+      "reason": "角落积污并反复刷洗无效支持结构可达性问题，可考虑补标；不是模型必错。"
+    },
+    {
+      "reviewId": "r002",
+      "decision": "参考漏标候选",
+      "reason": "角落积污且各部分需刷洗支持结构清洁负担，但“不易触及”仍需谨慎。"
+    },
+    {
+      "reviewId": "r006",
+      "decision": "参考漏标候选",
+      "reason": "明确小缝隙残留且难洗，可讨论补内部结构标签；仅有缝隙不是缺陷。"
+    },
+    {
+      "reviewId": "r007",
+      "decision": "模型不符合当前标准",
+      "reason": "需拆开不代表拆装困难。"
+    },
+    {
+      "reviewId": "r016",
+      "decision": "模型不符合当前标准",
+      "reason": "仅提到猫喝水，当前标准不自动认定接受度正面。"
+    },
+    {
+      "reviewId": "r017",
+      "decision": "模型不符合当前标准",
+      "reason": "acceptable按既定可接受=弱正面；不能另外记中性。"
+    },
+    {
+      "reviewId": "r034",
+      "decision": "模型不符合当前标准",
+      "reason": "时长陈述不能默认耐用正面；定期清洗也未讨论清洗难易。"
+    },
+    {
+      "reviewId": "r040",
+      "decision": "模型不符合当前标准",
+      "reason": "持续开支本身未明确抱怨，不能自动加负面。"
+    },
+    {
+      "reviewId": "r043",
+      "decision": "模型不符合当前标准",
+      "reason": "每月更换为频率事实，未明确负担，应中性。"
+    },
+    {
+      "reviewId": "r051",
+      "decision": "模型不符合当前标准",
+      "reason": "okay按既定可接受=弱正面；保留夏季补水负担。"
+    },
+    {
+      "reviewId": "r052",
+      "decision": "模型不符合当前标准",
+      "reason": "fine for one cat按既定够用=弱正面；仍是边界敏感案例。"
+    },
+    {
+      "reviewId": "r057",
+      "decision": "标准边界待确认",
+      "reason": "声音使猫害怕，可理解为声音负面体验，但未评价噪声大；是否同时标运行噪声需明确边界，不能直接判模型错。"
+    },
+    {
+      "reviewId": "r068",
+      "decision": "模型不符合当前标准",
+      "reason": "容易加水不是频率低；maintain不等于清洗便利。"
+    },
+    {
+      "reviewId": "r071",
+      "decision": "参考需修正候选",
+      "reason": "Small未明确是体积还是容量；模型不贴储水容量有理由，建议参考去掉容量条目，未覆盖已确认50条。"
+    },
+    {
+      "reviewId": "r074",
+      "decision": "模型不符合当前标准",
+      "reason": "整体可靠及成本低不能归到水泵寿命、滤芯。"
+    },
+    {
+      "reviewId": "r075",
+      "decision": "模型不符合当前标准",
+      "reason": "steady未指明水泵，不应推断特定部件稳定。"
+    }
+  ]
+}

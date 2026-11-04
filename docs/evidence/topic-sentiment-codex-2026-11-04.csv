@@ -3,11 +3,11 @@ r001,清洁体验,负面,Hard to clean.,明确表示难清洗。,Codex,PENDING
 r002,清洁体验,负面,Cleaning takes forever.,明确抱怨清洗耗时。,Codex,PENDING
 r003,清洁体验,负面,"Very hard to clean, the motor chamber is impossible to reach",明确表示很难清洗且电机腔无法触及。,Codex,PENDING
 r004,清洁体验,负面,I stopped using it because scrubbing took too long.,因刷洗耗时而停止使用。,Codex,PENDING
-r005,其他,正面,The wide bowl sounds nice,对宽口碗设计有初步肯定；仅是听起来不错，不当作容量评价。,Codex,PENDING
+r005,外形与结构设计,正面,The wide bowl sounds nice,对宽口碗设计有初步肯定；仅是听起来不错，不当作容量评价。,Codex,PENDING
 r005,清洁体验,负面,it is a pain to clean every few days.,明确认为定期清洗麻烦。,Codex,PENDING
 r006,清洁体验,负面,Not the easiest to clean.,委婉表达清洗不方便，不能反读成容易清洗。,Codex,PENDING
 r007,清洁体验,负面,Hard to clean,明确表示难清洗。,Codex,PENDING
-r007,其他,负面,it smells after a few days unless I take everything apart.,有条件的异味反馈；未彻底拆洗时几天后有异味，不推断已发生健康损害。,Codex,PENDING
+r007,气味表现,负面,it smells after a few days unless I take everything apart.,有条件的异味反馈；未彻底拆洗时几天后有异味，不推断已发生健康损害。,Codex,PENDING
 r008,清洁体验,正面,"Easy to clean, the parts come apart simply",肯定清洗和拆卸便利性。,Codex,PENDING
 r009,清洁体验,正面,Much easier to clean than my old fountain.,明确相对旧设备更易清洗。,Codex,PENDING
 r010,清洁体验,负面,the filter housing is a bit awkward to clean each week.,对滤芯外壳的清洗便利性轻度不满；总体尚可未单独强加给其他主题。,Codex,PENDING
@@ -30,7 +30,7 @@ r026,密封防漏,负面,"Leaked everywhere on day one, returned it.",首日严�
 r027,密封防漏,正面,"No leaks so far after a month, seals look solid.",当前一个月内无漏水是有限正面反馈，不代表永久防漏。,Codex,PENDING
 r028,密封防漏,正面,"No leakage, the gasket fits well.",无漏水并肯定密封垫贴合。,Codex,PENDING
 r029,水泵可靠性,负面,Pump died after two months.,两个月后损坏。,Codex,PENDING
-r029,其他,负面,Replacement part was expensive.,对替换件费用不满；原文未说是滤芯，不能标作滤芯成本。,Codex,PENDING
+r029,配件更换成本,负面,Replacement part was expensive.,对替换件费用不满；原文未说是滤芯，不能标作滤芯成本。,Codex,PENDING
 r030,水泵可靠性,负面,The pump stopped working after six weeks.,六周后停机，不能扩展成已证实的电气事故。,Codex,PENDING
 r031,水泵可靠性,负面,Pump became weak after a while and needed frequent priming.,水泵变弱且需频繁重新引水。,Codex,PENDING
 r032,水泵可靠性,正面,Pump still going strong after four months of daily use.,明确肯定每日使用四个月后仍运行良好。,Codex,PENDING
@@ -51,7 +51,7 @@ r042,滤芯维护与成本,正面,The filter lasts long so the running cost stay
 r043,滤芯维护与成本,中性,Filters are average price and need changing monthly.,价格一般与每月更换是描述性信息，没有明确褒贬。,Codex,PENDING
 r044,滤芯维护与成本,负面,Filter refills are on the expensive side compared to the fountain.,相对饮水机价格认为替换滤芯偏贵。,Codex,PENDING
 r045,滤芯维护与成本,正面,Filter cost is fine,明确认为费用可以接受。,Codex,PENDING
-r045,其他,负面,but the pack is large to store.,包装存放负担；不能误当作水箱容量太大。,Codex,PENDING
+r045,包装与收纳,负面,but the pack is large to store.,包装存放负担；不能误当作水箱容量太大。,Codex,PENDING
 r046,容量与补水,正面,"Good capacity for two cats, lasts a couple of days.",明确肯定供两只猫使用的容量与补水间隔。,Codex,PENDING
 r047,容量与补水,负面,"Too small, needs refilling every day with one cat.",太小并需每天补水，明确负面。,Codex,PENDING
 r048,容量与补水,正面,"Decent capacity, fine for a single cat.",肯定容量适合一只猫。,Codex,PENDING

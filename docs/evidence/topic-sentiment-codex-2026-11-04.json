@@ -48,7 +48,7 @@
     },
     {
       "review_id": "r005",
-      "topic": "其他",
+      "topic": "外形与结构设计",
       "sentiment": "正面",
       "evidence": "The wide bowl sounds nice",
       "reason": "对宽口碗设计有初步肯定；仅是听起来不错，不当作容量评价。",
@@ -84,7 +84,7 @@
     },
     {
       "review_id": "r007",
-      "topic": "其他",
+      "topic": "气味表现",
       "sentiment": "负面",
       "evidence": "it smells after a few days unless I take everything apart.",
       "reason": "有条件的异味反馈；未彻底拆洗时几天后有异味，不推断已发生健康损害。",
@@ -291,7 +291,7 @@
     },
     {
       "review_id": "r029",
-      "topic": "其他",
+      "topic": "配件更换成本",
       "sentiment": "负面",
       "evidence": "Replacement part was expensive.",
       "reason": "对替换件费用不满；原文未说是滤芯，不能标作滤芯成本。",
@@ -480,7 +480,7 @@
     },
     {
       "review_id": "r045",
-      "topic": "其他",
+      "topic": "包装与收纳",
       "sentiment": "负面",
       "evidence": "but the pack is large to store.",
       "reason": "包装存放负担；不能误当作水箱容量太大。",
@@ -532,5 +532,19 @@
       "annotator": "Codex",
       "human_review": "PENDING"
     }
-  ]
+  ],
+  "topic_catalog": [
+    "清洁体验",
+    "声音表现",
+    "密封防漏",
+    "水泵可靠性",
+    "滤芯维护与成本",
+    "容量与补水",
+    "宠物接受度",
+    "外形与结构设计",
+    "气味表现",
+    "配件更换成本",
+    "包装与收纳"
+  ],
+  "taxonomy_revision": "2026-11-04-r2"
 }

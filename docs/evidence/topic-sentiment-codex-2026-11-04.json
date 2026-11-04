@@ -752,5 +752,13 @@
       "annotator": "Codex",
       "human_review": "PENDING"
     }
-  ]
+  ],
+  "userConfirmation": {
+    "status": "ACCEPTED",
+    "date": "2026-11-04",
+    "scope": "2026-11-04-r3目录及50条评论的72个主题情感标注",
+    "statement": "我觉得你打的没问题 我全部同意",
+    "method": "用户在对话中整体认可Codex标注；未提交逐条独立复标结果",
+    "independentHumanValidation": false
+  }
 }

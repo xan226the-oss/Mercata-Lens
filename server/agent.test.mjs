@@ -148,3 +148,13 @@ test('dialogue receives the authoritative catalog and sentiment contract as trus
   assert.ok(system.includes('未覆盖'));
  }
 });
+test('every analytical reply retains a deterministic synthetic provenance even if the model omits it',async()=>{
+ const config={enabled:true,endpoint:'https://example.test/chat',model:'m',key:'s'};
+ const fake=value=>async()=>new Response(JSON.stringify({choices:[{message:{content:JSON.stringify(value)}}]}));
+ const reply=await runModel(valid,config,fake({answer:'单条不能支持总体判断。',reviewIds:['r001']}));
+ assert.ok(reply.answer.startsWith('【数据范围：内置模拟样本，不代表真实市场】'));
+ assert.deepEqual(reply.reviewIds,['r001']);
+ const notice=await runModel(valid,config,fake({scopeNotice:'demo_provenance',reviewIds:[]}));
+ assert.deepEqual(notice.reviewIds,[]);assert.equal(notice.scopeNotice,'demo_provenance');
+ assert.ok(!notice.answer.includes('【数据范围'));
+});

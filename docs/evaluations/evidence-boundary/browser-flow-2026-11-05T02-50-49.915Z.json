@@ -1,0 +1,9 @@
+{
+  "transport": "browser -> Vite page with real HTTP routing to isolated gateway -> configured provider",
+  "calls": 0,
+  "requests": [],
+  "answers": [],
+  "checks": [],
+  "completed": false,
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:5173/assistant\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:5173/assistant\", waiting until \"load\"\u001b[22m\n"
+}

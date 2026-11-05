@@ -1,0 +1,64 @@
+{
+  "transport": "browser -> Vite page with real HTTP routing to isolated gateway -> configured provider",
+  "calls": 3,
+  "requests": [
+    {
+      "historyLength": 0,
+      "revision": "f16aaa36-402d-4c59-9f03-d7a145a64334",
+      "aspectCorrections": []
+    },
+    {
+      "historyLength": 2,
+      "revision": "f16aaa36-402d-4c59-9f03-d7a145a64334",
+      "aspectCorrections": []
+    },
+    {
+      "historyLength": 0,
+      "revision": "57519c5e-0b06-4f98-a4aa-e13c0f1713ca",
+      "aspectCorrections": [
+        {
+          "reviewId": "r001",
+          "annotations": [
+            {
+              "topic": "清洗便利性",
+              "sentiment": "中性",
+              "evidence": "Hard to clean. The inside has corners that trap slime no matter how many times I scrub.",
+              "reason": "结合完整原文，对“清洗便利性”作负面判断。保留原文的条件与时间范围，不延伸到未提供的事实。"
+            },
+            {
+              "topic": "积污残留",
+              "sentiment": "负面",
+              "evidence": "Hard to clean. The inside has corners that trap slime no matter how many times I scrub.",
+              "reason": "结合完整原文，对“积污残留”作负面判断。保留原文的条件与时间范围，不延伸到未提供的事实。"
+            }
+          ],
+          "reason": "Browser acceptance test only, not independent human judgment.",
+          "source": "manual"
+        }
+      ]
+    }
+  ],
+  "answers": [
+    "Model explanation\n\n【数据范围：内置模拟样本，不代表真实市场】\n这条评论明确说难清洗，内部角落会积住黏液，反复刷洗也不易清除，因此清洗便利性偏负面，积污残留也偏负面。可解决性目前只是假设：若结构上减少难触及的角落，可能降低刷洗负担，但尚未验证改进有效。\n\nView review r001",
+    "Model explanation\n\n【数据范围：内置模拟样本，不代表真实市场】\n这条评论能支持两点：一是清洗便利性偏负面，原文说难清洗，反复刷洗仍费劲；二是积污残留偏负面，内部角落会积住黏液。它不能支持具体结构缺陷的成因、材质或卫生危害，也不能证明某种改动能解决问题。可解决性目前只是待验证假设：若减少难触及的角落，可能降低刷洗负担，但尚无改进后的实测反馈。人工标签与原文一致，仍建议抽查英文原句。\n\nView review r001",
+    "Model explanation\n\n【数据范围：内置模拟样本，不代表真实市场】\n原文事实：这条评论明确说“Hard to clean”，并称内部有角落反复刷洗仍会积留黏液，因此可支持清洗负担重和积污残留的负面体验。当前注释：人工标注把“积污残留”标为负面，与原文一致；但把“清洗便利性”标为中性，与原文“Hard to clean”及反复刷洗的表述存在张力，建议复核该标签。注释只是用户标注，不是市场事实。内部角落是否可通过结构改动改善，仍需验证。\n\nView review r001"
+  ],
+  "checks": [
+    "No request error for turn 1",
+    "Program provenance on turn 1",
+    "No request error for turn 2",
+    "Program provenance on turn 2",
+    "Second turn carries current history",
+    "Citation focuses original evidence",
+    "Blank correction reason cannot save",
+    "Both earlier turns invalidated",
+    "No request error for turn 3",
+    "Program provenance on turn 3",
+    "New revision clears old history",
+    "New aspect correction forwarded",
+    "Export uses current aspect revision",
+    "Export includes same corrected aspect and source",
+    "Export retains all review snapshots"
+  ],
+  "completed": true
+}

@@ -1,9 +1,10 @@
 /** Read-only frozen rubric evaluation; default zero calls. */
 import {readConfig,runModel,validateRequest} from '../server/agent.mjs';
 import {readDiagnostic,safeMetadata} from './benchmark-support.mjs';
-import cases from '../docs/evaluations/evidence-boundary/cases-2026-11-04.json' with {type:'json'};
+import oldCases from '../docs/evaluations/evidence-boundary/cases-2026-11-04.json' with {type:'json'};
 import {mkdir,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
+const cases=process.argv.includes('--new-cases')?(await import('../docs/evaluations/evidence-boundary/cases-2026-11-05-new.json',{with:{type:'json'}})).default:oldCases;
 const config=readConfig(),live=process.argv.includes('--live');
 for(const c of cases)validateRequest({sourceKind:'demo',question:c.question,requestId:c.id,revision:'boundary-frozen',history:[],corrections:[]});
 if(!live){console.log(JSON.stringify({externalCalls:0,plannedCalls:cases.length,rubricFrozen:true}));process.exit(0);}

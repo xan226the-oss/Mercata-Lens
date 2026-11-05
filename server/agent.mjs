@@ -112,6 +112,8 @@ export async function runModel(body,config,fetcher=fetch){
  let reply;
  try {const raw=JSON.parse(Buffer.concat(chunks).toString('utf8'));reply=validateReply(JSON.parse(raw.choices[0].message.content));} catch {fail('unverified_response');}
  if(reply.reviewIds.some(id=>!allowedIds.has(id)))fail('unverified_response');
+ // Provenance is program-supplied, never dependent on model wording. Revalidate final size.
+ if(!reply.scopeNotice)reply=validateReply({...reply,answer:"【数据范围：内置模拟样本，不代表真实市场】\n"+reply.answer});
  return {...reply,requestId:body.requestId,revision:body.revision};
 }
 export function createAgentServer(config=readConfig(),fetcher=fetch){

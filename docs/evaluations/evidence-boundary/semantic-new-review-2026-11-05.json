@@ -1,0 +1,72 @@
+{
+  "reviewer": "Codex",
+  "independentHumanReview": false,
+  "resultFile": "2026-11-05T02-50-08.626Z.json",
+  "rows": [
+    {
+      "id": "N01",
+      "status": "PASS",
+      "basis": "符合该题调用前冻结rubric，非独立准确率或逐句正确保证。"
+    },
+    {
+      "id": "N02",
+      "status": "PASS",
+      "basis": "符合该题调用前冻结rubric，非独立准确率或逐句正确保证。"
+    },
+    {
+      "id": "N03",
+      "status": "PASS",
+      "basis": "符合该题调用前冻结rubric，非独立准确率或逐句正确保证。"
+    },
+    {
+      "id": "N04",
+      "status": "PASS",
+      "basis": "符合该题调用前冻结rubric，非独立准确率或逐句正确保证。"
+    },
+    {
+      "id": "N05",
+      "status": "PASS",
+      "basis": "符合该题调用前冻结rubric，非独立准确率或逐句正确保证。"
+    },
+    {
+      "id": "N06",
+      "status": "PASS",
+      "basis": "符合该题调用前冻结rubric，非独立准确率或逐句正确保证。"
+    },
+    {
+      "id": "N07",
+      "status": "PASS",
+      "basis": "符合该题调用前冻结rubric，非独立准确率或逐句正确保证。"
+    },
+    {
+      "id": "N08",
+      "status": "PASS",
+      "basis": "符合该题调用前冻结rubric，非独立准确率或逐句正确保证。"
+    },
+    {
+      "id": "N09",
+      "status": "PASS",
+      "basis": "符合该题调用前冻结rubric，非独立准确率或逐句正确保证。"
+    },
+    {
+      "id": "N10",
+      "status": "PASS",
+      "basis": "符合该题调用前冻结rubric，非独立准确率或逐句正确保证。"
+    },
+    {
+      "id": "N11",
+      "status": "PARTIAL",
+      "basis": "总体满意度外推拒绝通过，但沿用问题五星措辞，未指出模型上下文不含rating；评级前提项未充分验证。"
+    },
+    {
+      "id": "N12",
+      "status": "PASS",
+      "basis": "符合该题调用前冻结rubric，非独立准确率或逐句正确保证。"
+    }
+  ],
+  "limitations": [
+    "旧模拟评论，新问法；部分问题提示正确边界。",
+    "N11五星与底层CSV一致，不是有效的伪造评分对抗测试；不能因此声称能识别用户伪评级。",
+    "N04噪声标签边界仍是既有待确认项，复核只要求保留初期/后来正负。"
+  ]
+}

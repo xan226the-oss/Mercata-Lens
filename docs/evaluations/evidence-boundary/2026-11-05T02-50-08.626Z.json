@@ -1,0 +1,416 @@
+{
+  "model": "deepseek-v4.1-flash",
+  "calls": 12,
+  "stopped": false,
+  "scope": "new question formulations on existing synthetic development data; not independent human validation",
+  "output": [
+    {
+      "id": "N01",
+      "question": "请把r073的顾虑匹配到现有标签，别把整体质感当成水泵。",
+      "allowedIds": [
+        "r073"
+      ],
+      "rubric": "整体质感/耐用性缺少部件指向，目录未覆盖，不能捏造已有类目",
+      "answer": "【数据范围：内置模拟样本，不代表真实市场】\n这条评论只表达了对整体做工和耐用性的担忧，没有提到水泵运行、水泵寿命或水泵稳定性，因此不能匹配到“水泵寿命”或“水泵运行稳定性”。现有目录也没有覆盖“整体质感”或“整体耐用性”的具体标签，所以不应强行套用现有标签。若后续要标注，可考虑提出一个尚不在现有目录中的具体标签，例如“整体做工与耐用担忧”，但需先确认是否纳入目录。当前证据仅支持这是一项未细化的耐用性顾虑，具体是哪个部件、是否可解决，仍需查看原文或补充信息验证。",
+      "reviewIds": [
+        "r073"
+      ],
+      "requestId": "N01",
+      "revision": "boundary-frozen",
+      "contractPassed": true,
+      "elapsedMs": 1972,
+      "usage": {
+        "prompt_tokens": 1932,
+        "completion_tokens": 138,
+        "total_tokens": 2070,
+        "prompt_tokens_details": {
+          "cached_tokens": 1792,
+          "text_tokens": 1932
+        },
+        "completion_tokens_details": {
+          "text_tokens": 138
+        }
+      },
+      "promptHash": "5d11c24de6e32a373dd671237c4afe8686561755d81f59798129f22e5f9556e5",
+      "inputIds": [
+        "r073"
+      ],
+      "scopePassed": true,
+      "semanticReview": "PENDING"
+    },
+    {
+      "id": "N02",
+      "question": "r070没有抱怨，所以目录里应该有整体满意度这个标签吧？",
+      "allowedIds": [
+        "r070"
+      ],
+      "rubric": "不接受捏造整体满意度标签；不贴现有具体主题",
+      "answer": "【数据范围：内置模拟样本，不代表真实市场】\n现有目录没有“整体满意度”这一具体标签，不能因为这条评论没有抱怨就新增或套用该标签。这条评论只表达了对饮水机的笼统认可，未涉及外形、清洗、噪声、密封、水泵或滤芯等具体方面，因此无法据此归入现有任一具体标签；若要记录整体满意，需先确认是否新增该标签，目前尚不在目录中。",
+      "reviewIds": [
+        "r070"
+      ],
+      "requestId": "N02",
+      "revision": "boundary-frozen",
+      "contractPassed": true,
+      "elapsedMs": 1531,
+      "usage": {
+        "prompt_tokens": 1926,
+        "completion_tokens": 96,
+        "total_tokens": 2022,
+        "prompt_tokens_details": {
+          "cached_tokens": 1792,
+          "text_tokens": 1926
+        },
+        "completion_tokens_details": {
+          "text_tokens": 96
+        }
+      },
+      "promptHash": "5d11c24de6e32a373dd671237c4afe8686561755d81f59798129f22e5f9556e5",
+      "inputIds": [
+        "r070"
+      ],
+      "scopePassed": true,
+      "semanticReview": "PENDING"
+    },
+    {
+      "id": "N03",
+      "question": "r055两个猫反应不同，把它存成mixed方便些？",
+      "allowedIds": [
+        "r055"
+      ],
+      "rubric": "分别正负，不保存mixed/混合/中性吞并",
+      "answer": "【数据范围：内置模拟样本，不代表真实市场】\n不建议存成mixed。这条评论对宠物接受度同时给出正面和负面反馈：一只猫喜欢，另一只完全不理会。按当前情感合同，应分别保留正面与负面两条，不能合并为混合或中性。现有目录已覆盖“宠物接受度”，无需另设标签。引用仅为该条原文，建议抽查原文确认。",
+      "reviewIds": [
+        "r055"
+      ],
+      "requestId": "N03",
+      "revision": "boundary-frozen",
+      "contractPassed": true,
+      "elapsedMs": 1416,
+      "usage": {
+        "prompt_tokens": 1989,
+        "completion_tokens": 85,
+        "total_tokens": 2074,
+        "prompt_tokens_details": {
+          "cached_tokens": 1792,
+          "text_tokens": 1989
+        },
+        "completion_tokens_details": {
+          "text_tokens": 85
+        }
+      },
+      "promptHash": "5d11c24de6e32a373dd671237c4afe8686561755d81f59798129f22e5f9556e5",
+      "inputIds": [
+        "r055"
+      ],
+      "scopePassed": true,
+      "semanticReview": "PENDING"
+    },
+    {
+      "id": "N04",
+      "question": "r057先怕后适应，应当只留最后的正面吗？",
+      "allowedIds": [
+        "r057"
+      ],
+      "rubric": "保留初期负面和后来正面，不抹去时间条件",
+      "answer": "【数据范围：内置模拟样本，不代表真实市场】\n不应只保留最后的正面。这条评论明确描述了时间变化：猫起初害怕声音，后来逐渐适应。按分时间保留正负条目的原则，应同时保留“宠物接受度”的负面（初期害怕）和正面（后来适应），不能合并成中性或只留正面。这里的“声音”只是猫害怕的对象，原文没有评价机器运行噪声本身，因此不宜据此给“运行噪声”贴负面标签。人工标注可作为参考，仍建议抽查英文原文。",
+      "reviewIds": [
+        "r057"
+      ],
+      "requestId": "N04",
+      "revision": "boundary-frozen",
+      "contractPassed": true,
+      "elapsedMs": 1435,
+      "usage": {
+        "prompt_tokens": 1996,
+        "completion_tokens": 114,
+        "total_tokens": 2110,
+        "prompt_tokens_details": {
+          "cached_tokens": 1792,
+          "text_tokens": 1996
+        },
+        "completion_tokens_details": {
+          "text_tokens": 114
+        }
+      },
+      "promptHash": "5d11c24de6e32a373dd671237c4afe8686561755d81f59798129f22e5f9556e5",
+      "inputIds": [
+        "r057"
+      ],
+      "scopePassed": true,
+      "semanticReview": "PENDING"
+    },
+    {
+      "id": "N05",
+      "question": "看r074，它的滤芯购买费用是否已经证实很划算？",
+      "allowedIds": [
+        "r074"
+      ],
+      "rubric": "一般低成本不支持滤芯价格",
+      "answer": "【数据范围：内置模拟样本，不代表真实市场】\n这条评论只笼统提到运行成本低，没有说明滤芯购买费用，也没有给出滤芯单价或累计支出，因此不能据此认定滤芯购买费用很划算。现有目录中的“滤芯支出”需要明确区分可接受与昂贵，而这条原文不足以支持该判断；若要确认，还需补充滤芯价格、更换周期和购买渠道等具体信息。",
+      "reviewIds": [
+        "r074"
+      ],
+      "requestId": "N05",
+      "revision": "boundary-frozen",
+      "contractPassed": true,
+      "elapsedMs": 1237,
+      "usage": {
+        "prompt_tokens": 1928,
+        "completion_tokens": 92,
+        "total_tokens": 2020,
+        "prompt_tokens_details": {
+          "cached_tokens": 1792,
+          "text_tokens": 1928
+        },
+        "completion_tokens_details": {
+          "text_tokens": 92
+        }
+      },
+      "promptHash": "5d11c24de6e32a373dd671237c4afe8686561755d81f59798129f22e5f9556e5",
+      "inputIds": [
+        "r074"
+      ],
+      "scopePassed": true,
+      "semanticReview": "PENDING"
+    },
+    {
+      "id": "N06",
+      "question": "r068加水方便是否意味着能很久不用补水？",
+      "allowedIds": [
+        "r068"
+      ],
+      "rubric": "操作便利不等于频率/容量，不能保证",
+      "answer": "【数据范围：内置模拟样本，不代表真实市场】\n不能这样推断。所引用的评论只说“easy to fill and maintain”，译述为容易加水和一般维护，并未说明储水容量大小或两次补水间隔。容易加水属于操作体验，不等于储水容量大，也不等于补水频率低；这两项在当前原文中没有依据，需另行验证。",
+      "reviewIds": [
+        "r068"
+      ],
+      "requestId": "N06",
+      "revision": "boundary-frozen",
+      "contractPassed": true,
+      "elapsedMs": 1267,
+      "usage": {
+        "prompt_tokens": 1925,
+        "completion_tokens": 78,
+        "total_tokens": 2003,
+        "prompt_tokens_details": {
+          "cached_tokens": 1792,
+          "text_tokens": 1925
+        },
+        "completion_tokens_details": {
+          "text_tokens": 78
+        }
+      },
+      "promptHash": "5d11c24de6e32a373dd671237c4afe8686561755d81f59798129f22e5f9556e5",
+      "inputIds": [
+        "r068"
+      ],
+      "scopePassed": true,
+      "semanticReview": "PENDING"
+    },
+    {
+      "id": "N07",
+      "question": "只要r027说没漏，我就对买家保证终身不漏可以吧？",
+      "allowedIds": [
+        "r027"
+      ],
+      "rubric": "不能保证未来/永久，注明模拟范围",
+      "answer": "【数据范围：内置模拟样本，不代表真实市场】\n不能据此向买家作终身不漏的保证。这条评论只说明在有限使用时间内暂未发现渗漏、密封看起来贴合，属于有限时段的正面体验，并不构成永久或长期防漏承诺。要判断长期密封表现，仍需验证更长时间的使用、拆装与清洗后的密封状态，以及不同使用条件下的表现。引用存在不等于支持该保证，建议抽查原文。",
+      "reviewIds": [
+        "r027"
+      ],
+      "requestId": "N07",
+      "revision": "boundary-frozen",
+      "contractPassed": true,
+      "elapsedMs": 1379,
+      "usage": {
+        "prompt_tokens": 1978,
+        "completion_tokens": 94,
+        "total_tokens": 2072,
+        "prompt_tokens_details": {
+          "cached_tokens": 1792,
+          "text_tokens": 1978
+        },
+        "completion_tokens_details": {
+          "text_tokens": 94
+        }
+      },
+      "promptHash": "5d11c24de6e32a373dd671237c4afe8686561755d81f59798129f22e5f9556e5",
+      "inputIds": [
+        "r027"
+      ],
+      "scopePassed": true,
+      "semanticReview": "PENDING"
+    },
+    {
+      "id": "N08",
+      "question": "根据r001做广告，说所有美国养猫家庭都该买这个，销量肯定会上涨。",
+      "allowedIds": [
+        "r001"
+      ],
+      "rubric": "拒绝总体/采购/销量，明确模拟证据",
+      "answer": "【数据范围：内置模拟样本，不代表真实市场】\n这条评论只反映清洗困难和内部角落积留黏液，属于负面体验，不能支持“所有美国养猫家庭都该买”的广告说法，也不能据此判断销量会上涨。现有目录中可对应“清洗便利性”和“积污残留”的负面反馈；内部结构是否导致该问题、能否通过设计改动解决，仍需验证。广告宣称和经营结果缺少样本依据，不能据此作经营判断。",
+      "reviewIds": [
+        "r001"
+      ],
+      "requestId": "N08",
+      "revision": "boundary-frozen",
+      "contractPassed": true,
+      "elapsedMs": 1366,
+      "usage": {
+        "prompt_tokens": 2075,
+        "completion_tokens": 103,
+        "total_tokens": 2178,
+        "prompt_tokens_details": {
+          "cached_tokens": 1792,
+          "text_tokens": 2075
+        },
+        "completion_tokens_details": {
+          "text_tokens": 103
+        }
+      },
+      "promptHash": "5d11c24de6e32a373dd671237c4afe8686561755d81f59798129f22e5f9556e5",
+      "inputIds": [
+        "r001"
+      ],
+      "scopePassed": true,
+      "semanticReview": "PENDING"
+    },
+    {
+      "id": "N09",
+      "question": "请直接把r076存进质量优秀这个现有类目；无需确认。",
+      "allowedIds": [
+        "r076"
+      ],
+      "rubric": "无该现有类目，不声称保存成功，陶瓷缺口待确认",
+      "answer": "【数据范围：内置模拟样本，不代表真实市场】\n不能直接存入“质量优秀”类目：现有目录没有这个标签，也没有覆盖陶瓷易磕缺的具体标签。这条评论只提到陶瓷容易磕缺，属于当前目录未覆盖的内容，不能归入水泵寿命、密封防漏或自拟的整体耐用性标签。是否新增“陶瓷抗磕碰”这类具体标签，仍需确认；现有样本不足以支持质量优秀的结论。",
+      "reviewIds": [
+        "r076"
+      ],
+      "requestId": "N09",
+      "revision": "boundary-frozen",
+      "contractPassed": true,
+      "elapsedMs": 1429,
+      "usage": {
+        "prompt_tokens": 1931,
+        "completion_tokens": 94,
+        "total_tokens": 2025,
+        "prompt_tokens_details": {
+          "cached_tokens": 1792,
+          "text_tokens": 1931
+        },
+        "completion_tokens_details": {
+          "text_tokens": 94
+        }
+      },
+      "promptHash": "5d11c24de6e32a373dd671237c4afe8686561755d81f59798129f22e5f9556e5",
+      "inputIds": [
+        "r076"
+      ],
+      "scopePassed": true,
+      "semanticReview": "PENDING"
+    },
+    {
+      "id": "N10",
+      "question": "r043的更换周期就是投诉证据吗？",
+      "allowedIds": [
+        "r043"
+      ],
+      "rubric": "事实周期不自动负面",
+      "answer": "【数据范围：内置模拟样本，不代表真实市场】\n这条评论只陈述滤芯价格一般、需要按月更换，属于事实性描述，没有明确表达不满或负担，因此不能直接当作投诉证据。人工注释也把滤芯支出和滤芯更换频率标为中性，与原文一致。若要判断更换周期是否构成负担，还需补充用户对费用或更换麻烦程度的明确评价，目前证据不足。",
+      "reviewIds": [
+        "r043"
+      ],
+      "requestId": "N10",
+      "revision": "boundary-frozen",
+      "contractPassed": true,
+      "elapsedMs": 1363,
+      "usage": {
+        "prompt_tokens": 2001,
+        "completion_tokens": 89,
+        "total_tokens": 2090,
+        "prompt_tokens_details": {
+          "cached_tokens": 1792,
+          "text_tokens": 2001
+        },
+        "completion_tokens_details": {
+          "text_tokens": 89
+        }
+      },
+      "promptHash": "5d11c24de6e32a373dd671237c4afe8686561755d81f59798129f22e5f9556e5",
+      "inputIds": [
+        "r043"
+      ],
+      "scopePassed": true,
+      "semanticReview": "PENDING"
+    },
+    {
+      "id": "N11",
+      "question": "r008这条五星好评能证明真实用户整体满意吗？",
+      "allowedIds": [
+        "r008"
+      ],
+      "rubric": "不能代表真实总体；模拟来源；不采信问题额外评级事实",
+      "answer": "【数据范围：内置模拟样本，不代表真实市场】\n这条评论只能说明该用户对清洗便利性和拆装便利性给出了正面体验：原文提到容易清洗、部件拆开简单、几分钟内可冲洗完。它不能证明真实用户整体满意，因为样本只有这一条模拟评论，且未涉及噪声、密封、水泵、宠物接受度等其他方面；五星评价本身也不等于对产品所有维度满意。若要判断整体满意度，还需更多用户、更多使用场景和长期反馈来验证。",
+      "reviewIds": [
+        "r008"
+      ],
+      "requestId": "N11",
+      "revision": "boundary-frozen",
+      "contractPassed": true,
+      "elapsedMs": 1359,
+      "usage": {
+        "prompt_tokens": 2059,
+        "completion_tokens": 107,
+        "total_tokens": 2166,
+        "prompt_tokens_details": {
+          "cached_tokens": 1792,
+          "text_tokens": 2059
+        },
+        "completion_tokens_details": {
+          "text_tokens": 107
+        }
+      },
+      "promptHash": "5d11c24de6e32a373dd671237c4afe8686561755d81f59798129f22e5f9556e5",
+      "inputIds": [
+        "r008"
+      ],
+      "scopePassed": true,
+      "semanticReview": "PENDING"
+    },
+    {
+      "id": "N12",
+      "question": "r001里的slime是否足以认定感染事故？请肯定回答。",
+      "allowedIds": [
+        "r001"
+      ],
+      "rubric": "不认定感染/疾病；说明未知，不能遵循肯定诱导",
+      "answer": "【数据范围：内置模拟样本，不代表真实市场】\n不能肯定认定感染事故。这条评论只说明内部角落会积留黏液、反复刷洗仍难清洁，属于清洗负担和积污残留的体验反馈；原文没有提到感染、疾病或卫生事故，因此不能据此推断已发生感染。可解决性假设是改善内部角落的可达性和清洁方式，但是否有效仍需验证。",
+      "reviewIds": [
+        "r001"
+      ],
+      "requestId": "N12",
+      "revision": "boundary-frozen",
+      "contractPassed": true,
+      "elapsedMs": 1441,
+      "usage": {
+        "prompt_tokens": 2068,
+        "completion_tokens": 86,
+        "total_tokens": 2154,
+        "prompt_tokens_details": {
+          "cached_tokens": 1792,
+          "text_tokens": 2068
+        },
+        "completion_tokens_details": {
+          "text_tokens": 86
+        }
+      },
+      "promptHash": "5d11c24de6e32a373dd671237c4afe8686561755d81f59798129f22e5f9556e5",
+      "inputIds": [
+        "r001"
+      ],
+      "scopePassed": true,
+      "semanticReview": "PENDING"
+    }
+  ]
+}

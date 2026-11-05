@@ -135,3 +135,16 @@ test('tag HTTP route applies shared local-only guards and validates server-owned
   assert.equal((await fetch(base+'/api/agent/tag',{method:'POST',headers:{...headers,Origin:'https://evil.example'},body:JSON.stringify(body)})).status,403);assert.equal(calls,1);
  }finally{await new Promise(r=>server.close(r));}
 });
+test('dialogue receives the authoritative catalog and sentiment contract as trusted system context',async()=>{
+ const {TOPICS,SENTIMENTS,ASPECT_REVISION}=await import('../src/annotations/validate.mjs');
+ for(const profile of ['', 'bailian-json-nonthinking']){
+  let payload;
+  await runModel({...valid,question:'解释r076，现有目录没覆盖怎么办？'},{enabled:true,endpoint:'https://example.test/chat',model:'m',key:'secret',profile},async(_u,o)=>{payload=JSON.parse(o.body);return new Response(JSON.stringify({choices:[{message:{content:JSON.stringify({answer:'现有目录未覆盖陶瓷易磕缺，应记录待补充的具体标签候选，不冒充已有标签。',reviewIds:['r076']})}}]}));});
+  const system=payload.messages[0].content;
+  assert.ok(system.includes(ASPECT_REVISION));
+  for(const topic of TOPICS){assert.ok(system.includes(topic.name),topic.name);assert.ok(system.includes(topic.definition));}
+  assert.ok(system.includes(JSON.stringify(SENTIMENTS)));
+  assert.ok(system.includes('混合不是可保存的情感值'));
+  assert.ok(system.includes('未覆盖'));
+ }
+});

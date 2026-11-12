@@ -1,6 +1,14 @@
 import type { EconomicResult } from "./economics";
 import type { OpportunityId, RankingResult } from "./opportunities";
 import type { QualityReport, ResearchState } from "./types";
+/**
+ * Bounded decision logic (Task 8A).
+ * Aggregates category, pain-point and opportunity evidence into exactly one
+ * of: continue_research / insufficient_evidence / pause, plus a validation
+ * plan. Structurally prevents purchase or stocking recommendations.
+ * Documentation pass 2026-11-12.
+ */
+
 
 export type DecisionStatus = "continue_research" | "insufficient_evidence" | "pause";
 
@@ -158,6 +166,7 @@ function copyActions(actions: readonly ValidationAction[]): ValidationAction[] {
   }));
 }
 
+//** Clamp user thresholds into documented bounds and reject unknown keys. */
 export function normalizeDecisionConditions(input: DecisionConditions): DecisionConditions {
   const normalize = (values: readonly string[]): string[] => values
     .filter((value): value is string => typeof value === "string" && value.trim().length > 0)
@@ -217,6 +226,11 @@ function defaultActions(input: DecisionInput): ValidationAction[] {
   return copyActions(actions);
 }
 
+/**
+ * Bounded decision entry: consumes category/pain-point/opportunity evidence and
+ * returns continue_research | insufficient_evidence | pause with reasons and a
+ * validation plan. Structurally cannot emit purchase advice.
+ */
 export function buildDecisionReport(input: DecisionInput): DecisionReport {
   const conditions = normalizeDecisionConditions(input.userConditions);
   const triggeredCandidates = input.triggeredStopConditions

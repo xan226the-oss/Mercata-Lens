@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
 import { StatusBanner } from "./StatusBanner";
 import type { ImportOutcomeState } from "../research/ResearchContext";
+/**
+ * Concise latest-import result summary.
+ * Documentation pass 2026-11-12.
+ */
+
 
 interface ImportResultSummaryProps {
   state: ImportOutcomeState;

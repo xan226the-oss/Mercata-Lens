@@ -3,6 +3,11 @@ import { PAIN_POINT_IDS, type PainPointId } from "../domain/painPointRules";
 import type { PainPointCorrection, ReviewClassification } from "../domain/painPoints";
 import type { ReviewRecord } from "../domain/types";
 import type { ReviewQueueRow } from "./ReviewQueue";
+/**
+ * Manual review-label correction panel; requires a non-blank correction reason.
+ * Documentation pass 2026-11-12.
+ */
+
 
 export type { ReviewQueueRow } from "./ReviewQueue";
 

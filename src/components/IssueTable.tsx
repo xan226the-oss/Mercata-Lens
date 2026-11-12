@@ -1,5 +1,10 @@
 import type { ReactElement } from "react";
 import type { ParseIssue } from "../domain/types";
+/**
+ * Full per-row import diagnostics (blocking vs warning).
+ * Documentation pass 2026-11-12.
+ */
+
 
 interface IssueTableProps {
   issues: ParseIssue[];

@@ -3,15 +3,27 @@
  * Types only — no parsing, no analysis, no economics calculation.
  */
 
+/**
+ * Versioned domain contracts (Task 3 core).
+ * Single source of truth for product/review record shapes, parse issue
+ * taxonomy and the dataset envelope. Downstream modules must rely on these
+ * types instead of re-declaring raw CSV rows.
+ * Documentation pass 2026-11-12.
+ */
+
+/** Where the dataset came from: bundled synthetic demo or user CSV upload. */
 export type SourceKind = "demo" | "user_upload";
+/** Provenance flavor: observed (source page), assumption (user-entered), derived (computed). */
 export type EvidenceKind = "observed" | "assumption" | "derived";
 
+/** One validated product row. Nullable fields are genuinely missing, never defaulted. */
 export interface ProductRecord {
   productId: string;
   title: string;
   brand: string | null;
   priceUsd: number;
   rating: number;
+  /** Displayed review count — NOT sales volume; null when the page shows none. */
   reviewCount: number | null;
   category: string;
   material: string | null;
@@ -23,6 +35,7 @@ export interface ProductRecord {
   csvRow?: number;
 }
 
+/** One validated review row; reviewDate/verifiedPurchase are optional columns. */
 export interface ReviewRecord {
   reviewId: string;
   productId: string;
@@ -34,7 +47,9 @@ export interface ReviewRecord {
   csvRow?: number;
 }
 
+/** Active evidence envelope: source kind, category, products and reviews together. */
 export interface ResearchDataset {
+  /** Bump on breaking shape changes; downstream code asserts this value. */
   schemaVersion: 1;
   market: "US";
   currency: "USD";
@@ -45,6 +60,7 @@ export interface ResearchDataset {
   importedAt: string;
 }
 
+/** Per-field provenance stub so any number can answer "where did you come from". */
 export interface DataProvenance {
   sourceKind: SourceKind;
   evidenceKind: EvidenceKind;
@@ -58,6 +74,7 @@ export interface DataProvenance {
  * Defined here for type completeness only; no economics logic exists
  * until its dedicated task. All fields remain nullable until filled in.
  */
+/** Unit-economics inputs in integer cents; every field is an assumption until sourced. */
 export interface EconomicInputs {
   salePriceCents: number | null;
   sourcingCostCents: number | null;
@@ -69,6 +86,7 @@ export interface EconomicInputs {
   otherCostCents: number | null;
 }
 
+/** Pessimistic/base/optimistic assumption bundles, each field with provenance. */
 export interface EconomicScenario {
   id: "pessimistic" | "base" | "optimistic";
   label: string;
@@ -81,6 +99,7 @@ export interface EconomicScenario {
  * Corrections / economicsByOpportunity / weights / decisionDraft are
  * structural placeholders consumed by later tasks.
  */
+/** Serializable research snapshot (v1): dataset + corrections + economics + weights + draft decision. */
 export interface ResearchState {
   schemaVersion: 1;
   dataset: ResearchDataset;
@@ -98,12 +117,14 @@ export interface ResearchState {
   updatedAt: string;
 }
 
+/** Row-level validation failure taxonomy shared by product and review parsers. */
 export type ParseIssueCode =
   | "required"
   | "invalid_type"
   | "out_of_range"
   | "invalid_format";
 
+/** One field-level problem with row number, raw value and human message. */
 export interface ParseIssue {
   row: number;
   field: string;

@@ -1,5 +1,16 @@
 import type { ProductRecord, ResearchDataset, SourceKind } from "./types";
+/**
+ * Category overview domain (Task 4C).
+ * Traceable descriptive statistics for the active product sample: price
+ * median/quartiles/bands, rating and review-count bands, brand shares and
+ * attribute coverage. Every band keeps contributing product IDs so any number
+ * shown in the UI can be audited back to source rows. Deliberately
+ * descriptive-only: no market inference, no sales claims.
+ * Documentation pass 2026-11-12.
+ */
 
+
+/** Bounded tri-state mirroring the decision vocabulary; never a market verdict. */
 export type CategoryStatus = "continue_research" | "insufficient_evidence" | "pause";
 
 export type CategoryBandId =
@@ -13,6 +24,11 @@ export type CategoryBandId =
   | "reviews_100_to_499"
   | "reviews_500_plus";
 
+/**
+ * One distribution band with explicit boundaries and the product IDs that
+ * fall inside. Denominator semantics: shareOfProducts = count / productCount
+ * with productCount always stated alongside — never a bare percentage.
+ */
 export interface CategoryBand {
   id: CategoryBandId;
   label: string;
@@ -25,6 +41,7 @@ export interface CategoryBand {
   productIds: string[];
 }
 
+/** Brand share with denominator; "Not provided" is an explicit bucket, not hidden. */
 export interface BrandShare {
   brand: string | null;
   label: string;
@@ -47,6 +64,10 @@ export interface AttributeCoverage {
   missingProductIds: string[];
 }
 
+/**
+ * Evidence block attached to every analysis: which products are in, which
+ * are out (and why), the price cut points used, and the denominator.
+ */
 export interface CategoryEvidence {
   category: string;
   sourceKind: SourceKind;
@@ -56,6 +77,7 @@ export interface CategoryEvidence {
   productDenominator: number;
 }
 
+/** Enumerated limitation codes so the UI can render them consistently. */
 export type CategoryLimitationCode =
   | "current_sample_only"
   | "synthetic_demo"
@@ -87,6 +109,7 @@ interface ValueWithProductId {
   productId: string;
 }
 
+/** Median of a pre-sorted ascending array; null when empty. */
 function median(sorted: number[]): number | null {
   if (sorted.length === 0) return null;
   const middle = Math.floor(sorted.length / 2);
@@ -95,6 +118,7 @@ function median(sorted: number[]): number | null {
     : (sorted[middle - 1] + sorted[middle]) / 2;
 }
 
+/** Tukey-style quartiles via median-of-halves; single value repeats itself. */
 function quartiles(sorted: number[]): { q1: number | null; median: number | null; q3: number | null } {
   if (sorted.length === 0) return { q1: null, median: null, q3: null };
   if (sorted.length === 1) return { q1: sorted[0], median: sorted[0], q3: sorted[0] };
@@ -105,6 +129,7 @@ function quartiles(sorted: number[]): { q1: number | null; median: number | null
   return { q1: median(lower), median: median(sorted), q3: median(upper) };
 }
 
+/** Assemble one band with an explicit product-count denominator (no silent percentages). */
 function band(
   id: CategoryBandId,
   label: string,
@@ -129,6 +154,7 @@ function band(
   };
 }
 
+/** Q1/median/Q3 deduplicated ascending — the only allowed price cut points. */
 function uniqueSortedPriceCutPoints(priceQuartiles: { q1: number | null; median: number | null; q3: number | null }): number[] {
   return [priceQuartiles.q1, priceQuartiles.median, priceQuartiles.q3]
     .filter((value): value is number => value !== null)
@@ -136,6 +162,7 @@ function uniqueSortedPriceCutPoints(priceQuartiles: { q1: number | null; median:
     .filter((value, index, values) => index === 0 || value !== values[index - 1]);
 }
 
+/** Sample-relative price bands: (prevCut, cut] intervals, open top band above Q3. */
 function buildPriceBands(
   entries: ValueWithProductId[],
   priceQuartiles: { q1: number | null; median: number | null; q3: number | null },
@@ -188,6 +215,7 @@ function buildPriceBands(
   return bands;
 }
 
+/** Fixed-band builder for rating / review-count definitions (constant edges). */
 function buildFixedBands(
   products: ProductRecord[],
   productCount: number,
@@ -218,6 +246,7 @@ function buildFixedBands(
   );
 }
 
+/** Fixed rating bands: <3, 3–<4, 4–<4.5, 4.5–5. Edges are constant across samples. */
 const ratingDefinitions = [
   {
     id: "rating_below_3" as const,
@@ -257,6 +286,10 @@ const ratingDefinitions = [
   },
 ];
 
+/**
+ * Fixed displayed-review-count bands: 0, 1–99, 100–499, 500+.
+ * review_count is a displayed count and is explicitly NOT sales volume.
+ */
 const reviewDefinitions = [
   {
     id: "reviews_zero" as const,
@@ -304,6 +337,7 @@ function getAttributeValue(product: ProductRecord, attribute: CategoryAttribute)
   return product[attribute];
 }
 
+/** Per-attribute present/missing product lists with explicit denominator. */
 function buildAttributeCoverage(products: ProductRecord[]): AttributeCoverage[] {
   const attributes: CategoryAttribute[] = ["brand", "material", "capacity", "filterCost", "reviewCount"];
   return attributes.map((attribute) => {
@@ -326,6 +360,7 @@ function buildAttributeCoverage(products: ProductRecord[]): AttributeCoverage[] 
   });
 }
 
+/** Brand grouping (blank → "Not provided"), sorted by count then label. */
 function buildBrandShares(products: ProductRecord[]): BrandShare[] {
   const groups = new Map<string | null, string[]>();
   for (const product of products) {
@@ -347,6 +382,7 @@ function buildBrandShares(products: ProductRecord[]): BrandShare[] {
     .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
 }
 
+/** Mandatory limitations block; grows with demo source, missing fields, small sample. */
 function buildLimitations(dataset: ResearchDataset, products: ProductRecord[], coverage: AttributeCoverage[]) {
   const limitations: Array<{ code: CategoryLimitationCode; message: string }> = [
     { code: "current_sample_only", message: "This analysis describes only products in the current sample." },
@@ -366,6 +402,7 @@ function buildLimitations(dataset: ResearchDataset, products: ProductRecord[], c
   return limitations;
 }
 
+/** Main entry: full CategoryAnalysis for the active dataset. ≥3 products → continue, else insufficient evidence. */
 export function analyzeCategory(dataset: ResearchDataset): CategoryAnalysis {
   const products = dataset.products;
   const productCount = products.length;

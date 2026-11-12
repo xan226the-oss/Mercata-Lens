@@ -1,5 +1,14 @@
 import {validateAnnotations, type AspectOverrides, type AspectOverride} from "../domain/aspects";
 /**
+ * Session research state provider.
+ * Owns the active dataset, import flow, legacy pain-point corrections and
+ * aspect overrides. State is React memory only; nothing persists across
+ * reloads. Dataset/corrections changes bump the revision used to invalidate
+ * stale assistant answers.
+ * Documentation pass 2026-11-12.
+ */
+
+/**
  * Research context: demo loading + CSV import with a quality gate.
  * States: idle | loading | ready | error (for the demo load path);
  * import keeps its own success/error state without replacing current data
@@ -96,6 +105,11 @@ const EMPTY_IMPORT_STATE: ImportOutcomeState = {
 
 const ResearchContext = createContext<ResearchContextValue | null>(null);
 
+/**
+ * Root provider: demo autoload, import-replace flow, correction stores and
+ * the revision counter that invalidates assistant answers. All state is
+ * in-memory; leaving the page or reloading discards the session.
+ */
 export function ResearchProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<ResearchStatus>("idle");
   const [dataset, setDataset] = useState<ResearchDataset | null>(null);

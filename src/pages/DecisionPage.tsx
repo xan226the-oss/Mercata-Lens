@@ -11,6 +11,11 @@ import { createOpportunityHypotheses } from "../data/opportunityHypotheses";
 import { useResearch } from "../research/ResearchContext";
 import { downloadResearchExport } from "../data/researchExport";
 import type { EconomicScenario } from "../domain/types";
+/**
+ * Decision & validation: bounded output plus local JSON export.
+ * Documentation pass 2026-11-12.
+ */
+
 
 const CONDITION_FIELDS: ReadonlyArray<{ key: keyof DecisionConditions; label: string; help: string }> = [
   { key: "continueConditions", label: "Continue conditions", help: "One user-authored condition per line." },

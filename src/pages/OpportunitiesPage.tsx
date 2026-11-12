@@ -1,3 +1,8 @@
+/**
+ * Opportunity comparison: weighted scoring with editable weights and evidence links.
+ * Documentation pass 2026-11-12.
+ */
+
 import { useEffect, useMemo, useState, type ReactElement } from "react";
 import { calculateContribution, type EconomicResult } from "../domain/economics";
 import { EconomicsEditor } from "../components/EconomicsEditor";
@@ -8,6 +13,7 @@ import { DataSourceBadge } from "../components/DataSourceBadge";
 import { useResearch } from "../research/ResearchContext";
 import { aspectPainPoints } from "../domain/aspects";
 import {
+
   rankOpportunities,
   scoreOpportunity,
   type RankingResult,

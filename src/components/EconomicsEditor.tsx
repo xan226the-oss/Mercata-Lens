@@ -2,6 +2,11 @@ import type { ChangeEvent, ReactElement } from "react";
 import { useEffect, useState } from "react";
 import type { EconomicInputKey } from "../domain/economics";
 import type { DataProvenance, EconomicScenario } from "../domain/types";
+/**
+ * Editor for user-supplied unit-economics assumptions; every input is labelled an assumption.
+ * Documentation pass 2026-11-12.
+ */
+
 
 const FIELD_DEFINITIONS: ReadonlyArray<{ key: EconomicInputKey; label: string; kind: "dollar" | "rate" }> = [
   { key: "salePriceCents", label: "Sale price", kind: "dollar" },

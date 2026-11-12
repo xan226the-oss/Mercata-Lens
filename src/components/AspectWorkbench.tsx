@@ -1,9 +1,15 @@
+/**
+ * Topic × sentiment workbench: AI initial labels, user confirmation and overrides.
+ * Documentation pass 2026-11-12.
+ */
+
 import {useEffect,useMemo,useRef,useState} from 'react';
 import {useResearch} from '../research/ResearchContext';
 import {useLanguage} from '../app/LanguageContext';
 import {annotationsFor,aspectProvenance,coverageNote,summarizeAspects,validateAnnotations,ASPECT_REVISION} from '../domain/aspects';
 import {AspectEditor} from './AspectEditor';
 import './aspects.css';
+
 export function AspectWorkbench(){
  const {dataset,aspectOverrides,applyAspectOverride,clearAspectOverride}=useResearch();
  const {language}=useLanguage();const zh=language==='zh';const t=(cn:string,en:string)=>zh?cn:en;

@@ -1,8 +1,18 @@
 import type { EconomicScenario, EvidenceKind } from "./types";
+/**
+ * Opportunity comparison domain (Task 7A).
+ * Scores candidate opportunity hypotheses against user-editable weights.
+ * Scores are sample-relative and comparative only — never an absolute
+ * market-size or demand claim.
+ * Documentation pass 2026-11-12.
+ */
 
+
+/** Three demo hypothesis cards: easy-clean, quiet-durable, low-consumables. */
 export const OPPORTUNITY_IDS = ["easy_clean", "quiet_durable", "low_consumables"] as const;
 export type OpportunityId = (typeof OPPORTUNITY_IDS)[number];
 
+/** Scoring dimensions shared by all hypotheses; weights are user preferences. */
 export const OPPORTUNITY_DIMENSIONS = [
   "demand",
   "supply_gap",

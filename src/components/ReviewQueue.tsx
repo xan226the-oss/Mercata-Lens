@@ -1,6 +1,11 @@
 import type { PainPointId } from "../domain/painPointRules";
 import type { ReviewClassification } from "../domain/painPoints";
 import type { ReviewRecord } from "../domain/types";
+/**
+ * Review browsing queue with automatic vs manual label provenance.
+ * Documentation pass 2026-11-12.
+ */
+
 
 export type ReviewQueueStatus = "rule_matched" | "corrected" | "no_automatic_match" | "all";
 

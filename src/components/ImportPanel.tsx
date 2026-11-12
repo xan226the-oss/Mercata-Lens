@@ -1,4 +1,9 @@
 import { useState } from "react";
+/**
+ * Local CSV selection controls; no file is read before the explicit import button.
+ * Documentation pass 2026-11-12.
+ */
+
 
 interface ImportPanelProps {
   importCsv: (productsText: string, reviewsText: string) => void;

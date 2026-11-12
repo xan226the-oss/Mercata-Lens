@@ -1,5 +1,10 @@
 import type { ReactElement } from "react";
 import type { SourceKind } from "../domain/types";
+/**
+ * Category-analysis source boundary badge (demo vs user upload).
+ * Documentation pass 2026-11-12.
+ */
+
 
 export interface DataSourceBadgeProps {
   sourceKind: SourceKind;

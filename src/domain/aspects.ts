@@ -3,6 +3,14 @@ import {TOPICS,ASPECT_REVISION,validateAnnotations,type AspectAnnotation} from '
 import {summarizePainPoints,type PainPointSummary} from './painPoints';
 import type {PainPointId} from './painPointRules';
 import type {ResearchDataset,ReviewRecord} from './types';
+/**
+ * Multi-aspect topic × sentiment domain (2026-11-04).
+ * Same review may carry several topics with independent, even opposite
+ * sentiments per object/time. Mixed valence is a display state, not a
+ * saveable sentiment value. Aligns with server/agent.mjs TOPICS contract.
+ * Documentation pass 2026-11-12.
+ */
+
 export {TOPICS,ASPECT_REVISION,validateAnnotations};
 export type {AspectAnnotation};
 export interface AspectOverride {annotations:AspectAnnotation[];reason:string;source?:'manual'|'model'}

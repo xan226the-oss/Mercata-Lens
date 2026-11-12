@@ -1,5 +1,11 @@
+/**
+ * Opportunity weight editor; weight changes recalculate scores client-side.
+ * Documentation pass 2026-11-12.
+ */
+
 import { useEffect, useMemo, useState, type ReactElement } from "react";
 import {
+
   OPPORTUNITY_DIMENSIONS,
   DEFAULT_OPPORTUNITY_WEIGHTS,
   type OpportunityDimension,

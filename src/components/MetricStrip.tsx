@@ -1,4 +1,9 @@
 import type { ReactElement } from "react";
+/**
+ * Descriptive dataset metrics strip (counts, range, readiness).
+ * Documentation pass 2026-11-12.
+ */
+
 
 export interface MetricItem {
   id: "products" | "reviews" | "price-range" | "brands";

@@ -3,6 +3,11 @@
  * warnings and neutral status use role="status" with readable text.
  */
 import type { ReactNode } from "react";
+/**
+ * Accessible status/alert banner (role-mapped).
+ * Documentation pass 2026-11-12.
+ */
+
 
 export type StatusBannerTone = "error" | "warning" | "info" | "success";
 

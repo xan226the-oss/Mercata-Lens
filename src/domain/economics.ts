@@ -1,4 +1,12 @@
 import type { EconomicInputs } from "./types";
+/**
+ * Unit economics domain (Task 6A).
+ * Deterministic cost/margin arithmetic over user-supplied assumptions.
+ * Inputs are labelled assumptions, never market facts; outputs stay local
+ * and are excluded from any market claim.
+ * Documentation pass 2026-11-12.
+ */
+
 
 export type EconomicInputKey = keyof EconomicInputs;
 
@@ -141,6 +149,11 @@ function sumKnownCosts(inputs: EconomicInputs): number | EconomicIssue {
   return total;
 }
 
+/**
+ * Deterministic contribution margin arithmetic over labelled user assumptions.
+ * Result is either an issue list (invalid inputs) or computed metrics — never
+ * a market-cost claim.
+ */
 export function calculateContribution(inputs: EconomicInputs): EconomicResult {
   const issues = validate(inputs);
   if (issues.length > 0) return { status: "invalid", issues };

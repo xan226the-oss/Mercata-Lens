@@ -4,6 +4,11 @@ import { EvidenceStatus, type EvidenceGate } from "../components/EvidenceStatus"
 import { IssueTable } from "../components/IssueTable";
 import { ModuleStatus } from "../components/ModuleStatus";
 import { PageHeader } from "../components/PageHeader";
+/**
+ * Data quality: latest import attempt vs active valid dataset; blocking/warning split.
+ * Documentation pass 2026-11-12.
+ */
+
 
 function sourceLabel(sourceKind: "demo" | "user_upload" | null): string {
   return sourceKind === "demo" ? "Demo data" : sourceKind === "user_upload" ? "User upload" : "No active data";

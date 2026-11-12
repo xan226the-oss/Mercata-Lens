@@ -1,8 +1,18 @@
 /**
+ * Data quality gate (Task 4A).
+ * Separates blocking issues (reject the import, keep current research) from
+ * warnings (import proceeds, outliers are never removed). Also computes the
+ * per-module availability map (available / incomplete / locked) that drives
+ * evidence-gated navigation.
+ * Documentation pass 2026-11-12.
+ */
+
+/**
  * Data quality gate (Task 3). Evaluates a ResearchDataset and returns
  * blocking issues, warnings, module availability, and exact counts.
  * Pure, deterministic, and independent of UI / storage.
  */
+
 import type {
   AnalysisModule,
   ModuleAvailability,

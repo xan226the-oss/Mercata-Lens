@@ -1,4 +1,9 @@
 import type { ReactElement } from "react";
+/**
+ * Single descriptive category metric card.
+ * Documentation pass 2026-11-12.
+ */
+
 
 export interface MetricCardProps {
   id: string;

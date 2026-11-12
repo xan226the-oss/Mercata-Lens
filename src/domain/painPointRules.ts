@@ -1,5 +1,15 @@
+/**
+ * Versioned pain-point phrase ruleset (Task 5A), version 1.0.0.
+ * Stable labels: hard_to_clean, noise, leakage, pump_lifetime, filter_cost,
+ * capacity, pet_acceptance. Every automatic match retains the configured
+ * phrase and exact source-text offsets so each signal is auditable.
+ * Documentation pass 2026-11-12.
+ */
+
+/** Semver of the phrase ruleset; bumped whenever any phrase changes (see review-rule-changelog). */
 export const PAIN_POINT_RULESET_VERSION = "1.0.0" as const;
 
+/** Stable machine IDs for the seven pain-point labels; UI copy lives separately (labelEn/labelZh). */
 export const PAIN_POINT_IDS = [
   "hard_to_clean",
   "noise",
@@ -12,6 +22,7 @@ export const PAIN_POINT_IDS = [
 
 export type PainPointId = (typeof PAIN_POINT_IDS)[number];
 
+/** One label rule: include phrases flag a match; overlapping exclude phrases cancel it. */
 export interface PainPointRule {
   id: PainPointId;
   labelEn: string;
@@ -20,6 +31,7 @@ export interface PainPointRule {
   excludePhrases: readonly string[];
 }
 
+/** A single auditable automatic match: which phrase fired, verbatim source text and exact offsets. */
 export interface PainPointMatch {
   painPointId: PainPointId;
   ruleId: PainPointId;
@@ -30,9 +42,16 @@ export interface PainPointMatch {
   rulesetVersion: typeof PAIN_POINT_RULESET_VERSION;
 }
 
+/**
+ * The ruleset itself. Phrases are literal English n-grams observed in the
+ * demo corpus; negation guards ("not hard to clean") prevent the classic
+ * sentiment-inversion false positive. Adding/removing a phrase requires a
+ * version bump so historical matches stay interpretable.
+ */
 export const PAIN_POINT_RULES = [
   {
-    id: "hard_to_clean",
+    // Cleaning difficulty: disassembly/refit friction and cleaning time complaints.
+  id: "hard_to_clean",
     labelEn: "Cleaning difficulty",
     labelZh: "清洁困难",
     includePhrases: [
@@ -46,21 +65,24 @@ export const PAIN_POINT_RULES = [
     excludePhrases: ["not hard to clean"],
   },
   {
-    id: "noise",
+    // Noise: pump hum and splashing volume complaints; "not noisy" excluded.
+  id: "noise",
     labelEn: "Unwanted noise",
     labelZh: "噪音问题",
     includePhrases: ["noisy", "loud splashing", "not as quiet", "constant hum"],
     excludePhrases: ["not noisy", "no noise"],
   },
   {
-    id: "leakage",
+    // Leakage: all inflections of leak; explicit no-leak denials excluded.
+  id: "leakage",
     labelEn: "Water leakage",
     labelZh: "漏水问题",
     includePhrases: ["leak", "leaks", "leaked", "leaking", "leakage"],
     excludePhrases: ["no leak", "no leaks", "no leakage", "not leaking"],
   },
   {
-    id: "pump_lifetime",
+    // Pump lifetime: pump death/weakening/clogging events, not general reliability.
+  id: "pump_lifetime",
     labelEn: "Pump lifetime",
     labelZh: "水泵寿命",
     includePhrases: [
@@ -72,7 +94,8 @@ export const PAIN_POINT_RULES = [
     excludePhrases: [],
   },
   {
-    id: "filter_cost",
+    // Filter cost: recurring replacement expense complaints, not one-off price.
+  id: "filter_cost",
     labelEn: "Filter replacement cost",
     labelZh: "滤芯更换成本",
     includePhrases: [
@@ -84,7 +107,8 @@ export const PAIN_POINT_RULES = [
     excludePhrases: [],
   },
   {
-    id: "capacity",
+    // Capacity: undersized units and daily refill burden; "easy to refill" is not a match.
+  id: "capacity",
     labelEn: "Capacity or refill burden",
     labelZh: "容量或补水负担",
     includePhrases: [
@@ -96,7 +120,8 @@ export const PAIN_POINT_RULES = [
     excludePhrases: [],
   },
   {
-    id: "pet_acceptance",
+    // Pet acceptance: pets ignoring/fearing the fountain; hardest label, fewest phrases.
+  id: "pet_acceptance",
     labelEn: "Pet acceptance",
     labelZh: "宠物接受度",
     includePhrases: [
@@ -108,17 +133,20 @@ export const PAIN_POINT_RULES = [
   },
 ] as const satisfies readonly PainPointRule[];
 
+/** Lowercased word token pinned to its source offsets (audit trail stays exact). */
 interface TextToken {
   normalized: string;
   start: number;
   end: number;
 }
 
+/** Match plus ranking metadata for the overlap resolution below. */
 interface MatchCandidate extends PainPointMatch {
   phraseIndex: number;
   tokenCount: number;
 }
 
+/** Split into alphanumeric tokens (punctuation ignored) keeping original offsets. */
 function tokenize(text: string): TextToken[] {
   return [...text.matchAll(/[A-Za-z0-9]+/g)].map((match) => ({
     normalized: match[0].toLowerCase(),
@@ -127,6 +155,11 @@ function tokenize(text: string): TextToken[] {
   }));
 }
 
+/**
+ * Find every occurrence of `phrase` in the token stream (exact normalized
+ * token equality — no stemming, no synonyms) and return its character span
+ * and token count in the original review text.
+ */
 function phraseSpans(
   reviewText: string,
   reviewTokens: TextToken[],
@@ -158,6 +191,7 @@ function phraseSpans(
   return spans;
 }
 
+/** Half-open interval intersection test. */
 function overlaps(
   left: { start: number; end: number },
   right: { start: number; end: number },
@@ -217,6 +251,7 @@ export function matchPainPointRule(
     }));
 }
 
+/** Run all seven rules; matches across different labels may legitimately coexist. */
 export function matchPainPointRules(reviewText: string): PainPointMatch[] {
   return PAIN_POINT_RULES.flatMap((rule) => matchPainPointRule(reviewText, rule));
 }

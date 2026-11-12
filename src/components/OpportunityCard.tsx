@@ -1,6 +1,11 @@
 import type { ReactElement } from "react";
 import type { SourceKind } from "../domain/types";
 import type { Opportunity, OpportunityScore } from "../domain/opportunities";
+/**
+ * One scored opportunity hypothesis card with evidence links.
+ * Documentation pass 2026-11-12.
+ */
+
 
 interface OpportunityCardProps {
   opportunity: Opportunity;

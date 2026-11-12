@@ -1,4 +1,9 @@
 import type { DataProvenance, EconomicInputs, EconomicScenario, SourceKind } from "../domain/types";
+/**
+ * Preset economic assumption scenarios (all values are user assumptions).
+ * Documentation pass 2026-11-12.
+ */
+
 
 const SCENARIO_IDS = ["pessimistic", "base", "optimistic"] as const;
 

@@ -1,5 +1,10 @@
 import type { PainPointId } from "../domain/painPointRules";
 import type { PainPointSummary } from "../domain/painPoints";
+/**
+ * Pain-point summary with per-label counts and evidence navigation.
+ * Documentation pass 2026-11-12.
+ */
+
 
 export interface PainPointSummaryListProps {
   summaries: PainPointSummary[];

@@ -6,6 +6,11 @@ import { EvidenceDrawer } from "../components/EvidenceDrawer";
 import { MetricCard } from "../components/MetricCard";
 import { SampleDistribution } from "../components/SampleDistribution";
 import { PageHeader } from "../components/PageHeader";
+/**
+ * Category overview: traceable descriptive statistics with disclosure drawers.
+ * Documentation pass 2026-11-12.
+ */
+
 
 const usd = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 const percent = new Intl.NumberFormat("en-US", { style: "percent", maximumFractionDigits: 1 });

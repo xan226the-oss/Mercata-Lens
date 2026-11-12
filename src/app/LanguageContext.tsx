@@ -1,4 +1,9 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
+/**
+ * zh/en UI language context; defaults follow the Light Slate copy deck.
+ * Documentation pass 2026-11-12.
+ */
+
 
 export type Language = "en" | "zh";
 

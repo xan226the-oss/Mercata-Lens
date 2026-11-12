@@ -9,6 +9,11 @@ import { ReviewQueue, filterReviewQueueRows, type ReviewQueueRow, type ReviewQue
 import { PAIN_POINT_RULESET_VERSION, type PainPointId } from "../domain/painPointRules";
 import { classifyReview, summarizePainPoints, type PainPointCorrection } from "../domain/painPoints";
 import { useResearch } from "../research/ResearchContext";
+/**
+ * Pain-point workbench: automatic matches vs manual corrections, evidence-first.
+ * Documentation pass 2026-11-12.
+ */
+
 
 function LegacyPainPointsPage() {
   const { dataset, sourceKind, corrections, applyReviewCorrection, clearReviewCorrection } = useResearch();

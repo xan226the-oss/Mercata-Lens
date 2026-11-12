@@ -3,6 +3,13 @@ import type { EconomicScenario, ResearchDataset } from "../domain/types";
 import type { PainPointCorrections } from "../domain/painPoints";
 import type { OpportunityWeights, RankingResult } from "../domain/opportunities";
 import type { DecisionConditions, DecisionReport } from "../domain/decision";
+/**
+ * Local research export (decision JSON download).
+ * Serializes the current decision state, aspect revisions and review
+ * snapshot for offline inspection. Export happens client-side only.
+ * Documentation pass 2026-11-12.
+ */
+
 
 export const RESEARCH_EXPORT_SCHEMA_VERSION = 1 as const;
 

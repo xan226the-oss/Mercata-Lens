@@ -3,6 +3,12 @@ import type { Opportunity } from "../domain/opportunities";
 import { OPPORTUNITY_DIMENSIONS, OPPORTUNITY_IDS, OPPORTUNITY_NAMES } from "../domain/opportunities";
 import type { PainPointSummary } from "../domain/painPoints";
 import type { PainPointId } from "../domain/painPointRules";
+/**
+ * Default opportunity hypothesis cards derived from pain-point evidence.
+ * Each hypothesis keeps its evidence links so scores remain traceable.
+ * Documentation pass 2026-11-12.
+ */
+
 
 export const OPPORTUNITY_HYPOTHESIS_VALUES = Object.freeze({
   easy_clean: [70, 60, 65, 75, 55],

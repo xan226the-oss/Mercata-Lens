@@ -1,5 +1,10 @@
 import type { ReactElement } from "react";
 import type { DecisionReport } from "../domain/decision";
+/**
+ * Validation plan checklist attached to the bounded decision output.
+ * Documentation pass 2026-11-12.
+ */
+
 
 export interface ValidationPlanProps {
   report: DecisionReport;

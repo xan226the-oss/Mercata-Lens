@@ -1,5 +1,10 @@
 import type { ReactElement } from "react";
 import type { CategoryBand } from "../domain/category";
+/**
+ * Exact-count sample bands with explicit denominators.
+ * Documentation pass 2026-11-12.
+ */
+
 
 export interface SampleDistributionProps {
   id: string;

@@ -4,6 +4,12 @@ import { RESEARCH_STEPS } from "../app/routes";
 import { useResearch } from "./ResearchContext";
 import { copyFor, useLanguage, type Language } from "../app/LanguageContext";
 import type { ModuleAvailability } from "../domain/types";
+/**
+ * Light Slate shell: sidebar navigation, source badge, evidence-gated links.
+ * Locked steps are visible but not clickable and explain why.
+ * Documentation pass 2026-11-12.
+ */
+
 
 function LockedPage({ reason, language }: { reason: string; language: Language }) {
   const isZh = language === "zh";

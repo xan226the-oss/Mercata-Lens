@@ -9,6 +9,11 @@ import { ImportResultSummary } from "../components/ImportResultSummary";
 import { MetricStrip, type MetricItem } from "../components/MetricStrip";
 import { PageHeader } from "../components/PageHeader";
 import { SampleDistribution } from "../components/SampleDistribution";
+/**
+ * Research home: active evidence source, record counts, evidence readiness, next step.
+ * Documentation pass 2026-11-12.
+ */
+
 
 const usd = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 

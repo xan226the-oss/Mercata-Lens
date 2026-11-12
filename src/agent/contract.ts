@@ -1,4 +1,12 @@
+/**
+ * Shared client/server reply contract: message shape and verifyReply.
+ * Client-side re-verification mirrors server checks — defense in depth
+ * against malformed or drifted gateway responses.
+ * Documentation pass 2026-11-12.
+ */
+
 import scopeNotices from './scope-notices.json';
+
 type ScopeNotice=keyof typeof scopeNotices;
 /** Responses are usable only for the active request and immutable research revision. */
 export interface AgentReply { requestId:string; revision:string; answer:string; reviewIds:string[]; scopeNotice?:ScopeNotice }

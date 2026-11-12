@@ -6,6 +6,12 @@ import { CategoryPage } from "../pages/CategoryPage";
 import { PainPointsPage } from "../pages/PainPointsPage";
 import { OpportunitiesPage } from "../pages/OpportunitiesPage";
 import { DecisionPage } from "../pages/DecisionPage";
+/**
+ * RESEARCH_STEPS + STEP_ROUTES: shared six-step route metadata for the
+ * sidebar and evidence gating. Single source of truth for step order.
+ * Documentation pass 2026-11-12.
+ */
+
 
 export type StepStatus = "available" | "locked";
 

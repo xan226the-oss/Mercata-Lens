@@ -1,9 +1,17 @@
 /**
+ * ResearchDataset envelope builder.
+ * Wraps parsed products/reviews with source kind, category and observation
+ * metadata so every downstream analysis can state its evidence boundary.
+ * Documentation pass 2026-11-12.
+ */
+
+/**
  * ResearchDataset construction and helpers (Task 2).
  * Builds a versioned dataset envelope from parsed records.
  * No statistics, no cross-row quality rules — those belong to later tasks.
  */
 import type {
+
   ProductRecord,
   ResearchDataset,
   ReviewRecord,

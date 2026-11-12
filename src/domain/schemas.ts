@@ -13,6 +13,7 @@ import type {
 export type ProductRow = Record<string, unknown>;
 export type ReviewRow = Record<string, unknown>;
 
+/** Columns a product row must carry; anything else is a blocking parse issue. */
 const PRODUCT_REQUIRED_FIELDS = [
   "product_id",
   "title",
@@ -23,6 +24,7 @@ const PRODUCT_REQUIRED_FIELDS = [
   "observed_at",
 ] as const;
 
+/** Columns a review row must carry (review_date optional). */
 const REVIEW_REQUIRED_FIELDS = [
   "review_id",
   "product_id",

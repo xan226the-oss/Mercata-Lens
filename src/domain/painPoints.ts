@@ -1,5 +1,14 @@
+/**
+ * Pain-point classification over review records.
+ * Applies the versioned phrase ruleset and merges session-local manual
+ * corrections (adds/removes with a required non-blank reason). Corrections
+ * are annotations, not market facts.
+ * Documentation pass 2026-11-12.
+ */
+
 import type { ResearchDataset, ReviewRecord } from "./types";
 import {
+
   PAIN_POINT_IDS,
   PAIN_POINT_RULES,
   PAIN_POINT_RULESET_VERSION,

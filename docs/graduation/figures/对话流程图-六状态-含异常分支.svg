@@ -1,0 +1,189 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 1620" font-family="-apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5b6472"/>
+    </marker>
+    <marker id="arrowErr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b3591e"/>
+    </marker>
+    <marker id="arrowBack" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a6d1a"/>
+    </marker>
+  </defs>
+
+  <!-- 标题 -->
+  <text x="590" y="42" text-anchor="middle" font-size="24" font-weight="700" fill="#1c2430">Mercata Lens 研究助手 · 六状态对话流程（含异常分支与回退路径）</text>
+  <text x="590" y="66" text-anchor="middle" font-size="13" fill="#5b6472">依据《对话流程与验收清单》(2026-11-02) S1–S6 状态定义与 A01–A12 异常用例绘制 · 2026-11-12</text>
+
+  <!-- 图例 -->
+  <g font-size="12">
+    <rect x="30" y="86" width="330" height="74" rx="8" fill="#f4f6f9" stroke="#d5dbe4"/>
+    <line x1="46" y1="106" x2="82" y2="106" stroke="#5b6472" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="92" y="110" fill="#3c4654">主流程（正常迁移）</text>
+    <line x1="46" y1="130" x2="82" y2="130" stroke="#b3591e" stroke-width="2" stroke-dasharray="6 3" marker-end="url(#arrowErr)"/>
+    <text x="92" y="134" fill="#8a4218">异常分支（拦截/回退触发）</text>
+    <line x1="46" y1="150" x2="82" y2="150" stroke="#8a6d1a" stroke-width="2" marker-end="url(#arrowBack)"/>
+    <text x="92" y="154" fill="#6b5410">回退/失效重算路径</text>
+  </g>
+  <g font-size="12">
+    <rect x="820" y="86" width="330" height="74" rx="8" fill="#f4f6f9" stroke="#d5dbe4"/>
+    <text x="836" y="108" fill="#3c4654" font-weight="600">异常用例编号 A01–A12</text>
+    <text x="836" y="128" fill="#5b6472">橙色虚线框 = 该状态需拦截的异常</text>
+    <text x="836" y="148" fill="#5b6472">验证机制 V：结构·引用·统计三重校验</text>
+  </g>
+
+  <!-- ============ S1 ============ -->
+  <g>
+    <rect x="440" y="190" width="300" height="92" rx="10" fill="#ffffff" stroke="#3c4654" stroke-width="2"/>
+    <rect x="440" y="190" width="300" height="30" rx="10" fill="#3c4654"/>
+    <text x="590" y="211" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">S1 确认商品与市场范围</text>
+    <text x="456" y="240" font-size="11.5" fill="#3c4654">· 确认美国宠物饮水机品类与研测目的</text>
+    <text x="456" y="258" font-size="11.5" fill="#3c4654">· 用户确认范围后进入 S2</text>
+    <text x="456" y="276" font-size="11.5" fill="#8a4218">A01 空输入→本地拦截 · A12 经营预测→范围说明</text>
+  </g>
+  <line x1="590" y1="282" x2="590" y2="330" stroke="#5b6472" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="600" y="312" font-size="12" fill="#5b6472">用户确认范围</text>
+
+  <!-- ============ S2 ============ -->
+  <g>
+    <rect x="440" y="330" width="300" height="108" rx="10" fill="#ffffff" stroke="#3c4654" stroke-width="2"/>
+    <rect x="440" y="330" width="300" height="30" rx="10" fill="#3c4654"/>
+    <text x="590" y="351" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">S2 检查评论数据</text>
+    <text x="456" y="380" font-size="11.5" fill="#3c4654">· 程序检查格式、重复与归属（质量门）</text>
+    <text x="456" y="398" font-size="11.5" fill="#3c4654">· 有效数据与可用模块明确后进入 S3</text>
+    <text x="456" y="416" font-size="11.5" fill="#8a4218">A02 无有效数据→引导导入，不编造结果</text>
+  </g>
+  <!-- S2 阻塞 → 修正导入 -->
+  <path d="M 440 384 L 300 384" stroke="#b3591e" stroke-width="2" stroke-dasharray="6 3" fill="none" marker-end="url(#arrowErr)"/>
+  <text x="312" y="376" font-size="11.5" fill="#8a4218">阻塞</text>
+  <g>
+    <rect x="140" y="354" width="160" height="60" rx="8" fill="#fdf3ea" stroke="#b3591e" stroke-dasharray="5 3"/>
+    <text x="220" y="378" text-anchor="middle" font-size="12.5" font-weight="600" fill="#8a4218">修正导入</text>
+    <text x="220" y="396" text-anchor="middle" font-size="11" fill="#8a4218">拒绝导入·保留现研究</text>
+  </g>
+  <path d="M 220 414 L 220 466 L 434 466 L 434 438" stroke="#8a6d1a" stroke-width="2" fill="none" marker-end="url(#arrowBack)"/>
+  <text x="290" y="458" font-size="11" fill="#6b5410">重新导入后回到检查</text>
+
+  <line x1="590" y1="438" x2="590" y2="486" stroke="#5b6472" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="600" y="468" font-size="12" fill="#5b6472">数据有效</text>
+
+  <!-- ============ S3 + V ============ -->
+  <g>
+    <rect x="440" y="486" width="300" height="108" rx="10" fill="#ffffff" stroke="#3c4654" stroke-width="2"/>
+    <rect x="440" y="486" width="300" height="30" rx="10" fill="#3c4654"/>
+    <text x="590" y="507" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">S3 识别用户偏好候选</text>
+    <text x="456" y="536" font-size="11.5" fill="#3c4654">· 基于有效评论提出主题候选并绑定原文</text>
+    <text x="456" y="554" font-size="11.5" fill="#3c4654">· 用户可纠错（人工标签 = 注释非事实）</text>
+    <text x="456" y="572" font-size="11.5" fill="#8a4218">A09 用户改标签→先程序重算再更新解释</text>
+  </g>
+  <line x1="590" y1="594" x2="590" y2="632" stroke="#5b6472" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="600" y="620" font-size="12" fill="#5b6472">候选生成</text>
+
+  <!-- V 校验 -->
+  <g>
+    <polygon points="590,632 710,688 590,744 470,688" fill="#eef2f7" stroke="#3c4654" stroke-width="2"/>
+    <text x="590" y="680" text-anchor="middle" font-size="13" font-weight="700" fill="#1c2430">V 三重校验</text>
+    <text x="590" y="698" text-anchor="middle" font-size="11" fill="#3c4654">结构 · 引用存在 · 统计一致</text>
+    <text x="590" y="714" text-anchor="middle" font-size="11" fill="#3c4654">（客户端+服务端双重执行）</text>
+  </g>
+  <!-- V 不通过 -->
+  <path d="M 470 688 L 330 688" stroke="#b3591e" stroke-width="2" stroke-dasharray="6 3" fill="none" marker-end="url(#arrowErr)"/>
+  <text x="340" y="680" font-size="11.5" fill="#8a4218">不通过</text>
+  <g>
+    <rect x="140" y="652" width="190" height="72" rx="8" fill="#fdf3ea" stroke="#b3591e" stroke-dasharray="5 3"/>
+    <text x="235" y="676" text-anchor="middle" font-size="12.5" font-weight="600" fill="#8a4218">拦截与修正候选</text>
+    <text x="235" y="694" text-anchor="middle" font-size="11" fill="#8a4218">A05 未知ID拒绝展示</text>
+    <text x="235" y="710" text-anchor="middle" font-size="11" fill="#8a4218">A06 数字冲突不采用</text>
+  </g>
+  <path d="M 235 724 L 235 758 L 434 758 L 434 540" stroke="#8a6d1a" stroke-width="2" fill="none" marker-end="url(#arrowBack)"/>
+  <text x="300" y="750" font-size="11" fill="#6b5410">修正后重新生成候选</text>
+
+  <!-- V 通过 -->
+  <line x1="590" y1="744" x2="590" y2="792" stroke="#5b6472" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="600" y="774" font-size="12" fill="#5b6472">通过</text>
+
+  <!-- ============ S4 ============ -->
+  <g>
+    <rect x="440" y="792" width="300" height="108" rx="10" fill="#ffffff" stroke="#3c4654" stroke-width="2"/>
+    <rect x="440" y="792" width="300" height="30" rx="10" fill="#3c4654"/>
+    <text x="590" y="813" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">S4 识别核心风险</text>
+    <text x="456" y="842" font-size="11.5" fill="#3c4654">· 展示问题主题、证据与判断依据</text>
+    <text x="456" y="860" font-size="11.5" fill="#3c4654">· 矛盾证据并列展示，不凭频次判严重性</text>
+    <text x="456" y="878" font-size="11.5" fill="#8a4218">A07 证据不足/矛盾→保留不确定，不补造</text>
+  </g>
+  <line x1="590" y1="900" x2="590" y2="948" stroke="#5b6472" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="600" y="930" font-size="12" fill="#5b6472">风险与不确定项明确</text>
+
+  <!-- ============ S5 ============ -->
+  <g>
+    <rect x="440" y="948" width="300" height="108" rx="10" fill="#ffffff" stroke="#3c4654" stroke-width="2"/>
+    <rect x="440" y="948" width="300" height="30" rx="10" fill="#3c4654"/>
+    <text x="590" y="969" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">S5 判断可解决性</text>
+    <text x="456" y="998" font-size="11.5" fill="#3c4654">· 对照产品属性、支持与反对证据</text>
+    <text x="456" y="1016" font-size="11.5" fill="#3c4654">· 形成可解决性假设与待验证项</text>
+    <text x="456" y="1034" font-size="11.5" fill="#8a4218">A10 评论含指令→作数据处理，不执行</text>
+  </g>
+  <!-- S5 缺参数 → 追问 -->
+  <path d="M 740 1002 L 860 1002" stroke="#b3591e" stroke-width="2" stroke-dasharray="6 3" fill="none" marker-end="url(#arrowErr)"/>
+  <text x="756" y="994" font-size="11.5" fill="#8a4218">缺产品参数</text>
+  <g>
+    <rect x="860" y="972" width="150" height="60" rx="8" fill="#fdf3ea" stroke="#b3591e" stroke-dasharray="5 3"/>
+    <text x="935" y="996" text-anchor="middle" font-size="12.5" font-weight="600" fill="#8a4218">追问补充</text>
+    <text x="935" y="1014" text-anchor="middle" font-size="11" fill="#8a4218">无依据不生成结论</text>
+  </g>
+  <path d="M 935 1032 L 935 1068 L 746 1068" stroke="#8a6d1a" stroke-width="2" fill="none" marker-end="url(#arrowBack)"/>
+  <text x="830" y="1060" font-size="11" fill="#6b5410">补充后继续判断</text>
+
+  <line x1="590" y1="1056" x2="590" y2="1104" stroke="#5b6472" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="600" y="1086" font-size="12" fill="#5b6472">假设与待验证项成形</text>
+
+  <!-- ============ S6 ============ -->
+  <g>
+    <rect x="440" y="1104" width="300" height="126" rx="10" fill="#ffffff" stroke="#1f5c3a" stroke-width="2.5"/>
+    <rect x="440" y="1104" width="300" height="30" rx="10" fill="#1f5c3a"/>
+    <text x="590" y="1125" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">S6 形成条件性判断</text>
+    <text x="456" y="1154" font-size="11.5" fill="#3c4654">· 汇总范围、证据、假设与限制</text>
+    <text x="456" y="1172" font-size="11.5" fill="#3c4654">· 输出：继续研究 / 证据不足 / 暂缓 + 验证计划</text>
+    <text x="456" y="1190" font-size="11.5" fill="#3c4654">· 结构上不可能输出采购/囤货建议</text>
+    <text x="456" y="1216" font-size="11.5" fill="#8a4218">A12 要求进货建议→说明证据边界并拒绝</text>
+  </g>
+
+  <!-- S6 出口三个 -->
+  <g font-size="12.5" font-weight="600">
+    <rect x="120" y="1250" width="180" height="44" rx="22" fill="#e8f4ec" stroke="#1f5c3a"/>
+    <text x="210" y="1277" text-anchor="middle" fill="#1f5c3a">继续研究</text>
+    <rect x="340" y="1250" width="180" height="44" rx="22" fill="#f4f0e2" stroke="#8a6d1a"/>
+    <text x="430" y="1277" text-anchor="middle" fill="#6b5410">证据不足</text>
+    <rect x="560" y="1250" width="180" height="44" rx="22" fill="#f4f0e2" stroke="#8a6d1a"/>
+    <text x="650" y="1277" text-anchor="middle" fill="#6b5410">暂缓 + 验证计划</text>
+  </g>
+  <path d="M 530 1230 L 210 1250" stroke="#5b6472" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 570 1230 L 440 1250" stroke="#5b6472" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 610 1230 L 640 1250" stroke="#5b6472" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- 全局失效重算（A08） -->
+  <path d="M 740 1160 L 900 1160 L 900 384 L 746 384" stroke="#8a6d1a" stroke-width="2.5" fill="none" marker-end="url(#arrowBack)"/>
+  <text x="912" y="700" font-size="12" fill="#6b5410" transform="rotate(90 912 700)">A08 数据/标签变更 → 旧解释全部失效 → 回到 S2 重新检查 · revision 绑定</text>
+
+  <!-- 底部注释区 -->
+  <g>
+    <rect x="30" y="1330" width="1120" height="260" rx="10" fill="#f4f6f9" stroke="#d5dbe4"/>
+    <text x="50" y="1360" font-size="14" font-weight="700" fill="#1c2430">异常用例 ↔ 状态映射总表（A01–A12）</text>
+    <g font-size="12" fill="#3c4654">
+      <text x="50" y="1390">A01 空输入 → S1/S3 本地拦截，不发模型请求</text>
+      <text x="50" y="1414">A02 无有效数据 → S2 引导导入或演示样本</text>
+      <text x="50" y="1438">A03 模型未配置 → 全局：显示不可用，规则分析可用</text>
+      <text x="50" y="1462">A04 调用超时/失败 → 全局：保留输入可重试，35s 客户端中止</text>
+      <text x="50" y="1486">A05 未知评论ID → V：拒绝作为引用展示</text>
+      <text x="50" y="1510">A06 数量与程序冲突 → V：不采用模型数字</text>
+      <text x="430" y="1390">A07 证据不足/矛盾 → S4：保留不确定，不补造</text>
+      <text x="430" y="1414">A08 中途替换数据 → 全局失效：回到 S2 重算</text>
+      <text x="430" y="1438">A09 用户修改标签 → S3：先程序重算再解释</text>
+      <text x="430" y="1462">A10 评论正文含指令 → S5：作待分析数据，不执行</text>
+      <text x="430" y="1486">A11 重复点击发送 → 全局：不并发重复提交</text>
+      <text x="430" y="1510">A12 询问销量/进货 → S1/S6：范围说明拒绝经营预测</text>
+    </g>
+    <text x="50" y="1556" font-size="11.5" fill="#5b6472">服务端兜底（server/agent.mjs）：请求白名单 + 体积上限 + 30s 超时 + 100KB 响应上限 + 数字禁令 + 引用存在性校验 + 程序注入数据范围声明。</text>
+    <text x="50" y="1576" font-size="11.5" fill="#5b6472">客户端镜像校验（contract.ts verifyReply）：结构·引用·revision 三重复核，任何一层失败都不展示未验证内容。</text>
+  </g>
+</svg>

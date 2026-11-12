@@ -1,4 +1,9 @@
 import type { ReactElement } from "react";
+/**
+ * Evidence-readiness gate indicator.
+ * Documentation pass 2026-11-12.
+ */
+
 
 export interface EvidenceGate {
   id: string;

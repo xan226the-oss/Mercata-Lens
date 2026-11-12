@@ -1,5 +1,10 @@
 import type { ReactElement } from "react";
 import type { CategoryAnalysis, CategoryBand } from "../domain/category";
+/**
+ * Native calculation disclosure drawer (audit-friendly "how was this computed").
+ * Documentation pass 2026-11-12.
+ */
+
 
 export interface EvidenceDrawerProps {
   analysis: CategoryAnalysis;

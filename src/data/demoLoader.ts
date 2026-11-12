@@ -1,10 +1,18 @@
 /**
+ * Bundled synthetic demo dataset loader (12 products / 76 reviews).
+ * Hand-curated fixture for flow demonstration only — not a real Amazon
+ * scrape; review texts are not real consumer reviews.
+ * Documentation pass 2026-11-12.
+ */
+
+/**
  * Loads the curated demo dataset from public/demo/*.csv using Papa Parse.
  * Strict row parsing: any invalid row fails the whole load with issues
  * (no silent skipping). sourceKind is always "demo".
  */
 import Papa from "papaparse";
 import type {
+
   ParseIssue,
   ParseResult,
   ProductRecord,

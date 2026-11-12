@@ -1,4 +1,12 @@
 /**
+ * Synchronous CSV import with the quality gate (Task 4B).
+ * Nothing is read until the user clicks the exact import button. A rejected
+ * import leaves current research untouched; warnings do not silently clean
+ * data. Data lives in browser memory only — no persistence, no upload.
+ * Documentation pass 2026-11-12.
+ */
+
+/**
  * CSV import layer (Task 3). Turns two raw CSV texts (products + reviews)
  * into a validated, deterministic ResearchDataset.
  *
@@ -9,6 +17,7 @@
  */
 import Papa from "papaparse";
 import type {
+
   ImportResult,
   ParseIssue,
   ProductRecord,

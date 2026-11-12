@@ -1,6 +1,11 @@
 import type { ReactElement } from "react";
 import type { DecisionReport } from "../domain/decision";
 import type { RankingResult } from "../domain/opportunities";
+/**
+ * Bounded decision status display (continue / insufficient / pause).
+ * Documentation pass 2026-11-12.
+ */
+
 
 const STATUS_COPY = {
   continue_research: { label: "Continue research", tone: "continue", description: "Current evidence supports another validation step; it does not establish a commercial conclusion." },

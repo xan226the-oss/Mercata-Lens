@@ -1,4 +1,9 @@
 import type { ReactNode } from "react";
+/**
+ * Consistent page title and metadata header.
+ * Documentation pass 2026-11-12.
+ */
+
 
 export interface PageHeaderProps {
   eyebrow: string;

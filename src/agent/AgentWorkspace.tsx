@@ -1,3 +1,13 @@
+/**
+ * /assistant dialogue & evidence workspace (2026-11-02+).
+ * Session layer on top of the deterministic six-step research flow: model
+ * answers with citation navigation, manual label correction, revision-bound
+ * messages (stale answers are invalidated, never silently reused), stale
+ * notices and narrow-screen Dialogue/Evidence tabs. Model responses are
+ * never fabricated when the gateway is unavailable.
+ * Documentation pass 2026-11-12.
+ */
+
 import {AspectEditor} from '../components/AspectEditor';
 import {annotationsFor,aspectPainPoints,ASPECT_REVISION} from '../domain/aspects';
 import { useEffect,useMemo,useRef,useState } from 'react';
@@ -12,6 +22,7 @@ import './agent.css';
 export function AgentWorkspace(){
  const {dataset,corrections,applyReviewCorrection,aspectOverrides,applyAspectOverride}=useResearch();
  const {language}=useLanguage();const zh=language==='zh';const t=(cn:string,en:string)=>zh?cn:en;
+ // Gateway capability: checking (probing) → ready/disabled/offline. Drives whether input is enabled.
  const [capability,setCapability]=useState<'checking'|'ready'|'disabled'|'offline'>('checking');
  const [statusKey,setStatusKey]=useState(0);
  const [draft,setDraft]=useState('');const [messages,setMessages]=useState<Message[]>([]);
@@ -20,22 +31,26 @@ export function AgentWorkspace(){
  const [legacyDirty,setLegacyDirty]=useState(false);const [aspectDirty,setAspectDirty]=useState(false);const dirty=legacyDirty||aspectDirty;
  const evidenceHeading=useRef<HTMLHeadingElement>(null);const citationOrigin=useRef<HTMLButtonElement|null>(null);
  const active=useRef<{id:string;revision:string;controller:AbortController}|null>(null);
+ // Revision bumps on any data/label change; all in-flight and past answers are bound to it.
  const revision=useMemo(()=>crypto.randomUUID(),[dataset,corrections,aspectOverrides]);
  const currentRevision=useRef(revision);currentRevision.current=revision;
  const summaries=useMemo(()=>dataset?aspectPainPoints(dataset,aspectOverrides):[],[dataset,corrections,aspectOverrides]);
  const selected=dataset?.reviews.find(r=>r.reviewId===selectedId)??dataset?.reviews[0]??null;
  const classification=selected?classifyReview(selected,corrections):null;
  const canSend=capability==='ready'&&dataset?.sourceKind==='demo'&&!pending&&!dirty&&draft.trim().length>0&&draft.length<=2000;
+/** Probe /api/agent/status once per statusKey change; classify ready/disabled/offline. */
  useEffect(()=>{
   const controller=new AbortController();setCapability('checking');
   fetch('/api/agent/status',{signal:controller.signal}).then(async r=>{if(!r.ok)throw new Error();const b=await r.json();if(!controller.signal.aborted)setCapability(b.enabled===true?'ready':'disabled');}).catch(()=>{if(!controller.signal.aborted)setCapability('offline');});
   return ()=>controller.abort();
  },[statusKey]);
  // Invalidate immediately on research changes; late requests cannot replace current results.
+  // On revision change: abort in-flight requests, clear error/dirty flags — stale answers can never be shown as current.
  useEffect(()=>{
   active.current?.controller.abort();active.current=null;setPending(false);setError(null);setLegacyDirty(false);setAspectDirty(false);
   return ()=>{active.current?.controller.abort();active.current=null;};
  },[revision]);
+/** Sends one question; aborts and discards results if the research revision changes mid-flight. */
  async function send(){
   if(!canSend||active.current||!dataset)return;
   const question=draft.trim(),id=crypto.randomUUID(),sentRevision=revision,controller=new AbortController();

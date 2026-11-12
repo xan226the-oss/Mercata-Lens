@@ -1,5 +1,10 @@
 import type { ReactElement } from "react";
 import type { AnalysisModule, QualityReport } from "../domain/types";
+/**
+ * Per-module availability (available / incomplete / locked) rendering.
+ * Documentation pass 2026-11-12.
+ */
+
 
 interface ModuleStatusProps {
   availability: QualityReport["moduleAvailability"];

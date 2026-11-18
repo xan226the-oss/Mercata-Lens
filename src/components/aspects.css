@@ -6,3 +6,15 @@
 .aspect-workbench label,.aspect-editor label {display:flex;flex-direction:column;gap:6px;min-width:0}.aspect-workbench select,.aspect-editor select,.aspect-editor textarea {max-width:100%;min-width:0;padding:10px;border:1px solid #c4d1cb;border-radius:6px;background:#fff;color:#24372c;font:inherit;box-sizing:border-box}
 .aspect-editor {margin-top:24px}.aspect-editor fieldset {display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:12px;min-width:0;margin:12px 0;border:1px solid #d8e1de;border-radius:8px}.aspect-editor textarea {width:100%;min-height:80px;resize:vertical}.aspect-gap {background:#fff4dd;padding:12px}.aspect-workbench button {max-width:100%;white-space:normal;overflow-wrap:anywhere}
 @media(max-width:600px){.aspect-workbench{padding:14px}.aspect-editor fieldset{grid-template-columns:minmax(0,1fr)}.aspect-filters{display:grid;grid-template-columns:minmax(0,1fr)}.aspect-workbench th,.aspect-workbench td{padding:8px 5px}.aspect-workbench table{font-size:12px}}
+
+/* 2026-11-18 usability P0-1: editor intro banner makes the correction entry discoverable. */
+.aspect-editor__intro {border:1px solid #c9dbe9;background:var(--color-primary-soft,#eaf1f7);border-radius:8px;padding:14px 16px;margin-bottom:12px}
+.aspect-editor__intro h3 {margin:0 0 6px}
+.aspect-editor__hint {font-weight:600;color:#245578;margin:0 0 4px}
+
+/* 2026-11-18 usability P0-5/P1: visible verbatim-quote highlights and named evidence section. */
+.aspect-hits {border:1px solid #c9dbe9;background:#eef5fb;border-radius:8px;padding:12px 14px;margin:10px 0}
+.aspect-hits strong {color:#245578}
+.aspect-hits ul {margin:8px 0 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.aspect-hits mark {background:#ffe9a8;color:#3d2f00;padding:2px 6px;border-radius:4px;font-weight:600}
+.aspect-hits--empty {color:var(--color-muted,#687586)}

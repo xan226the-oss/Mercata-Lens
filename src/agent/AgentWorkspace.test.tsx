@@ -66,7 +66,7 @@ it('invalidates dialogue when a new aspect sentiment correction is saved and sen
  await screen.findByText('这条模拟样本提到清洗困难。');
  const sentiment=await screen.findByLabelText('Sentiment 1');
  await user.selectOptions(sentiment,'中性');
- await user.type(screen.getByLabelText('Aspect correction reason'),'tentative');
+ await user.type(screen.getByLabelText(/Aspect correction reason/),'tentative');
  await user.click(screen.getByRole('button',{name:'Save aspects'}));
  await screen.findByText(/This explanation is stale/);
  await user.type(screen.getByLabelText('Question'),'继续');await user.click(screen.getByRole('button',{name:'Send'}));

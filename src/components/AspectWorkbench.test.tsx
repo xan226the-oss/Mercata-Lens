@@ -19,7 +19,7 @@ it('shows multi-topic evidence, saves validated sentiment corrections and restor
  expect(within(editor).getByDisplayValue('Shape and opening design')).toBeVisible();
  await user.selectOptions(within(editor).getAllByLabelText(/Sentiment/)[0],'中性');
  expect(within(editor).getByRole('button',{name:'Save aspects'})).toBeDisabled();
- await user.type(within(editor).getByLabelText('Aspect correction reason'),'Initial appraisal is tentative');
+ await user.type(within(editor).getByLabelText(/Aspect correction reason/),'Initial appraisal is tentative');
  await user.click(within(editor).getByRole('button',{name:'Save aspects'}));
  await screen.findByText('Current-session manual correction');
  await user.click(screen.getByRole('button',{name:'Restore initial aspects'}));

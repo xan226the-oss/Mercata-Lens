@@ -51,6 +51,8 @@ export function DecisionPage(): ReactElement {
   const { status, dataset, sourceKind, qualityReport, corrections, aspectOverrides, economicScenarios, opportunityWeights, decisionConditions, replaceDecisionConditions } = useResearch();
   const [triggeredStopConditions, setTriggeredStopConditions] = useState<string[]>([]);
   const [selectedEvidenceId, setSelectedEvidenceId] = useState<string | null>(null);
+  /** 2026-11-18 usability P1: post-download confirmation so users need not hunt the download list. */
+  const [exportNotice, setExportNotice] = useState("");
   const savedConditions = decisionConditions;
 
   useEffect(() => {
@@ -96,7 +98,7 @@ export function DecisionPage(): ReactElement {
     <section className="decision-page">
       <p>Evidence basis: negative aspects only, counted once per review and group. Uncovered content is not problem-free.</p>
       <PageHeader eyebrow="Decision and validation" title="Decision & validation plan" description="Compose upstream evidence into a bounded status and validation plan. This page does not infer triggers from weighted comparisons or review text." meta={<div className="decision-page__meta"><span>{dataset.category}</span><DataSourceBadge sourceKind={sourceKind} /><span>Aspect standard {ASPECT_REVISION}</span></div>} />
-      <DecisionStatus report={report} />
+      <DecisionStatus report={report} sampleCaliber={dataset ? { productCount: dataset.products.length, reviewCount: dataset.reviews.length, observedAt: dataset.products.map((product) => product.observedAt).sort()[dataset.products.length - 1] ?? dataset.importedAt } : null} />
       <section className="decision-conditions" aria-labelledby="decision-conditions-title">
         <div><span className="section-kicker">User-authored inputs</span><h2 id="decision-conditions-title">Decision conditions</h2><p>These conditions stay in current-session memory. A stop condition triggers Pause only after an explicit exact selection.</p></div>
         <div className="decision-conditions__fields">
@@ -109,7 +111,10 @@ export function DecisionPage(): ReactElement {
       </section>
       <ValidationPlan report={report} onEvidenceClick={setSelectedEvidenceId} />
       <section className="decision-evidence-focus" aria-live="polite" data-testid="decision-selected-evidence">{selectedEvidenceId ? <><strong>{selectedEvidenceId}</strong>{evidenceDetail(selectedEvidenceId, dataset, economicScenarios, hypotheses)}</> : "Select an evidence reference to inspect its source or calculation explanation."}</section>
-      <section className="decision-export" aria-labelledby="decision-export-title"><div><span className="section-kicker">One-way local snapshot</span><h2 id="decision-export-title">Export research JSON</h2><p>Downloads a versioned snapshot. It does not import, persist, recover, or automatically save research.</p></div><button type="button" onClick={() => downloadResearchExport({ dataset, corrections, aspectOverrides, economicScenarios, weights: opportunityWeights, conditions: savedConditions, report, rulesetVersion: ASPECT_REVISION })}>Download JSON</button></section>
+      {/* 2026-11-18 usability P1: readable export filename (date + review count instead of a bare
+          default name) and an explicit success notice — 3/5 participants hunted the download list
+          for 40s+ without feedback. */}
+      <section className="decision-export" aria-labelledby="decision-export-title"><div><span className="section-kicker">One-way local snapshot</span><h2 id="decision-export-title">Export research JSON</h2><p>Downloads a versioned snapshot. It does not import, persist, recover, or automatically save research.</p></div><button type="button" onClick={() => { const name = `mercata-lens-research-${new Date().toISOString().slice(0, 10)}-${dataset.reviews.length}reviews.json`; downloadResearchExport({ dataset, corrections, aspectOverrides, economicScenarios, weights: opportunityWeights, conditions: savedConditions, report, rulesetVersion: ASPECT_REVISION }, name); setExportNotice(`Saved ${name} to your downloads folder.`); }}>Download JSON</button><p className="decision-export__notice" role="status" data-testid="decision-export-notice">{exportNotice}</p></section>
     </section>
   );
 }

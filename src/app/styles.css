@@ -1894,3 +1894,10 @@ input {
   .decision-page .validation-plan p,
   .decision-page .decision-export p { color: #111; }
 }
+
+/* 2026-11-18 usability P0-4: explicit non-purchase boundary + sample caliber on decision status. */
+.decision-status__boundary { margin-top: 10px; padding: 10px 12px; border: 1px solid #ead4a3; background: #fff7e6; color: var(--color-warning); font-weight: 600; border-radius: var(--radius-sm); }
+.decision-status__caliber { margin-top: 8px; padding: 8px 12px; border: 1px solid var(--color-border); background: var(--color-surface-subtle); color: var(--color-ink); border-radius: var(--radius-sm); }
+
+/* 2026-11-18 usability P1: export success notice under the download button. */
+.decision-export__notice {margin-top:10px !important;color:var(--color-success,#2e7462);font-weight:600;min-height:1.2em}

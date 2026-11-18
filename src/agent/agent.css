@@ -5,8 +5,15 @@
 .agent-columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start;margin-top:18px}
 .agent-pane{min-width:0;background:#fff;border:1px solid var(--color-border);border-radius:8px;padding:22px;overflow-wrap:anywhere}.agent-pane h2{font-size:22px;margin:0 0 18px}.agent-pane h2:focus{outline:3px solid var(--color-primary);outline-offset:5px}
 .agent-workspace button{font:inherit;cursor:pointer;border:1px solid #b6c9da;color:#285a87;background:#eaf1f7;border-radius:5px;padding:9px 12px;white-space:normal;max-width:100%}
+/* 2026-11-18 usability P1: citation buttons need stronger contrast — 2/5 participants read the
+   pale default as passive annotation text rather than a clickable control. */
+.agent-message button{border:1px solid #2f6395;background:#d7e7f4;color:#1c4568;font-weight:600}
 .agent-workspace button:disabled{opacity:.55;cursor:not-allowed}.agent-workspace textarea,.agent-workspace select{display:block;width:100%;box-sizing:border-box;border:1px solid #b8c4cd;border-radius:5px;padding:10px;font:inherit;color:inherit;background:#fff;margin:7px 0 12px;max-width:100%}
-.agent-workspace textarea{resize:vertical;min-height:70px}.agent-messages{max-height:540px;overflow:auto;margin-bottom:22px}.agent-message{padding:16px;background:#f5f7f9;border-radius:7px;margin:14px 0;border:1px solid var(--color-border)}.agent-message-assistant{background:#eaf1f7}.agent-message p{white-space:pre-wrap}.agent-message button{margin:4px}.agent-stale{border-left:4px solid #9a6b1f;padding-left:10px;color:#755014}
+.agent-workspace textarea{resize:vertical;min-height:70px}.agent-messages{max-height:540px;overflow:auto;margin-bottom:22px}.agent-message{padding:16px;background:#f5f7f9;border-radius:7px;margin:14px 0;border:1px solid var(--color-border)}.agent-message-assistant{background:#eaf1f7}.agent-message p{white-space:pre-wrap}.agent-message button{margin:4px}
+/* 2026-11-18 usability P0-2: stale notices were a thin left border that 3/5 participants missed;
+   now a full warning-tone banner (status-banner--warning palette from the design spec). */
+.agent-stale{margin-top:10px;padding:12px 14px;border:1px solid #ead4a3;background:#fff7e6;color:#755014;font-weight:600;border-radius:6px}
+.agent-stale::before{content:"⚠ ";font-weight:700}
 .agent-send{display:flex;justify-content:space-between;align-items:center;gap:8px}.agent-pane blockquote{margin:15px 0;padding:16px;border-left:4px solid #376d9e;background:#f4f6f8;white-space:pre-wrap}.agent-source,.agent-limit,.agent-stage-note{font-size:13px;color:#536173}.agent-correction{border:1px solid var(--color-border);padding:14px;margin:20px 0;min-width:0}.agent-correction label{display:block;margin:7px 0}.agent-correction input{margin-right:8px}.agent-correction button{margin:4px}.agent-tabs{display:none}.agent-workspace [role=alert]{padding:14px;border:1px solid var(--color-danger);border-radius:6px;margin-top:12px}
 @media(max-width:1024px){.agent-columns{display:block}.agent-tabs{display:flex;gap:8px;margin-top:15px}.agent-tabs [aria-selected=true]{background:#376d9e;color:white}.agent-pane:not(.agent-pane-active){display:none}.agent-pane{padding:16px}.agent-messages{max-height:430px}.agent-status button{margin:8px 0 0;display:block}}
 @media(prefers-reduced-motion:reduce){.agent-workspace *{scroll-behavior:auto}}

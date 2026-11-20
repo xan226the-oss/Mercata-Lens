@@ -1,0 +1,41 @@
+review_id,product_id,rating,review_text,review_date,verified_purchase,source_url
+r077,p01,3,Hard water spots build up on the bowl within two days and I wipe it constantly.,2026-10-01,true,https://example.com/independent/review/r077
+r078,p02,2,Taking it apart for a deep clean is a two-person job. The pump housing will not budge.,2026-10-04,true,https://example.com/independent/review/r078
+r079,p03,1,"The pump quit after five weeks. Just past the return window, of course.",2026-10-07,true,https://example.com/independent/review/r079
+r080,p04,2,It gurgles and rattles at 2am and I cannot sleep with it running in the room.,2026-10-10,false,https://example.com/independent/review/r080
+r081,p05,1,My senior cat refuses to go anywhere near it. Total waste for us.,2026-10-13,true,https://example.com/independent/review/r081
+r082,p06,1,Water seeps from the base seam onto my hardwood every single day.,2026-10-16,true,https://example.com/independent/review/r082
+r083,p07,3,Replacement filters cost more than I expected and I am buying them monthly.,2026-10-19,true,https://example.com/independent/review/r083
+r084,p08,2,The reservoir is tiny; I am refilling it every morning before work.,2026-10-22,false,https://example.com/independent/review/r084
+r085,p09,2,Slimy film coats the tube inside and I have to pull the whole thing apart to reach it.,2026-10-25,true,https://example.com/independent/review/r085
+r086,p10,2,There is a musty smell after a week even with fresh filters.,2026-10-28,true,https://example.com/independent/review/r086
+r087,p11,3,It hums louder than my old fountain. I keep it in the hallway now.,2026-10-03,true,https://example.com/independent/review/r087
+r088,p12,2,The filter slot is so tight that seating a new cartridge takes real force.,2026-10-06,false,https://example.com/independent/review/r088
+r089,p01,2,The pump cuts out randomly and I have to tap it to restart.,2026-10-09,true,https://example.com/independent/review/r089
+r090,p02,3,Finding this exact filter size locally is impossible; everything is online only.,2026-10-12,true,https://example.com/independent/review/r090
+r091,p03,3,Opening the lid to refill means detaching the cord each time. Annoying design.,2026-10-15,true,https://example.com/independent/review/r091
+r092,p04,5,Cleanup is genuinely quick - one rinse and a wipe and it is done.,2026-10-18,false,https://example.com/independent/review/r092
+r093,p05,5,Whisper quiet. I only hear a faint trickle if the room is silent.,2026-10-21,true,https://example.com/independent/review/r093
+r094,p06,5,"Both of my cats took to it within an hour, even the picky one.",2026-10-24,true,https://example.com/independent/review/r094
+r095,p07,4,Three weeks in and zero leaks. The seal is solid.,2026-10-27,true,https://example.com/independent/review/r095
+r096,p08,4,The wide opening makes refilling from a pitcher completely mess-free.,2026-10-02,false,https://example.com/independent/review/r096
+r097,p09,5,Going on month four with the original pump still running strong.,2026-10-05,true,https://example.com/independent/review/r097
+r098,p10,4,"Filters last about six weeks here, better than my previous fountain.",2026-10-08,true,https://example.com/independent/review/r098
+r099,p11,4,"A steady output with no stuttering, even when the water level drops.",2026-10-11,true,https://example.com/independent/review/r099
+r100,p12,4,No film buildup inside after two weeks. Much better than our old plastic one.,2026-10-14,false,https://example.com/independent/review/r100
+r101,p01,3,"Love how quiet it is, but cleaning the corners is a weekly fight.",2026-10-17,true,https://example.com/independent/review/r101
+r102,p02,3,"My oversized cat drinks from it happily, though it leaks a little underneath.",2026-10-20,true,https://example.com/independent/review/r102
+r103,p03,3,"Pump is holding up well, but filters are pricey and hard to find in stores.",2026-10-23,true,https://example.com/independent/review/r103
+r104,p04,3,"Easy to refill thanks to the big opening, but it does hum at night.",2026-10-26,false,https://example.com/independent/review/r104
+r105,p05,2,"No leaks at all, yet my skittish cat still will not approach it.",2026-10-01,true,https://example.com/independent/review/r105
+r106,p06,4,"Deep cleaning takes effort, but the pump has been flawless for months.",2026-10-04,true,https://example.com/independent/review/r106
+r107,p07,4,Shipping box arrived crushed but the fountain itself was fine.,2026-10-07,true,https://example.com/independent/review/r107
+r108,p08,2,The app that pairs with it stopped syncing after an update.,2026-10-10,false,https://example.com/independent/review/r108
+r109,p09,2,Customer service took ten days to reply to my email.,2026-10-13,true,https://example.com/independent/review/r109
+r110,p10,3,It arrived with a EU plug adapter instead of a US one.,2026-10-16,true,https://example.com/independent/review/r110
+r111,p11,5,Not hard to clean at all - the smooth bowl wipes clean in seconds.,2026-10-19,true,https://example.com/independent/review/r111
+r112,p12,5,Zero noise complaints from us; if anything it is too quiet to notice.,2026-10-22,false,https://example.com/independent/review/r112
+r113,p01,2,The carbon dust from the new filter settled on the floor around it.,2026-10-25,true,https://example.com/independent/review/r113
+r114,p02,3,The replacement impeller is cheap but the shipping fee doubles the cost.,2026-10-28,true,https://example.com/independent/review/r114
+r115,p03,3,Refilling daily is fine for me since I am home all day anyway.,2026-10-03,true,https://example.com/independent/review/r115
+r116,p04,4,My kitten was startled by the first splash but plays with the stream now.,2026-10-06,false,https://example.com/independent/review/r116

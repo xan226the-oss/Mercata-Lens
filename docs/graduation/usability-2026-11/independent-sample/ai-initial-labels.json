@@ -1,0 +1,597 @@
+{
+ "revision": "independent-2026-11-20-r1",
+ "records": [
+  {
+   "reviewId": "r077",
+   "text": "Hard water spots build up on the bowl within two days and I wipe it constantly.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "积污残留",
+     "sentiment": "负面",
+     "evidence": "Hard water spots build up on the bowl within two days",
+     "reason": "AI初标：水垢两日即积聚，积污残留负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r078",
+   "text": "Taking it apart for a deep clean is a two-person job. The pump housing will not budge.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "拆装便利性",
+     "sentiment": "负面",
+     "evidence": "The pump housing will not budge",
+     "reason": "AI初标：水泵壳难拆，拆装便利负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r079",
+   "text": "The pump quit after five weeks. Just past the return window, of course.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "水泵寿命",
+     "sentiment": "负面",
+     "evidence": "The pump quit after five weeks",
+     "reason": "AI初标：五周水泵损坏，寿命负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r080",
+   "text": "It gurgles and rattles at 2am and I cannot sleep with it running in the room.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "振动与异响",
+     "sentiment": "负面",
+     "evidence": "It gurgles and rattles at 2am",
+     "reason": "AI初标：夜间咕噜声与共振，异响负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r081",
+   "text": "My senior cat refuses to go anywhere near it. Total waste for us.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "宠物接受度",
+     "sentiment": "负面",
+     "evidence": "My senior cat refuses to go anywhere near it",
+     "reason": "AI初标：老猫拒绝靠近，接受度负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r082",
+   "text": "Water seeps from the base seam onto my hardwood every single day.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "密封防漏",
+     "sentiment": "负面",
+     "evidence": "Water seeps from the base seam",
+     "reason": "AI初标：底座接缝日日渗水，防漏负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r083",
+   "text": "Replacement filters cost more than I expected and I am buying them monthly.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "滤芯支出",
+     "sentiment": "负面",
+     "evidence": "I am buying them monthly",
+     "reason": "AI初标：滤芯月月购买，支出负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r084",
+   "text": "The reservoir is tiny; I am refilling it every morning before work.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "储水容量",
+     "sentiment": "负面",
+     "evidence": "The reservoir is tiny",
+     "reason": "AI初标：容量小需每日加水，容量负面。以原文为依据，不延伸未提供的事实。"
+    },
+    {
+     "topic": "补水频率",
+     "sentiment": "负面",
+     "evidence": "refilling it every morning",
+     "reason": "AI初标：每晨补水，频率负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r085",
+   "text": "Slimy film coats the tube inside and I have to pull the whole thing apart to reach it.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "内部结构与可达性",
+     "sentiment": "负面",
+     "evidence": "pull the whole thing apart to reach it",
+     "reason": "AI初标：管内生物膜需整机拆解，可达性负面。以原文为依据，不延伸未提供的事实。"
+    },
+    {
+     "topic": "积污残留",
+     "sentiment": "负面",
+     "evidence": "Slimy film coats the tube inside",
+     "reason": "AI初标：管内生物膜积聚，残留负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r086",
+   "text": "There is a musty smell after a week even with fresh filters.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "气味表现",
+     "sentiment": "负面",
+     "evidence": "a musty smell after a week",
+     "reason": "AI初标：换芯后仍有霉味，气味负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r087",
+   "text": "It hums louder than my old fountain. I keep it in the hallway now.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "运行噪声",
+     "sentiment": "负面",
+     "evidence": "It hums louder than my old fountain",
+     "reason": "AI初标：比旧机更响被迫移位，噪声负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r088",
+   "text": "The filter slot is so tight that seating a new cartridge takes real force.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "外形与开口设计",
+     "sentiment": "负面",
+     "evidence": "filter slot is so tight",
+     "reason": "AI初标：滤芯槽过紧，设计负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r089",
+   "text": "The pump cuts out randomly and I have to tap it to restart.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "水泵运行稳定性",
+     "sentiment": "负面",
+     "evidence": "The pump cuts out randomly",
+     "reason": "AI初标：水泵随机停转需拍打重启，稳定性负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r090",
+   "text": "Finding this exact filter size locally is impossible; everything is online only.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "滤芯购买便利性",
+     "sentiment": "负面",
+     "evidence": "impossible; everything is online only",
+     "reason": "AI初标：本地无从购买，便利负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r091",
+   "text": "Opening the lid to refill means detaching the cord each time. Annoying design.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "外形与开口设计",
+     "sentiment": "负面",
+     "evidence": "detaching the cord each time",
+     "reason": "AI初标：加水需先拔线，设计负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r092",
+   "text": "Cleanup is genuinely quick - one rinse and a wipe and it is done.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "清洗便利性",
+     "sentiment": "正面",
+     "evidence": "one rinse and a wipe and it is done",
+     "reason": "AI初标：一冲一擦即净，便利正面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r093",
+   "text": "Whisper quiet. I only hear a faint trickle if the room is silent.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "运行噪声",
+     "sentiment": "正面",
+     "evidence": "Whisper quiet",
+     "reason": "AI初标：近乎无声，噪声正面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r094",
+   "text": "Both of my cats took to it within an hour, even the picky one.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "宠物接受度",
+     "sentiment": "正面",
+     "evidence": "took to it within an hour",
+     "reason": "AI初标：挑剔的猫一小时内接受，接受度正面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r095",
+   "text": "Three weeks in and zero leaks. The seal is solid.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "密封防漏",
+     "sentiment": "正面",
+     "evidence": "zero leaks. The seal is solid",
+     "reason": "AI初标：三周零渗漏，防漏正面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r096",
+   "text": "The wide opening makes refilling from a pitcher completely mess-free.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "外形与开口设计",
+     "sentiment": "正面",
+     "evidence": "wide opening makes refilling mess-free",
+     "reason": "AI初标：宽口加水不洒，设计正面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r097",
+   "text": "Going on month four with the original pump still running strong.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "水泵寿命",
+     "sentiment": "正面",
+     "evidence": "month four with the original pump still running strong",
+     "reason": "AI初标：原装泵四月强劲，寿命正面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r098",
+   "text": "Filters last about six weeks here, better than my previous fountain.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "滤芯更换频率",
+     "sentiment": "正面",
+     "evidence": "Filters last about six weeks",
+     "reason": "AI初标：滤芯六周寿命优于旧机，频率正面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r099",
+   "text": "A steady output with no stuttering, even when the water level drops.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "水泵运行稳定性",
+     "sentiment": "正面",
+     "evidence": "steady output with no stuttering",
+     "reason": "AI初标：低水位仍稳定出水，稳定性正面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r100",
+   "text": "No film buildup inside after two weeks. Much better than our old plastic one.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "积污残留",
+     "sentiment": "正面",
+     "evidence": "No film buildup inside after two weeks",
+     "reason": "AI初标：两周无生物膜，残留正面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r101",
+   "text": "Love how quiet it is, but cleaning the corners is a weekly fight.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "运行噪声",
+     "sentiment": "正面",
+     "evidence": "Love how quiet it is",
+     "reason": "AI初标：安静获好评，噪声正面。以原文为依据，不延伸未提供的事实。"
+    },
+    {
+     "topic": "清洗便利性",
+     "sentiment": "负面",
+     "evidence": "cleaning the corners is a weekly fight",
+     "reason": "AI初标：角落清理费劲，便利负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r102",
+   "text": "My oversized cat drinks from it happily, though it leaks a little underneath.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "宠物接受度",
+     "sentiment": "正面",
+     "evidence": "drinks from it happily",
+     "reason": "AI初标：大型猫正常饮用，接受度正面。以原文为依据，不延伸未提供的事实。"
+    },
+    {
+     "topic": "密封防漏",
+     "sentiment": "负面",
+     "evidence": "it leaks a little underneath",
+     "reason": "AI初标：底部轻微渗漏，防漏负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r103",
+   "text": "Pump is holding up well, but filters are pricey and hard to find in stores.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "水泵寿命",
+     "sentiment": "正面",
+     "evidence": "Pump is holding up well",
+     "reason": "AI初标：水泵耐用，寿命正面。以原文为依据，不延伸未提供的事实。"
+    },
+    {
+     "topic": "滤芯支出",
+     "sentiment": "负面",
+     "evidence": "filters are pricey",
+     "reason": "AI初标：滤芯偏贵，支出负面。以原文为依据，不延伸未提供的事实。"
+    },
+    {
+     "topic": "滤芯购买便利性",
+     "sentiment": "负面",
+     "evidence": "hard to find in stores",
+     "reason": "AI初标：门店难寻，便利负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r104",
+   "text": "Easy to refill thanks to the big opening, but it does hum at night.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "外形与开口设计",
+     "sentiment": "正面",
+     "evidence": "Easy to refill thanks to the big opening",
+     "reason": "AI初标：宽口易加水，设计正面。以原文为依据，不延伸未提供的事实。"
+    },
+    {
+     "topic": "运行噪声",
+     "sentiment": "负面",
+     "evidence": "it does hum at night",
+     "reason": "AI初标：夜间嗡鸣，噪声负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r105",
+   "text": "No leaks at all, yet my skittish cat still will not approach it.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "密封防漏",
+     "sentiment": "正面",
+     "evidence": "No leaks at all",
+     "reason": "AI初标：完全不漏，防漏正面。以原文为依据，不延伸未提供的事实。"
+    },
+    {
+     "topic": "宠物接受度",
+     "sentiment": "负面",
+     "evidence": "my skittish cat still will not approach it",
+     "reason": "AI初标：胆小猫仍不靠近，接受度负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r106",
+   "text": "Deep cleaning takes effort, but the pump has been flawless for months.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "清洗便利性",
+     "sentiment": "负面",
+     "evidence": "Deep cleaning takes effort",
+     "reason": "AI初标：深度清洁费力，便利负面。以原文为依据，不延伸未提供的事实。"
+    },
+    {
+     "topic": "水泵寿命",
+     "sentiment": "正面",
+     "evidence": "the pump has been flawless for months",
+     "reason": "AI初标：数月零故障，寿命正面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r107",
+   "text": "Shipping box arrived crushed but the fountain itself was fine.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": []
+  },
+  {
+   "reviewId": "r108",
+   "text": "The app that pairs with it stopped syncing after an update.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": []
+  },
+  {
+   "reviewId": "r109",
+   "text": "Customer service took ten days to reply to my email.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": []
+  },
+  {
+   "reviewId": "r110",
+   "text": "It arrived with a EU plug adapter instead of a US one.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": []
+  },
+  {
+   "reviewId": "r111",
+   "text": "Not hard to clean at all - the smooth bowl wipes clean in seconds.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "清洗便利性",
+     "sentiment": "正面",
+     "evidence": "wipes clean in seconds",
+     "reason": "AI初标：存在否定结构\"not hard to clean\"，实为正面；勿因短语误判负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r112",
+   "text": "Zero noise complaints from us; if anything it is too quiet to notice.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "运行噪声",
+     "sentiment": "正面",
+     "evidence": "too quiet to notice",
+     "reason": "AI初标：零投诉且安静到察觉不到；勿被 noise 词面误导为负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r113",
+   "text": "The carbon dust from the new filter settled on the floor around it.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "滤芯包装收纳",
+     "sentiment": "负面",
+     "evidence": "carbon dust from the new filter settled on the floor",
+     "reason": "AI初标：滤芯碳尘散落，包装收纳负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r114",
+   "text": "The replacement impeller is cheap but the shipping fee doubles the cost.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "配件更换成本",
+     "sentiment": "负面",
+     "evidence": "the shipping fee doubles the cost",
+     "reason": "AI初标：运费使配件成本翻倍，成本负面。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r115",
+   "text": "Refilling daily is fine for me since I am home all day anyway.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "补水频率",
+     "sentiment": "中性",
+     "evidence": "Refilling daily is fine for me",
+     "reason": "AI初标：仅陈述每日补水且表示可接受，按弱正面处理需依据原文\"fine\"，此处中性。以原文为依据，不延伸未提供的事实。"
+    },
+    {
+     "topic": "储水容量",
+     "sentiment": "中性",
+     "evidence": "Refilling daily",
+     "reason": "AI初标：容量小导致每日补水的客观陈述，中性。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  },
+  {
+   "reviewId": "r116",
+   "text": "My kitten was startled by the first splash but plays with the stream now.",
+   "source": "Codex",
+   "userConfirmed": false,
+   "annotations": [
+    {
+     "topic": "宠物接受度",
+     "sentiment": "正面",
+     "evidence": "plays with the stream now",
+     "reason": "AI初标：起初受惊后现已主动玩水，接受度正面（分时间：初期负面已转变）。以原文为依据，不延伸未提供的事实。"
+    }
+   ]
+  }
+ ]
+}
